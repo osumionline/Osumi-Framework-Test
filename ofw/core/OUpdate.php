@@ -124,6 +124,38 @@ class OUpdate {
 	}
 
 	/**
+	 * Returns status message about a file
+	 *
+	 * @param array Array of information about a file to be updated
+	 *
+	 * @return string Information about the file
+	 */
+	private function getStatusMessage($file) {
+		$ret = "    ";
+		switch ($file['status']) {
+			case 0: {
+				$ret .= "[".$this->colors->getColoredString("NEW   ", "light_green")."]";
+			}
+			break;
+			case 1: {
+				$ret .= "[".$this->colors->getColoredString("UPDATE", "light_blue")."]";
+			}
+			break;
+			case 2: {
+				$ret .= "[".$this->colors->getColoredString("DELETE", "light_red")."]";
+			}
+			break;
+			case 3: {
+				$ret .= "[".$this->colors->getColoredString("DELETE (NOT FOUND)", "light_purple")."]";
+			}
+			break;
+		}
+		$ret .= " - ".str_ireplace($this->base_dir, '', $file['file'])."\n";
+
+		return $ret;
+	}
+
+	/**
 	 * Show information about available updates
 	 *
 	 * @return string Prints information about updates
@@ -135,28 +167,19 @@ class OUpdate {
 		foreach ($to_be_updated as $version => $update) {
 			echo str_pad("==[ ".$update['message']." ]", 110, "=")."\n\n";
 			foreach ($update['files'] as $file) {
-				echo "    ";
-				switch ($file['status']){
-					case 0: {
-						echo "[".$this->colors->getColoredString("NEW   ", "light_green")."]";
-					}
-					break;
-					case 1: {
-						echo "[".$this->colors->getColoredString("UPDATE", "light_blue")."]";
-					}
-					break;
-					case 2: {
-						echo "[".$this->colors->getColoredString("DELETE", "light_red")."]";
-					}
-					break;
-					case 3: {
-						echo "[".$this->colors->getColoredString("DELETE (NOT FOUND)", "light_purple")."]";
-					}
-					break;
-				}
-				echo " - ".str_ireplace($this->base_dir, '', $file['file'])."\n";
+				echo $this->getStatusMessage($file);
 			}
 			echo "\n".str_pad('', 109, '=')."\n\n";
 		}
+	}
+
+	/**
+	 * Perform the updates and print update information messages
+	 *
+	 * @return string Prints information about updates
+	 */
+	public function doUpdate() {
+		$to_be_updated = $this->doUpdateCheck();
+		echo "\n";
 	}
 }
