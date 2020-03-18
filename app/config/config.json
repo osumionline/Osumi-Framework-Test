@@ -1,0 +1,29 @@
+{
+	"db": {
+		"host": "localhost",
+		"user": "dev",
+		"pass": "eIl!x767",
+		"name": "dev"
+	},
+	"cookies": {
+		"prefix": "ofw",
+		"url": ".osumi.es"
+	},
+	"log_level": "DEBUG",
+	"base_url": "https://dev.osumi.es/",
+	"admin_email": "igorosabel@osumi.es",
+	"default_title": "Osumi Framework Dev",
+	"lang": "en",
+	"css": ["common"],
+	"ext_css": [],
+	"js": ["common"],
+	"ext_js": [],
+	"extra": {
+		"key": "value",
+		"foo": "bar"
+	},
+	"libs": ["another/library"],
+	"dir": {
+		"test": "{{app_controller}}test/"
+	}
+}
