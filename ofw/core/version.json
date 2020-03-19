@@ -1,6 +1,17 @@
 {
-	"version": "5.0.0",
+	"version": "5.0.1",
 	"updates": {
+		"5.0.1": {
+			"message": "5.0.1 - Versión 5.0.1",
+			"files": [
+				"CHANGELOG.md",
+				"ofw.php"
+			],
+			"deletes": [
+				"ofw/base/OForm.php",
+				"ofw/base/ODBContainer.php"
+			]
+		},
 		"5.0.0": {
 			"message": "5.0.0 - Versión 5.0",
 			"files": [

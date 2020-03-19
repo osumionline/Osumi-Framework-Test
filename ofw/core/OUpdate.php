@@ -6,7 +6,7 @@ class OUpdate {
 	private $colors          = null;
 	private $base_dir        = null;
 	//private $repo_url        = 'https://raw.githubusercontent.com/igorosabel/Osumi-Framework/master/';
-	private $repo_url        = 'https://osumi.es/';
+	private $repo_url        = 'https://raw.githubusercontent.com/igorosabel/Osumi-Framework-Test/master/';
 	private $version_file    = null;
 	private $current_version = null;
 	private $repo_version    = null;
@@ -61,7 +61,7 @@ class OUpdate {
 	 */
 	private function getVersionFile() {
 		if (is_null($this->version_file)) {
-			$this->version_file = json_decode( file_get_contents($this->repo_url.'ofw/base/version.json'), true );
+			$this->version_file = json_decode( file_get_contents($this->repo_url.'ofw/core/version.json'), true );
 		}
 		return $this->version_file;
 	}
@@ -225,6 +225,26 @@ class OUpdate {
 				
 				echo $this->getStatusMessage($file, 'ok');
 			}
+			
+			if ($result) {
+				echo "\n  ".$this->colors->getColoredString(OTools::getMessage('TASK_UPDATE_ALL_UPDATED', [$version]), "light_green")."\n";
+				if (count($backups)>0) {
+					echo OTools::getMessage('TASK_UPDATE_DELETE_BACKUPS');
+					foreach ($backups as $backup) {
+						unlink($backup['backup']);
+					}
+				}
+			}
+			else {
+				echo "  ".$this->colors->getColoredString(OTools::getMessage('TASK_UPDATE_UPDATE_ERROR'), "white", "red")."\n";
+				foreach ($backups as $backup) {
+					if (file_exists($backup['new_file'])) {
+						unlink($backup['new_file']);
+					}
+					rename($backup['backup'], $backup['new_file']);
+				}
+			}
+			
 			echo "\n".str_pad('', 109, '=')."\n\n";
 		}
 	}
