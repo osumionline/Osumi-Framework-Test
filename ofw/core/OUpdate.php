@@ -90,6 +90,7 @@ class OUpdate {
 			if (version_compare($this->current_version, $update_version)==-1) {
 				$to_be_updated[$update_version] = [
 					'message' => $update['message'],
+					'postinstall' => (array_key_exists('postinstall', $update) && $update['postinstall']===true),
 					'files' => []
 				];
 			}
@@ -130,27 +131,38 @@ class OUpdate {
 	 *
 	 * @return string Information about the file
 	 */
-	private function getStatusMessage($file) {
+	private function getStatusMessage($file, $end='') {
 		$ret = "    ";
 		switch ($file['status']) {
 			case 0: {
-				$ret .= "[".$this->colors->getColoredString("NEW   ", "light_green")."]";
+				$ret .= "[ ".$this->colors->getColoredString("NEW   ", "light_green")." ]";
 			}
 			break;
 			case 1: {
-				$ret .= "[".$this->colors->getColoredString("UPDATE", "light_blue")."]";
+				$ret .= "[ ".$this->colors->getColoredString("UPDATE", "light_blue")." ]";
 			}
 			break;
 			case 2: {
-				$ret .= "[".$this->colors->getColoredString("DELETE", "light_red")."]";
+				$ret .= "[ ".$this->colors->getColoredString("DELETE", "light_red")." ]";
 			}
 			break;
 			case 3: {
-				$ret .= "[".$this->colors->getColoredString("DELETE (NOT FOUND)", "light_purple")."]";
+				$ret .= "[ ".$this->colors->getColoredString("DELETE (NOT FOUND)", "light_purple")." ]";
 			}
 			break;
 		}
-		$ret .= " - ".str_ireplace($this->base_dir, '', $file['file'])."\n";
+		$ret .= " - ".str_ireplace($this->base_dir, '', $file['file']);
+		
+		if ($end=='ok') {
+			$ret = str_pad($ret, 120, ' ');
+			$ret .= "[ ".$this->colors->getColoredString("OK", "light_green")." ]";
+		}
+		if ($end=='error') {
+			$ret = str_pad($ret, 120, ' ');
+			$ret .= "[ ".$this->colors->getColoredString("ERROR", "light_red")." ]";
+		}
+		
+		$ret .= "\n";
 
 		return $ret;
 	}
@@ -181,5 +193,39 @@ class OUpdate {
 	public function doUpdate() {
 		$to_be_updated = $this->doUpdateCheck();
 		echo "\n";
+
+		$result = true;
+		foreach ($to_be_updated as $version => $update) {
+			echo str_pad("==[ ".$update['message']." ]", 110, "=")."\n\n";
+			$backups = [];
+			foreach ($update['files'] as $file) {
+				// Update or delete -> make backup
+				if ($file['status']==1 || $file['status']==2) {
+					$backup_file = $file['file'].'_backup';
+					rename($file['file'], $backup_file);
+					array_push($backups, ['new_file'=>$file['file'], 'backup'=>$backup_file]);
+				}
+				// New or update -> download
+				if ($file['status']==0 || $file['file']==1) {
+					$file_url = $this->repo_url.'v'.$version.'/'.$file['file'];
+					$file_content = file_get_contents($file_url);
+
+					$dir = dirname($file['file']);
+					if (!file_exists($dir)) {
+						mkdir($dir, 0777, true);
+					}
+
+					$result_file = file_put_contents($file['file'], $file_content);
+					if ($result_file===false) {
+						echo $this->getStatusMessage($file, 'error');
+						$result = false;
+						break;
+					}
+				}
+				
+				echo $this->getStatusMessage($file, 'ok');
+			}
+			echo "\n".str_pad('', 109, '=')."\n\n";
+		}
 	}
 }
