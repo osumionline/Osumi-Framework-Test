@@ -40,10 +40,7 @@ class updateTestTask {
 		switch ($update->getVersionCheck()) {
 			case -1: {
 				echo OTools::getMessage('TASK_UPDATE_CHECK_LIST');
-				$update->showUpdates();
-
-				echo OTools::getMessage('TASK_UPDATE_CHECK_DO_UPDATE');
-				echo "    ".$this->colors->getColoredString("php ofw.php update", "light_green")."\n\n";
+				$update->doUpdate();
 			}
 			break;
 			case 0: {

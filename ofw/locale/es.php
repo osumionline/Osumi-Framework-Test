@@ -84,6 +84,7 @@ $locale = [
 	'TASK_UPDATE' => 'Función para actualizar el Framework.',
 	'TASK_UPDATE_AVAILABLE' => "Se han encontrado %s actualizaciones pendientes. Se procede a la instalación ordenada.",
 	'TASK_UPDATE_FILE_DELETE' => " El archivo \"%s\" será eliminado.\n",
+	'TASK_UPDATE_NOT_FOUND' => "El archivo \"%s\" no se encuentra.",
 	'TASK_UPDATE_DOWNLOADING' => "  Descargando \"%s\"\n",
 	'TASK_UPDATE_FILE_EXISTS' => "    El archivo ya existe, creando copia de seguridad.\n",
 	'TASK_UPDATE_NEW_FILE' => "    Creando nuevo archivo.\n",

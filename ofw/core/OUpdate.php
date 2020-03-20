@@ -105,7 +105,7 @@ class OUpdate {
 					if (!file_exists($local_delete)) {
 						$status = 3; // delete not found
 					}
-					array_push($to_be_updated[$version]['files'], ['file' => $local_delete, 'status' => $status]);
+					array_push($to_be_updated[$version]['files'], ['file' => $local_delete, 'rel' => $delete, 'status' => $status]);
 				}
 			}
 			if (array_key_exists('files', $updates[$version])) {
@@ -115,7 +115,7 @@ class OUpdate {
 					if (file_exists($local_file)) {
 						$status = 1; // update
 					}
-					array_push($to_be_updated[$version]['files'], ['file' => $local_file, 'status' => $status]);
+					array_push($to_be_updated[$version]['files'], ['file' => $local_file, 'rel' => $file, 'status' => $status]);
 				}
 			}
 		}
@@ -151,7 +151,7 @@ class OUpdate {
 			}
 			break;
 		}
-		$ret .= " - ".str_ireplace($this->base_dir, '', $file['file']);
+		$ret .= " - ".$file['rel'];
 		
 		if ($end=='ok') {
 			$ret = str_pad($ret, 120, ' ');
@@ -186,6 +186,22 @@ class OUpdate {
 	}
 
 	/**
+	 * Restore the backups created during the update
+	 *
+	 * @param array Array of backuped files
+	 *
+	 * @return void
+	 */
+	private function restoreBackups($backups) {
+		foreach ($backups as $backup) {
+			if (file_exists($backup['new_file'])) {
+				unlink($backup['new_file']);
+			}
+			rename($backup['backup'], $backup['new_file']);
+		}
+	}
+
+	/**
 	 * Perform the updates and print update information messages
 	 *
 	 * @return string Prints information about updates
@@ -206,10 +222,14 @@ class OUpdate {
 					array_push($backups, ['new_file'=>$file['file'], 'backup'=>$backup_file]);
 				}
 				// New or update -> download
-				if ($file['status']==0 || $file['file']==1) {
-					$file_url = $this->repo_url.'v'.$version.'/'.$file['file'];
+				if ($file['status']==0 || $file['status']==1) {
+					$file_url = $this->repo_url.'v'.$version.'/'.$file['rel'];
+					if (!file_exists($file_url)) {
+						echo "\n\n".$this->colors->getColoredString("ERROR", "white", "red").": ".OTools::getMessage('TASK_UPDATE_NOT_FOUND', [$file_url])."\n\n";
+						$this->restoreBackups($backups);
+						exit;
+					}
 					$file_content = file_get_contents($file_url);
-
 					$dir = dirname($file['file']);
 					if (!file_exists($dir)) {
 						mkdir($dir, 0777, true);
@@ -237,12 +257,7 @@ class OUpdate {
 			}
 			else {
 				echo "  ".$this->colors->getColoredString(OTools::getMessage('TASK_UPDATE_UPDATE_ERROR'), "white", "red")."\n";
-				foreach ($backups as $backup) {
-					if (file_exists($backup['new_file'])) {
-						unlink($backup['new_file']);
-					}
-					rename($backup['backup'], $backup['new_file']);
-				}
+				$this->restoreBackups($backups);
 			}
 			
 			echo "\n".str_pad('', 109, '=')."\n\n";
