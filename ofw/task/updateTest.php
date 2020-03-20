@@ -2,14 +2,14 @@
 /**
  * Update Framework files to a newer version
  */
-class updateTestTask {
+class updateTask {
 	/**
 	 * Returns description of the task
 	 *
 	 * @return Description of the task
 	 */
 	public function __toString() {
-		return $this->colors->getColoredString("updateTest", "light_green").": ".OTools::getMessage('TASK_UPDATE');
+		return $this->colors->getColoredString("update", "light_green").": ".OTools::getMessage('TASK_UPDATE');
 	}
 
 	private $colors = null;

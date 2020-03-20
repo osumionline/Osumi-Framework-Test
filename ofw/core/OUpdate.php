@@ -5,8 +5,8 @@
 class OUpdate {
 	private $colors          = null;
 	private $base_dir        = null;
-	//private $repo_url        = 'https://raw.githubusercontent.com/igorosabel/Osumi-Framework/master/';
-	private $repo_url        = 'https://raw.githubusercontent.com/igorosabel/Osumi-Framework-Test/master/';
+	//private $repo_url        = 'https://raw.githubusercontent.com/igorosabel/Osumi-Framework/';
+	private $repo_url        = 'https://raw.githubusercontent.com/igorosabel/Osumi-Framework-Test/';
 	private $version_file    = null;
 	private $current_version = null;
 	private $repo_version    = null;
@@ -61,7 +61,7 @@ class OUpdate {
 	 */
 	private function getVersionFile() {
 		if (is_null($this->version_file)) {
-			$this->version_file = json_decode( file_get_contents($this->repo_url.'ofw/core/version.json'), true );
+			$this->version_file = json_decode( file_get_contents($this->repo_url.'master/ofw/core/version.json'), true );
 		}
 		return $this->version_file;
 	}
@@ -224,7 +224,8 @@ class OUpdate {
 				// New or update -> download
 				if ($file['status']==0 || $file['status']==1) {
 					$file_url = $this->repo_url.'v'.$version.'/'.$file['rel'];
-					if (!file_exists($file_url)) {
+					$file_headers = get_headers($file_url);
+					if ($file_headers[0] == 'HTTP/1.1 404 Not Found') {
 						echo "\n\n".$this->colors->getColoredString("ERROR", "white", "red").": ".OTools::getMessage('TASK_UPDATE_NOT_FOUND', [$file_url])."\n\n";
 						$this->restoreBackups($backups);
 						exit;
