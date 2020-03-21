@@ -5,7 +5,28 @@ CHANGELOG
 
 ¡Nueva versión 5.0!
 
-Esta es una nueva revisión mayor del Framework ya que incluye muchos cambios que rompen las aplicaciones anteriores que tendrán que ser adaptadas. Todo el código ha sido revisado, se ha incluido phpDoc en todas las clases y funciones para ayudar en la programación y se han localizado los mensajes (inglés y español, con más idiomas en proximas actualizaciones).
+Esta es una nueva revisión mayor del Framework ya que incluye muchos cambios que rompen las aplicaciones anteriores que tendrán que ser adaptadas. Todo el código ha sido revisado, se ha incluido phpDoc en todas las clases y funciones para ayudar en la programación y se han localizado los mensajes (inglés y español, con más idiomas en próximas actualizaciones).
+
+#### Novedades
+
+* Clase `OCore`: agrupa toda la funcionalidad de carga e inicio de la aplicación. También contiene las variables `dbContainer` (donde se guardan todas las conexiones abiertas con bases de datos), `cacheContainer` (objeto donde se guardan todos los archivos cargados como cache) y las variables estáticas con las que definir la base de datos.
+* Clase `OModel`: la mayor parte de la anterior clase `OBase` se ha renombrado a esta nueva clase y se han efectuado refactorizaciones y limpieza.
+* Clase `OUpdate`: agrupa las funciones necesarias para actualizar el Framework a futuras versiones. Anteriormente, las tareas `updateCheck` y `update` se encargaban de las actualizaciones y esto hacía que hubiese mucho código duplicado. Ahora se ha agrupado todo el código en esta clase nueva y se ha añadido abundantes controles de errores.
+* Locales: en la carpeta `ofw/locale` ahora se incluyen dos archivos (`es.php` -Español- y `en.php` -Inglés-) con todos los mensajes que se muestran mediante el CLI. El idioma del Framework se define mediante la variable `lang` en el archivo `config.json`.
+* `phpDoc`: todas las clases y funciones que componen el Framework han sido documentadas para facilitar su uso desde IDEs. Todas las funciones tienen su descripción, parámetros de entrada (tipo de dato y una explicación) y datos de salida (tipo de dato y explicación).
+* Nueva página de error: en las versiones anteriores, las páginas de error para 403 o 404 simplemente mostraban un mensaje. Ahora se ha creado el archivo `error.php` con un toque de diseño para mostrar algo más... bonito :) Las páginas de error siguen siendo personalizables.
+
+#### Refactorizaciones
+
+* La clase `OBase` se ha dividido en varias partes pero el grueso ahora es la nueva clase `OModel`
+* Las clases `ODB` y `ODBContainer` estaban cada una en un archivo, pero siempre se usan juntas, de modo que se han unido en un solo archivo.
+* Las clases `OCache` y `OCacheContainer` estaban cada una en un archivo, pero siempre se usan juntas, de modo que se han unido en un solo archivo.
+* Limpieza de código: había muchos lugares en los que se creaban variables de un solo uso, llamadas a funciones que devolvían un solo valor...
+
+#### Deprecaciones
+
+#### Breaking changes
+
 
 ## `4.20.0` (09/03/2020)
 
