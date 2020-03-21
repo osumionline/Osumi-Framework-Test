@@ -197,7 +197,9 @@ class OUpdate {
 			if (file_exists($backup['new_file'])) {
 				unlink($backup['new_file']);
 			}
-			rename($backup['backup'], $backup['new_file']);
+			if (!is_null($backup['backup'])) {
+				rename($backup['backup'], $backup['new_file']);
+			}
 		}
 	}
 
@@ -213,7 +215,7 @@ class OUpdate {
 		if ($file_headers[0] == 'HTTP/1.1 404 Not Found') {
 			return false;
 		}
-		return file_get_contents($file_url);
+		return file_get_contents($url);
 		
 	}
 
@@ -258,6 +260,11 @@ class OUpdate {
 						$result = false;
 						break;
 					}
+					else {
+						if ($file['status']==0) {
+							array_push($backups, ['new_file'=>$file['file'], 'backup'=>null]);
+						}
+					}
 				}
 				
 				echo $this->getStatusMessage($file, 'ok');
@@ -269,6 +276,7 @@ class OUpdate {
 				$file_content = $this->getFile($file_url);
 				if ($file_content===false) {
 					echo "\n\n".$this->colors->getColoredString("ERROR", "white", "red").": ".OTools::getMessage('TASK_UPDATE_NOT_FOUND', [$file_url])."\n\n";
+					$this->restoreBackups($backups);
 					exit;
 				}
 
@@ -281,7 +289,7 @@ class OUpdate {
 				
 				$postinstall = new OPostInstall();
 				$postinstall->run();
-				unlink($$this->base_dir.$file);
+				unlink($this->base_dir.$file);
 			}
 
 			if ($result) {
