@@ -202,6 +202,22 @@ class OUpdate {
 	}
 
 	/**
+	 * Download a file by its URL
+	 *
+	 * @param string URL of the file
+	 *
+	 * @return string Content of the file
+	 */
+	private function getFile($url) {
+		$file_headers = get_headers($url);
+		if ($file_headers[0] == 'HTTP/1.1 404 Not Found') {
+			return false;
+		}
+		return file_get_contents($file_url);
+		
+	}
+
+	/**
 	 * Perform the updates and print update information messages
 	 *
 	 * @return string Prints information about updates
@@ -224,13 +240,13 @@ class OUpdate {
 				// New or update -> download
 				if ($file['status']==0 || $file['status']==1) {
 					$file_url = $this->repo_url.'v'.$version.'/'.$file['rel'];
-					$file_headers = get_headers($file_url);
-					if ($file_headers[0] == 'HTTP/1.1 404 Not Found') {
+					$file_content = $this->getFile($file_url);
+					if ($file_content===false) {
 						echo "\n\n".$this->colors->getColoredString("ERROR", "white", "red").": ".OTools::getMessage('TASK_UPDATE_NOT_FOUND', [$file_url])."\n\n";
 						$this->restoreBackups($backups);
 						exit;
 					}
-					$file_content = file_get_contents($file_url);
+
 					$dir = dirname($file['file']);
 					if (!file_exists($dir)) {
 						mkdir($dir, 0777, true);
@@ -246,7 +262,28 @@ class OUpdate {
 				
 				echo $this->getStatusMessage($file, 'ok');
 			}
-			
+
+			if ($update['postinstall']) {
+				$file = 'ofw/core/postinstall-'.$version.'.php';
+				$file_url = $this->repo_url.'v'.$version.'/'.$file;
+				$file_content = $this->getFile($file_url);
+				if ($file_content===false) {
+					echo "\n\n".$this->colors->getColoredString("ERROR", "white", "red").": ".OTools::getMessage('TASK_UPDATE_NOT_FOUND', [$file_url])."\n\n";
+					exit;
+				}
+
+				if (file_exists($this->base_dir.$file)){
+					unlink($this->base_dir.$file);
+				}
+				$result_file = file_put_contents($this->base_dir.$file, $file_content);
+				
+				include $this->base_dir.$file;
+				
+				$postinstall = new OPostInstall();
+				$postinstall->run();
+				unlink($$this->base_dir.$file);
+			}
+
 			if ($result) {
 				echo "\n  ".$this->colors->getColoredString(OTools::getMessage('TASK_UPDATE_ALL_UPDATED', [$version]), "light_green")."\n";
 				if (count($backups)>0) {
