@@ -112,7 +112,7 @@ $locale = [
 	'TASK_UPDATE_URLS_NEW_TEMPLATE_FOLDER' => "  Nueva carpeta para templates %s creada.\n",
 	'TASK_UPDATE_URLS_NEW_ACTION' => "  Nueva acción %s creada en el controlador %s.\n",
 	'TASK_UPDATE_URLS_NEW_TEMPLATE' => "  Nuevo template %s creado.\n",
-
+	'TASK_UPDATE_URLS_ERROR' => "  Ocurrieron errores al actualizar módulos y controladores. Revisa los errores y vuelve a ejecutar la tarea updateUrls",
 	'TASK_VERSION' => 'Función para obtener el número de versión actual del Framework.',
 	'OFW_INDICATE_OPTION' => "Tienes que indicar una opción.\n\n",
 	'OFW_OPTIONS' => "  Opciones:\n",

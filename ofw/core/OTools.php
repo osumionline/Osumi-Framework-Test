@@ -575,7 +575,7 @@ class OTools {
 		if ($errors && !$silent) {
 			echo "\n";
 			echo $colors->getColoredString("----------------------------------------------------------------------------------------------------------------------", "white", "red")."\n";
-			echo $colors->getColoredString("  Ocurrieron errores al actualizar módulos y controladores. Revisa los errores y vuelve a ejecutar la tarea updateUrls", "white", "red")."\n";
+			echo $colors->getColoredString(self::getMessage('TASK_UPDATE_URLS_ERROR'), "white", "red")."\n";
 			echo $colors->getColoredString("----------------------------------------------------------------------------------------------------------------------", "white", "red")."\n";
 		}
 		if (!$silent) {
