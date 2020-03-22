@@ -25,6 +25,7 @@ $locale = [
 	'TASK_COMPOSER_CREATE_FILES' => 'CREATING FILES',
 	'TASK_COMPOSER_END' => 'Project has been exported.',
 	'TASK_GENERATE_MODEL' => 'Generate a SQL file to create all the tables in the database based on user defined models (file generated on ofw/export).',
+	'TASK_GENERATE_MODEL_MODEL' => "Model\n\n",
 	'TASK_PLUGINS' => 'Task to manage plugins (list available / install / remove)',
 	'TASK_PLUGINS_AVAILABLE_TITLE' => "  Available plugin list:\n\n",
 	'TASK_PLUGINS_AVAILABLE_INSTALL' => "  To install any of the plugins run the following command:\n\n",
@@ -104,6 +105,8 @@ $locale = [
 	'TASK_UPDATE_CHECK_UPDATED' => 'Installed version is up to date.',
 	'TASK_UPDATE_CHECK_NEWER' => 'Installed version is NEWER than the one in the repository!!',
 	'TASK_UPDATE_URLS' => 'Creates new modules / actions / templates based on user configured urls.json',
+	'TASK_UPDATE_URLS_UPDATING' => "  Actualizando módulos/controladores...\n\n",
+
 	'TASK_VERSION' => 'Get Frameworks current version information',
 	'OFW_INDICATE_OPTION' => "You have to indicate an option.\n\n",
 	'OFW_OPTIONS' => "  Options:\n",

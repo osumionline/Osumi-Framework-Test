@@ -385,7 +385,7 @@ class OTools {
 	 */
 	public static function generateModel() {
 		global $core;
-		echo "Modelo\n\n";
+		echo self::getMessage('TASK_GENERATE_MODEL_MODEL');
 		$sql = "/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;\n\n";
 		$models = self::getModelList();
 
@@ -495,14 +495,14 @@ class OTools {
 		if (!$silent) {
 			echo "\n";
 			echo "  ".$colors->getColoredString('Osumi Framework', 'white', 'blue')."\n\n";
-			echo "  Actualizando módulos/controladores...\n\n";
+			echo self::getMessage('TASK_UPDATE_URLS_UPDATING');
 		}
 
 		$reserved_modules = ['private', 'protected', 'public'];
 		foreach ($urls as $url) {
 			if (in_array($url['module'], $reserved_modules)) {
 				if (!$silent) {
-					echo $colors->getColoredString('ERROR', 'white', 'red').": El nombre del módulo es una palabra reservada (".$url['module']."). El módulo no puede llamarse de las siguientes maneras:\n";
+					echo $colors->getColoredString('ERROR', 'white', 'red').": ".self::getMessage('TASK_UPDATE_URLS_RESERVED')."\n";
 					foreach ($reserved_modules as $module) {
 						echo "  · ".$module."\n";
 					}
@@ -513,7 +513,7 @@ class OTools {
 
 			if ($url['action']==$url['module']) {
 				if (!$silent) {
-					echo $colors->getColoredString('ERROR', 'white', 'red').": Una acción no puede llamarse igual que el módulo que la contiene:\n";
+					echo $colors->getColoredString('ERROR', 'white', 'red').": ".self::getMessage('TASK_UPDATE_URLS_ACTION_MODULE')."\n";
 					echo "  Módulo: ".$url['module']."\n";
 					echo "  Acción: ".$url['action']."\n";
 					$errors = true;
@@ -521,42 +521,52 @@ class OTools {
 				continue;
 			}
 
-			$ruta_controller = $core->config->getDir('app_controller') . $url['module'] . '.php';
-			if (!file_exists($ruta_controller)) {
-				file_put_contents($ruta_controller, "<"."?php\nclass ".$url['module']." extends OController{\n}");
+			$route_controller = $core->config->getDir('app_controller') . $url['module'] . '.php';
+			if (!file_exists($route_controller)) {
+				file_put_contents($route_controller, "<"."?php\nclass ".$url['module']." extends OController{\n}");
 				if (!$silent) {
-					echo "  Nuevo controlador ".$colors->getColoredString("\"" . $url['module'] . "\"", "light_green")." creado en el archivo ".$colors->getColoredString("\"" . $ruta_controller . "\"", "light_green").".\n";
+					echo self::getMessage('TASK_UPDATE_URLS_NEW_CONTROLLER', [
+						$colors->getColoredString("\"" . $url['module'] . "\"", "light_green"),
+						$colors->getColoredString("\"" . $route_controller . "\"", "light_green")
+					]);
 				}
 			}
 
-			$ruta_templates = $core->config->getDir('app_template') . $url['module'];
-			if (!file_exists($ruta_templates) && !is_dir($ruta_templates)) {
-				mkdir($ruta_templates);
+			$route_templates = $core->config->getDir('app_template') . $url['module'];
+			if (!file_exists($route_templates) && !is_dir($route_templates)) {
+				mkdir($route_templates);
 				if (!$silent) {
-					echo "  Nueva carpeta para templates ".$colors->getColoredString("\"" . $ruta_templates . "\"", "light_green")." creada.\n";
+					echo self::getMessage('TASK_UPDATE_URLS_NEW_TEMPLATE_FOLDER', [
+						$colors->getColoredString("\"" . $route_templates . "\"", "light_green")
+					]);
 				}
 			}
 
-			$controller_str = file_get_contents($ruta_controller);
+			$controller_str = file_get_contents($route_controller);
 			if (stripos($controller_str, "function ".$url['action']) === false) {
-				file_put_contents($ruta_controller, substr_replace($controller_str, '', strrpos($controller_str, '}'), 1));
+				file_put_contents($route_controller, substr_replace($controller_str, '', strrpos($controller_str, '}'), 1));
 
 				$str = "\n";
 				$str .= "	/**\n";
 				$str .= "	 * ".$url['comment']."\n";
 				$str .= "	 */\n";
 				$str .= "	function ".$url['action']."($"."req){}\n";
-				file_put_contents($ruta_controller, $str."}", FILE_APPEND);
+				file_put_contents($route_controller, $str."}", FILE_APPEND);
 
 				if (!$silent) {
-					echo "  Nueva acción ".$colors->getColoredString("\"" . $url['action'] . "\"", "light_green")." creada en el controlador ".$colors->getColoredString("\"" . $url['module'] . "\"", "light_green").".\n";
+					echo self::getMessage('TASK_UPDATE_URLS_NEW_ACTION', [
+						$colors->getColoredString("\"" . $url['action'] . "\"", "light_green"),
+						$colors->getColoredString("\"" . $url['module'] . "\"", "light_green")
+					]);
 				}
 
-				$ruta_template = $core->config->getDir('app_template') . $url['module'] . '/' . $url['action'] . '.php';
-				if (!file_exists($ruta_template)) {
-					file_put_contents($ruta_template, '');
+				$route_template = $core->config->getDir('app_template') . $url['module'] . '/' . $url['action'] . '.php';
+				if (!file_exists($route_template)) {
+					file_put_contents($route_template, '');
 					if (!$silent) {
-						echo "  Nuevo template ".$colors->getColoredString("\"" . $ruta_template . "\"", "light_green")." creado.\n";
+						echo self::getMessage('TASK_UPDATE_URLS_NEW_TEMPLATE', [
+							$colors->getColoredString("\"" . $route_template . "\"", "light_green")
+						]);
 					}
 				}
 			}
