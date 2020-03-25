@@ -22,10 +22,19 @@ class home extends OController{
 	 * Página de un usuario
 	 */
 	function user($req){
-		$user = $this->user_service->getUser($req['id']);
+		$user = $this->user_service->getUser($req['params']['id']);
 		$list = $this->photo_service->getPhotos($user->get('id'));
 
 		$this->getTemplate()->add('name', $user->get('user'));
 		$this->getTemplate()->addPartial('photo_list', 'home/photo_list', ['list'=>$list]);
+	}
+
+	/**
+	 * Página de pruebas para filtros
+	 */
+	function filter($req){
+		echo '<pre>';
+		var_dump($req);
+		echo '</pre>';
 	}
 }
