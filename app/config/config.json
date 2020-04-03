@@ -9,7 +9,7 @@
 		"prefix": "ofw",
 		"url": ".osumi.es"
 	},
-	"log_level": "DEBUG",
+	"log_level": "ALL",
 	"base_url": "https://dev.osumi.es/",
 	"admin_email": "igorosabel@osumi.es",
 	"default_title": "Osumi Framework Dev",
