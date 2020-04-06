@@ -4,8 +4,8 @@ class home extends OController{
 	private $photo_service;
 
 	function __construct(){
-		$this->user_service  = new userService($this);
-		$this->photo_service = new photoService($this);
+		$this->user_service  = new userService();
+		$this->photo_service = new photoService();
 	}
 
 	/*
