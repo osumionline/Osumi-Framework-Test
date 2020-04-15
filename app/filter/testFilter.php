@@ -1,13 +1,13 @@
 <?php
-	/*
-	 * Filtro de prueba
-	 */
-	function testFilter($params, $headers){
-		global $c;
-		$ret = ['status'=>'error', 'data'=>null];
+/*
+ * Filtro de prueba
+ */
+function testFilter($params, $headers) {
+	global $c;
+	$ret = ['status'=>'error', 'data'=>null];
 
-		$ret['status'] = 'ok';
-		$ret['id'] = 33;
+	$ret['status'] = 'ok';
+	$ret['id'] = 33;
 
-		return $ret;
-	}
+	return $ret;
+}
