@@ -1,6 +1,30 @@
 {
-	"version": "5.3.0",
+	"version": "5.3.3",
 	"updates": {
+		"5.3.3": {
+			"message": "5.3.3 - Corrección en ODB",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/core/version.json",
+				"ofw/core/ODB.php"
+			]
+		},
+		"5.3.2": {
+			"message": "5.3.2 - Corrección en OTemplate",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/core/version.json",
+				"ofw/core/OTemplate.php"
+			]
+		},
+		"5.3.1": {
+			"message": "5.3.1 - Corrección en OConfig",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/core/version.json",
+				"ofw/core/OConfig.php"
+			]
+		},
 		"5.3.0": {
 			"message": "5.3.0 - Refactorización y tipado fuerte",
 			"files": [

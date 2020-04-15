@@ -1,6 +1,18 @@
 CHANGELOG
 =========
 
+## `5.3.3` (15/04/2020)
+
+Corrección en `ODB`. Nueva corrección por problemas de tipado.
+
+## `5.3.2` (15/04/2020)
+
+Corrección en `OTemplate`. Nueva corrección por problemas de tipado.
+
+## `5.3.1` (15/04/2020)
+
+Corrección en `OConfig`. Gracias al tipado fuerte aparecen errores que antes no se veían.
+
 ## `5.3.0` (15/04/2020)
 
 ¡Tipado fuerte en todo el Framework!
