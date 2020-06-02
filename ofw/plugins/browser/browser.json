@@ -1,0 +1,19 @@
+{
+  "file_name": "OBrowser.php",
+  "version": "1.1.0",
+  "description": "Clase para obtener datos del navegador del usuario (plataforma, navegador, versión...).",
+  "updates": {
+		"1.1.0": {
+			"message": "1.1.0 - Añado tipado fuerte (NOTA: el plugin está bastante desfasado, probablemente deje de actualizarlo en breve)",
+			"files": [
+				"OBrowser.php"
+			]
+		},
+		"1.0.0": {
+      "message": "1.0.0 - Versión inicial del plugin OBrowser",
+      "files": [
+        "OBrowser.php"
+      ]
+    }
+  }
+}

@@ -44,7 +44,19 @@ class emailTask {
 		}
 	}
 
-	private function sendWelcome(): void {}
+	private function sendWelcome(): void {
+		echo "\n\n";
+		echo "welcome\n";
+		echo "\n\n";
+		$em = new OEmail();
+		$em->addRecipient('inigo.gorosabel@gmail.com');
+		$em->setSubject('prueba');
+		$em->setMessage('contenido<br><strong>hola!</strong>');
+		$em->setFrom('prueba@osumi.es', 'Nombre Prueba');
+		$em->setIsHtml(true);
+		$em->addAttachment('/var/www/vhosts/osumi.es/dev.osumi.es/web/photo/2.jpg');
+		$em->send();
+	}
 
 	private function sendLostPassword(): void {}
 
