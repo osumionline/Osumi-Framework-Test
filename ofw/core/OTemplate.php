@@ -258,10 +258,9 @@ class OTemplate {
 	 */
 	public function addPartial(string $where, string $name, array $values=[]): void {
 		$partial_file = $this->templates_dir.'partials/'.$name.'.php';
-		if (file_exists($partial_file)) {
-			$output = OTools::getPartial($partial_file, $values);
-		}
-		else {
+		$output = OTools::getPartial($partial_file, $values);
+
+		if (is_null($output)) {
 			$output = 'ERROR: No existe el archivo '.$name;
 		}
 		$this->add($where, $output, array_key_exists('extra', $values) ? $values['extra'] : null);

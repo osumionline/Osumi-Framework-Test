@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-class emailTask {
+class emailTask extends OTask {
 	public function __toString() {
 		return "email: Función para enviar emails de prueba";
 	}
