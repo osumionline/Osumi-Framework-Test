@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 /**
- * OController - Base class for the controller classes providing access to the framework configuration, database, template, logs, session or cookies
+ * OModule - Base class for the module classes providing access to the framework configuration, database, template, logs, session or cookies
  */
-class OController {
+class OModule {
 	protected ?OConfig   $config   = null;
 	protected ?ODB       $db       = null;
 	protected ?OTemplate $template = null;
@@ -11,13 +11,13 @@ class OController {
 	protected ?OCookie   $cookie   = null;
 
 	/**
-	 * Load matched URL configuration value into the controller
+	 * Load matched URL configuration value into the module
 	 *
 	 * @param array $url_result Configuration array as in urls.json
 	 *
 	 * @return void
 	 */
-	public final function loadController(array $url_result): void {
+	public final function loadModule(array $url_result): void {
 		global $core;
 
 		$this->config   = $core->config;
@@ -59,7 +59,7 @@ class OController {
 	}
 
 	/**
-	 * Get access to the controllers template via a template configuration class object
+	 * Get access to the module's template via a template configuration class object
 	 *
 	 * @return OTemplate Template configuration class object
 	 */
