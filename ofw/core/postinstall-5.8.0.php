@@ -120,7 +120,7 @@ class OPostInstall {
 	 *
 	 * @return string
 	 */
-	public function run(): void {
+	public function run(): string {
 		$ret = '';
 		$ret .= $this->messages[$this->config->getLang()]['TITLE'];
 
