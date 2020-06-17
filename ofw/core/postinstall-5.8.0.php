@@ -69,7 +69,7 @@ class OPostInstall {
 	 *
 	 * @return string Information about the process
 	 */
-	private function updateController(string $controller): void {
+	private function updateController(string $controller): string {
 		$ret = '';
 		$path = $this->controller_path.'/'.$controller.'.php';
 
