@@ -8,7 +8,7 @@ class OPostInstall {
 	private array    $messages = [
 		'es' => [
 					'TITLE'                             => "\n\nPOST INSTALL 5.8.0\n\n",
-					'NEW_MODULE_FOLDER'                 => "  Nueva carpeta para módulos.\n",
+					'NEW_MODULES_FOLDER'                => "  Nueva carpeta para módulos.\n",
 					'DELETE_CONTROLLER_FOLDER'          => "  Carpeta controllers borrada.\n",
 					'MODULES_UPDATING'                  => "  Actualizando módulos...\n",
 					'CONTROLLER_UPDATED'                => "    Controller actualizado para que use OModule.\n",
@@ -21,15 +21,15 @@ class OPostInstall {
 				],
 		'en' => [
 					'TITLE'                             => "\n\nPOST INSTALL 5.8.0\n\n",
-					'NEW_MODULE_FOLDER'                 => "  New module folder.\n",
+					'NEW_MODULES_FOLDER'                => "  New module folder.\n",
 					'DELETE_CONTROLLER_FOLDER'          => "  Controllers folder deleted.\n",
 					'MODULES_UPDATING'                  => "  Updating modules...\n",
 					'CONTROLLER_UPDATED'                => "    Controller updated to use OModule.\n",
-					'NEW_MODULE_FOLDER'                 => "    Nueva carpeta para el módulo: \"%s\".\n",
-					'NEW_MODULE_TEMPLATE_FOLDER'        => "    Nueva carpeta para templates en el módulo: \"%s\".\n",
-					'MOVE_MODULE_CONTROLLER'            => "    Controller movido a carpeta de módulo: \"%s\" -> \"%s\".\n",
-					'MOVE_TEMPLATE_FILE'                => "    Archivo de template movido a carpeta de módulo: \"%s\" -> \"%s\".\n",
-					'DELETE_CONTROLLER_TEMPLATE_FOLDER' => "    Carpeta de template antigua borrada: \"%s\".\n\n",
+					'NEW_MODULE_FOLDER'                 => "    New module folder: \"%s\".\n",
+					'NEW_MODULE_TEMPLATE_FOLDER'        => "    New folder for templates in the module: \"%s\".\n",
+					'MOVE_MODULE_CONTROLLER'            => "    Controller moved to module folder: \"%s\" -> \"%s\".\n",
+					'MOVE_TEMPLATE_FILE'                => "    Template file moved to module folder: \"%s\" -> \"%s\".\n",
+					'DELETE_CONTROLLER_TEMPLATE_FOLDER' => "    Old template folder deleted: \"%s\".\n\n",
 					'END_TITLE'                         => "\n\nPOST INSTALL 5.8.0 finished.\n\n"
 				]
 	];
@@ -95,7 +95,7 @@ class OPostInstall {
 		rename($path, $new_module_path.'/'.$controller.'.php');
 
 		// Muevo cada archivo de template que tuviese en app/template
-		$controller_template_path = $this->template_path.'/'.$controller;
+		$controller_template_path = $this->template_path.$controller;
 		if (file_exists($controller_template_path)) {
 			if ($model = opendir($controller_template_path)) {
 				while (false !== ($entry = readdir($model))) {
@@ -124,7 +124,7 @@ class OPostInstall {
 		$ret = '';
 		$ret .= $this->messages[$this->config->getLang()]['TITLE'];
 
-		$ret .= $this->messages[$this->config->getLang()]['NEW_MODULE_FOLDER'];
+		$ret .= $this->messages[$this->config->getLang()]['NEW_MODULES_FOLDER'];
 		mkdir($this->module_path);
 
 		$ret .= $this->messages[$this->config->getLang()]['MODULES_UPDATING'];
