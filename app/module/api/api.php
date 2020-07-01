@@ -1,4 +1,10 @@
 <?php declare(strict_types=1);
+/**
+ * Módulo API de prueba
+ *
+ * @type json
+ * @prefix /api
+ */
 class api extends OModule {
 	private ?userService $user_service;
 
@@ -9,8 +15,8 @@ class api extends OModule {
 	/**
 	 * Función para obtener la fecha
 	 *
+	 * @url /getDate
 	 * @param ORequest $req Request object with method, headers, parameters and filters used
-	 *
 	 * @return void
 	 */
 	function getDate(ORequest $req): void {

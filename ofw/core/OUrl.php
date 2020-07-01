@@ -32,7 +32,7 @@ class OUrl {
 	 */
 	public function loadUrls(): array {
 		global $core;
-		$urls_cache_file = $core->config->getDir('app_cache').'urls.cache.json';
+		$urls_cache_file = $core->config->getDir('ofw_cache').'urls.cache.json';
 
 		// If it doesn't exist, generate it
 		if (!file_exists($urls_cache_file)){
@@ -103,7 +103,6 @@ class OUrl {
 		$found = false;
 		$i     = 0;
 		$ret   = [
-			'id'      => '',
 			'module'  => '',
 			'action'  => '',
 			'type'    => 'html',
@@ -115,7 +114,7 @@ class OUrl {
 		];
 
 		// Include Symfony routing
-		require_once($this->routing_dir.'sfRoute.class.php');
+		require_once $this->routing_dir.'sfRoute.class.php';
 		while (!$found && $i<count($this->urls)) {
 			$route = new sfRoute($this->urls[$i]['url']);
 			$chk = $route->matchesUrl($this->check_url);
@@ -123,7 +122,6 @@ class OUrl {
 			// If there is a match, return urls.json values plus the parameters in the route
 			if ($chk !== false) {
 				$found         = true;
-				$ret['id']     = $this->urls[$i]['id'];
 				$ret['module'] = $this->urls[$i]['module'];
 				$ret['action'] = $this->urls[$i]['action'];
 				$ret['res']    = true;

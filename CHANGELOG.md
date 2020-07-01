@@ -1,6 +1,22 @@
 CHANGELOG
 =========
 
+## `6.0.0` (30/06/2020)
+
+¡Nueva versión 6.0!
+
+Esta es una nueva versión mayor por que introduce cambios que rompen la estructura  y la filosofía de URLs actual.
+
+Esta nueva versión tiene tres puntos principales:
+
+* Nuevo sistema de URLs
+* Menos archivos de configuración
+* Nueva tarea `add`
+
+#### Nuevo sistema de URLs
+
+
+
 ## `5.8.0` (16/06/2020)
 
 Reestructuración en carpetas de módulos/acciones para unificar sintaxis. Hasta ahora, el archivo `urls.json` hacía referencia a módulos y acciones, al crear nuevas funciones se hablaba de módulos y acciones... pero luego el código se guardaba en la carpeta `controller` y las clases de esa carpeta heredaban la clase `OController`.

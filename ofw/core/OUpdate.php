@@ -300,7 +300,12 @@ class OUpdate {
 					$ret .= "\n  ".OTools::getMessage('TASK_UPDATE_DELETE_BACKUPS');
 					foreach ($backups as $backup) {
 						if (!is_null($backup['backup']) && file_exists($backup['backup'])){
-							unlink($backup['backup']);
+							if (is_file($backup['backup'])) {
+								unlink($backup['backup']);
+							}
+							if (is_dir($backup['backup'])) {
+								rmdir($backup['backup']);
+							}
 						}
 					}
 				}

@@ -11,8 +11,8 @@ class home extends OModule {
 	/**
 	 * Página de inicio
 	 *
+	 * @url /
 	 * @param ORequest $req Request object with method, headers, parameters and filters used
-	 *
 	 * @return void
 	 */
 	function start(ORequest $req): void {
@@ -25,8 +25,8 @@ class home extends OModule {
 	/**
 	 * Página de un usuario
 	 *
+	 * @url /user/:id
 	 * @param ORequest $req Request object with method, headers, parameters and filters used
-	 *
 	 * @return void
 	 */
 	function user(ORequest $req): void {
@@ -40,8 +40,9 @@ class home extends OModule {
 	/**
 	 * Página de pruebas para filtros
 	 *
+	 * @url /filter
+	 * @filter testFilter
 	 * @param ORequest $req Request object with method, headers, parameters and filters used
-	 *
 	 * @return void
 	 */
 	function filter(ORequest $req): void {
