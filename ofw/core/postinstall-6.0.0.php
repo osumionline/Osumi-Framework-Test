@@ -53,33 +53,35 @@ $l = new OLog();
 		$module_file = $this->config->getDir('app_module').$url['module'].'/'.$url['module'].'.php';
 		$module_content = file_get_contents($module_file);
 		$module_options = [];
-$l->debug('URL: '.$url);
+$l->debug('56 - URL: ');
+$l->debug(var_export($url));
 		foreach ($url as $option => $value) {
 			if ($option!='id' && $option!='urls') {
 				$module_options[$option] = $value;
 			}
 		}
 $l->debug(var_export($module_options, true));
+$l->debug('64 - COUNT OPTIONS: '.count($module_options));
 		if (count($module_options)>0) {
-$l->debug("DOC MODULE");
+$l->debug("66 - DOC MODULE");
 			$docblock = $this->generateModuleDoc($module_options);
 			$ind = stripos($module_content, 'class '.$url['module']);
-$l->debug("IND: ".$ind);
+$l->debug("69 - IND: ".$ind);
 			$module_content = substr($module_content, 0, $ind) . $docblock . substr($module_content, $ind);
 		}
-
+$l->debug('72 - NUM URLS: '.count($url['urls']));
 		foreach ($url['urls'] as $action_options) {
 			$action = $action_options['action'];
-$l->debug('ACTION: '.$action);
+$l->debug('75 - ACTION: '.$action);
 			unset($action_options['id']);
 			unset($action_options['action']);
 $l->debug(var_export($action_options, true));
 			$docblock = $this->generateActionDoc($action_options);
 			$ind = stripos($module_content, 'public function '.$action);
-$l->debug('IND: '.$ind);
+$l->debug('81 - IND: '.$ind);
 			$partial_content = substr($module_content, 0, $ind);
-			$doc_ind = strripos($module_content, '/**');
-$l->debug('DOC IND: '.$doc_ind);
+			$doc_ind = strripos($module_content, "/**");
+$l->debug('84 - DOC IND: '.$doc_ind);
 			$module_content = substr($module_content, 0, $doc_ind) . $docblock . substr($module_content, $ind);
 		}
 
