@@ -18,6 +18,7 @@ class OPostInstall {
 	 * @return string Properly formatted documentation block
 	 */
 	private function generateModuleDoc(array $options): string {
+		unset($options['module']);
 		$str = "/**\n";
 		foreach ($options as $key => $value) {
 			$str .= " * @".$key." ".$value."\n";
@@ -64,7 +65,7 @@ class OPostInstall {
 			$module_content = substr($module_content, 0, $ind) . $docblock . substr($module_content, $ind);
 		}
 
-		foreach ($url['urls'] as $action_options) {
+		/*foreach ($url['urls'] as $action_options) {
 			$action = $action_options['action'];
 			unset($action_options['id']);
 			unset($action_options['action']);
@@ -73,7 +74,7 @@ class OPostInstall {
 			$partial_content = substr($module_content, 0, $ind);
 			$doc_ind = strripos($module_content, '/**');
 			$module_content = substr($module_content, 0, $doc_ind) . $docblock . substr($module_content, $ind);
-		}
+		}*/
 
 		file_put_contents($module_file, $module_content);
 	}
