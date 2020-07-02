@@ -49,31 +49,37 @@ class OPostInstall {
 	}
 
 	private function processUrl(array $url): void {
+$l = new OLog();
 		$module_file = $this->config->getDir('app_module').$url['module'].'/'.$url['module'].'.php';
 		$module_content = file_get_contents($module_file);
 		$module_options = [];
-
+$l->debug('URL: '.$url);
 		foreach ($url as $option => $value) {
 			if ($option!='id' && $option!='urls') {
 				$module_options[$option] = $value;
 			}
 		}
-var_dump($options);
+$l->debug(var_export($module_options, true));
 		if (count($module_options)>0) {
-echo "DOC MODULE\n";
+$l->debug("DOC MODULE");
 			$docblock = $this->generateModuleDoc($module_options);
 			$ind = stripos($module_content, 'class '.$url['module']);
+$l->debug("IND: ".$ind);
 			$module_content = substr($module_content, 0, $ind) . $docblock . substr($module_content, $ind);
 		}
 
-		/*foreach ($url['urls'] as $action_options) {
+		foreach ($url['urls'] as $action_options) {
 			$action = $action_options['action'];
+$l->debug('ACTION: '.$action);
 			unset($action_options['id']);
 			unset($action_options['action']);
+$l->debug(var_export($action_options, true));
 			$docblock = $this->generateActionDoc($action_options);
 			$ind = stripos($module_content, 'public function '.$action);
+$l->debug('IND: '.$ind);
 			$partial_content = substr($module_content, 0, $ind);
 			$doc_ind = strripos($module_content, '/**');
+$l->debug('DOC IND: '.$doc_ind);
 			$module_content = substr($module_content, 0, $doc_ind) . $docblock . substr($module_content, $ind);
 		}*/
 
