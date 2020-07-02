@@ -15,7 +15,7 @@ class home extends OModule {
 	 * @param ORequest $req Request object with method, headers, parameters and filters used
 	 * @return void
 	 */
-	function start(ORequest $req): void {
+	public function start(ORequest $req): void {
 		$users = $this->user_service->getUsers();
 
 		$this->getTemplate()->add('date', $this->user_service->getLastUpdate());
@@ -29,7 +29,7 @@ class home extends OModule {
 	 * @param ORequest $req Request object with method, headers, parameters and filters used
 	 * @return void
 	 */
-	function user(ORequest $req): void {
+	public function user(ORequest $req): void {
 		$user = $this->user_service->getUser($req->getParamInt('id'));
 		$list = $this->photo_service->getPhotos($user->get('id'));
 
@@ -45,7 +45,7 @@ class home extends OModule {
 	 * @param ORequest $req Request object with method, headers, parameters and filters used
 	 * @return void
 	 */
-	function filter(ORequest $req): void {
+	public function filter(ORequest $req): void {
 		echo '<pre>';
 		var_dump($req);
 		echo '</pre>';

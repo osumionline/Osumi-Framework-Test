@@ -468,7 +468,7 @@ class OTools {
 
 		return self::updateControllers($silent);
 	}
-	
+
 	public static function getModuleDocumentation(string $module): ?string {
 		global $core;
 
@@ -711,7 +711,7 @@ class OTools {
 		$str_action .= "	 * @param ORequest $"."req Request object with method, headers, parameters and filters used\n";
 		$str_action .= "	 * @return void\n";
 		$str_action .= "	 */\n";
-		$str_action .= "	function ".$action."(ORequest $"."req): void {}\n";
+		$str_action .= "	public function ".$action."(ORequest $"."req): void {}\n";
 		$str_action .= "}";
 
 		file_put_contents($module_file, $module_content.$str_action);
@@ -836,7 +836,7 @@ class OTools {
 						$colors->getColoredString($route_templates, 'light_green')
 					])."\n";
 				}
-				
+
 			}
 
 			$status = self::addAction($url['module'], $url['action'], $url['url'], $url['type']);

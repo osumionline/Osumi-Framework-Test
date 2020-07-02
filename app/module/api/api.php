@@ -19,7 +19,7 @@ class api extends OModule {
 	 * @param ORequest $req Request object with method, headers, parameters and filters used
 	 * @return void
 	 */
-	function getDate(ORequest $req): void {
+	public function getDate(ORequest $req): void {
 		$this->getTemplate()->add('date', $this->user_service->getLastUpdate());
 	}
 }

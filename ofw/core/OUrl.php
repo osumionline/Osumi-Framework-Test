@@ -151,7 +151,9 @@ class OUrl {
 	/**
 	 * Static method to generate a URL for a user configured URL
 	 *
-	 * @param string $id Id of the URL in the urls.json file
+	 * @param string $module Module of the action
+	 *
+	 * @param string $action Action whose url has to be generated
 	 *
 	 * @param array $params Array of parameters to build the URL in case of a dynamic URL (eg /user/:id/:slug -> /user/1/igorosabel)
 	 *
@@ -159,7 +161,7 @@ class OUrl {
 	 *
 	 * @return string Generated URL with given parameters
 	 */
-	public static function generateUrl(string $id, array $params=[], bool $absolute=false): string {
+	public static function generateUrl(string $module, string $action, array $params=[], bool $absolute=false): string {
 		// Load URLs, as it's a static method it won't go through the constructor
 		global $core;
 		$urls = self::loadUrls();
@@ -169,17 +171,14 @@ class OUrl {
 		$url = '';
 
 		while (!$found && $i<count($urls)) {
-			if ($urls[$i]['id'] == $id) {
+			if ($urls[$i]['module']==$module && $urls[$i]['action']==$action) {
 				$url = $urls[$i]['url'];
 				$found = true;
 			}
 			$i++;
 		}
 
-		if (!$found) {
-			$url = '';
-		}
-		else {
+		if ($found) {
 			foreach ($params as $key => $value) {
 				$url = str_replace(':'.$key, $value, $url);
 			}

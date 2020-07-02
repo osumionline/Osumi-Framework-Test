@@ -332,6 +332,7 @@ class OConfig {
 		$this->setDir('app_service',    $bd.'app/service/');
 		$this->setDir('app_template',   $bd.'app/template/');
 		$this->setDir('app_task',       $bd.'app/task/');
+		$this->setDir('ofw',            $bd.'ofw/');
 		$this->setDir('ofw_cache',      $bd.'ofw/cache/');
 		$this->setDir('ofw_core',       $bd.'ofw/core/');
 		$this->setDir('ofw_lib',        $bd.'ofw/lib/');
