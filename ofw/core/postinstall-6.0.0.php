@@ -56,7 +56,7 @@ $l = new OLog();
 $l->debug('56 - URL: ');
 $l->debug(var_export($url, true));
 		foreach ($url as $option => $value) {
-			if ($option!='id' && $option!='urls') {
+			if ($option!='id' && $option!='urls' && $option!='module') {
 				$module_options[$option] = $value;
 			}
 		}
