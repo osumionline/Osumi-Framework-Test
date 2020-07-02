@@ -48,7 +48,7 @@ class OPostInstall {
 	}
 
 	private function processUrl(array $url): void {
-		$module_file = $this->config->getDir('app_module').$url['module'].'.php';
+		$module_file = $this->config->getDir('app_module').$url['module'].'/'.$url['module'].'.php';
 		$module_content = file_get_contents($module_file);
 		$module_options = [];
 
