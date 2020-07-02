@@ -81,7 +81,7 @@ $l->debug('IND: '.$ind);
 			$doc_ind = strripos($module_content, '/**');
 $l->debug('DOC IND: '.$doc_ind);
 			$module_content = substr($module_content, 0, $doc_ind) . $docblock . substr($module_content, $ind);
-		}*/
+		}
 
 		file_put_contents($module_file, $module_content);
 	}
