@@ -58,8 +58,9 @@ class OPostInstall {
 				$module_options[$option] = $value;
 			}
 		}
-
+var_dump($options);
 		if (count($module_options)>0) {
+echo "DOC MODULE\n";
 			$docblock = $this->generateModuleDoc($module_options);
 			$ind = stripos($module_content, 'class '.$url['module']);
 			$module_content = substr($module_content, 0, $ind) . $docblock . substr($module_content, $ind);
