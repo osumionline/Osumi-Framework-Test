@@ -34,7 +34,7 @@ class OPostInstall {
 	 * @return string Properly formatted documentation block
 	 */
 	private function generateActionDoc(array $options): string {
-		$str .= "/**\n";
+		$str = "/**\n";
 		$str .= " * ".$options['comment']."\n";
 		unset($options['comment']);
 		$str .= " *\n";
@@ -84,6 +84,8 @@ class OPostInstall {
 	 * @return string
 	 */
 	public function run(): string {
+		$ret = 'ok';
+
 		// Move cache folder from app to ofw
 		$source = $this->config->getDir('app').'cache';
 		$destination = $this->config->getDir('base').'ofw/cache';
@@ -95,5 +97,7 @@ class OPostInstall {
 		foreach ($urls['urls'] as $url) {
 			$this->processUrl($url);
 		}
+
+		return $ret;
 	}
 }
