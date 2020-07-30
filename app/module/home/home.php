@@ -9,7 +9,7 @@ class home extends OModule {
 	}
 
 	/**
-	 * Página de inicio
+	 * Start page
 	 *
 	 * @url /
 	 * @param ORequest $req Request object with method, headers, parameters and filters used
@@ -23,7 +23,7 @@ class home extends OModule {
 	}
 
 	/**
-	 * Página de un usuario
+	 * User's page
 	 *
 	 * @url /user/:id
 	 * @param ORequest $req Request object with method, headers, parameters and filters used
@@ -38,7 +38,7 @@ class home extends OModule {
 	}
 
 	/**
-	 * Página de pruebas para filtros
+	 * Test page for filters
 	 *
 	 * @url /filter
 	 * @filter testFilter

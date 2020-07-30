@@ -1,23 +1,26 @@
 <?php declare(strict_types=1);
 class Tag extends OModel {
+	/**
+	 * Configures current model object based on data-base table structure
+	 */
 	function __construct() {
 		$table_name  = 'tag';
 		$model = [
 			'id' => [
 				'type'    => OCore::PK,
-				'comment' => 'Unique id for each tag'
+				'comment' => 'Unique Id for each tag'
 			],
 			'name' => [
 				'type'     => OCore::TEXT,
 				'size'     => 20,
 				'nullable' => false,
-				'comment'  => 'Tags name'
+				'comment'  => 'Tag name'
 			],
 			'id_user' => [
 				'type'     => OCore::NUM,
 				'nullable' => true,
 				'default'  => null,
-				'comment'  => 'User id',
+				'comment'  => 'User Id',
 				'ref'      => 'user.id'
 			],
 			'created_at' => [
@@ -26,13 +29,16 @@ class Tag extends OModel {
 			],
 			'updated_at' => [
 				'type'    => OCore::UPDATED,
-				'comment' => 'Registers last update date'
+				'comment' => 'Last date register was modified'
 			]
 		];
 
 		parent::load($table_name, $model);
 	}
 
+	/**
+	 * Get tag's name
+	 */
 	public function __toString() {
 		return $this->get('name');
 	}
