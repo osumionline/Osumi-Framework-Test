@@ -2,7 +2,9 @@
 	<ul class="photos">
 <?php foreach ($values['list'] as $photo): ?>
 		<li>
-			<img src="/photo/<?php echo $photo ?>">
+			<a href="<?php echo $photo->get('url') ?>" rel="noreferrer" target="_blank">
+				<img src="/photo/<?php echo $photo ?>" alt="<?php echo $photo->get('alt') ?>">
+			</a>
 			<p>
 				Tags: <?php echo implode(', ', $photo->getTags()) ?>
 			</p>
@@ -10,5 +12,5 @@
 <?php endforeach ?>
 	</ul>
 <?php else: ?>
-	El usuario todavía no tiene ninguna foto.
+	User doesn't have any photos, yet.
 <?php endif ?>

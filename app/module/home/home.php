@@ -19,7 +19,7 @@ class home extends OModule {
 		$users = $this->user_service->getUsers();
 
 		$this->getTemplate()->add('date', $this->user_service->getLastUpdate());
-		$this->getTemplate()->addPartial('users', 'home/users', ['users' => $users]);
+		$this->getTemplate()->addComponent('users', 'home/users', ['users' => $users]);
 	}
 
 	/**
@@ -34,7 +34,7 @@ class home extends OModule {
 		$list = $this->photo_service->getPhotos($user->get('id'));
 
 		$this->getTemplate()->add('name', $user->get('user'));
-		$this->getTemplate()->addPartial('photo_list', 'home/photo_list', ['list'=>$list]);
+		$this->getTemplate()->addComponent('photo_list', 'home/photo_list', ['list'=>$list]);
 	}
 
 	/**

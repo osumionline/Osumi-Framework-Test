@@ -5,28 +5,28 @@ class Tag extends OModel {
 		$model = [
 			'id' => [
 				'type'    => OCore::PK,
-				'comment' => 'Id único de cada tag'
+				'comment' => 'Unique id for each tag'
 			],
 			'name' => [
 				'type'     => OCore::TEXT,
 				'size'     => 20,
 				'nullable' => false,
-				'comment'  => 'Nombre de la tag'
+				'comment'  => 'Tags name'
 			],
 			'id_user' => [
 				'type'     => OCore::NUM,
 				'nullable' => true,
 				'default'  => null,
-				'comment'  => 'Id del usuario',
+				'comment'  => 'User id',
 				'ref'      => 'user.id'
 			],
 			'created_at' => [
 				'type'    => OCore::CREATED,
-				'comment' => 'Fecha de creación del registro'
+				'comment' => 'Register creation date'
 			],
 			'updated_at' => [
 				'type'    => OCore::UPDATED,
-				'comment' => 'Fecha de última modificación del registro'
+				'comment' => 'Registers last update date'
 			]
 		];
 

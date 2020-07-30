@@ -24,6 +24,6 @@
 	},
 	"libs": ["another/library"],
 	"dir": {
-		"test": "{{app_controller}}test/"
+		"test": "{{web}}test/"
 	}
 }

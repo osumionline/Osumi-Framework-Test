@@ -5,25 +5,35 @@ class Photo extends OModel {
 		$model = [
 			'id' => [
 				'type'    => OCore::PK,
-				'comment' => 'Id único de cada foto'
+				'comment' => 'Unique id for each photo'
 			],
 			'id_user' => [
 				'type'    => OCore::NUM,
-				'comment' => 'Id del usuario',
+				'comment' => 'User id',
 				'ref'     => 'user.id'
 			],
 			'ext' => [
 				'type'    => OCore::TEXT,
 				'size'    => 5,
-				'comment' => 'Extensión de la foto'
+				'comment' => 'Photo file extension'
+			],
+			'alt' => [
+				'type'    => OCore::TEXT,
+				'size'    => 100,
+				'comment' => 'alt text for the photo'
+			],
+			'url' => [
+				'type'    => OCore::TEXT,
+				'size'    => 100,
+				'comment' => 'URL for the photo'
 			],
 			'created_at' => [
 				'type'    => OCore::CREATED,
-				'comment' => 'Fecha de creación del registro'
+				'comment' => 'Register creation date'
 			],
 			'updated_at' => [
 				'type'    => OCore::UPDATED,
-				'comment' => 'Fecha de última modificación del registro'
+				'comment' => 'Registers last update date'
 			]
 		];
 

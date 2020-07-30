@@ -5,17 +5,17 @@ class PhotoTag extends OModel {
 		$model = [
 			'id_photo' => [
 				'type'    => OCore::PK,
-				'comment' => 'Id de la foto',
+				'comment' => 'Photo id',
 				'ref'     => 'photo.id'
 			],
 			'id_tag' => [
 				'type'    => OCore::PK,
-				'comment' => 'Id de la tag',
+				'comment' => 'Tag id',
 				'ref'     => 'tag.id'
 			],
 			'created_at' => [
 				'type'    => OCore::CREATED,
-				'comment' => 'Fecha de creación del registro'
+				'comment' => 'Register creation date'
 			]
 		];
 
