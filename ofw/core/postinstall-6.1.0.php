@@ -13,7 +13,7 @@ class OPostInstall {
 			'DELETE_PARTIALS_FOLDER' => "  Carpeta partials borrada: \"%s\".\n",
 			'DELETE_TEMPLATE_FOLDER' => "  Carpeta template borrada: \"%s\".\n",
 			'UPDATE_MODULES'         => "  Actualizando módulos:\n",
-			'UPDATE_MODULE'          => "    Actualizo módulo \"%s\".\n",
+			'UPDATE_MODULE'          => "    Módulo \"%s\" actualizado.\n",
 			'END_TITLE'              => "\nPOST INSTALL 6.1.0 finalizado.\n\n"
 		],
 		'en' => [
@@ -26,7 +26,7 @@ class OPostInstall {
 			'DELETE_PARTIALS_FOLDER' => "  Partials folder deleted: \"%s\".\n",
 			'DELETE_TEMPLATE_FOLDER' => "  Template folder deleted: \"%s\".\n",
 			'UPDATE_MODULES'         => "  Updating modules:\n",
-			'UPDATE_MODULE'          => "    Update module \"%s\".\n",
+			'UPDATE_MODULE'          => "    Module \"%s\" updated.\n",
 			'END_TITLE' => "\nPOST INSTALL 6.1.0 finished.\n\n"
 		]
 	];
