@@ -4,27 +4,31 @@ class OPostInstall {
 	private ?OConfig $config = null;
 	private array    $messages = [
 		'es' => [
-					'TITLE'                  => "\nPOST INSTALL 6.1.0\n\n",
-					'MOVE_LAYOUT_FOLDER'     => "  Carpeta layout reubicada: \"%s\" -> \"%s\".\n",
-					'NEW_COMPONENT_FOLDER'   => "  Nueva carpeta para componentes: \"%s\".\n",
-					'MOVE_PARTIAL_FOLDER'    => "  Nueva carpeta de componentes: \"%s\".\n",
-					'MOVE_PARTIAL'           => "    Partial movido a componente: \"%s\" -> \"%s\".\n",
-					'DELETE_PARTIAL_FOLDER'  => "    Carpeta de partials borrada: \"%s\".\n",
-					'DELETE_PARTIALS_FOLDER' => "  Carpeta partials borrada: \"%s\".\n",
-					'DELETE_TEMPLATE_FOLDER' => "  Carpeta template borrada: \"%s\".\n",
-					'END_TITLE'              => "\nPOST INSTALL 6.1.0 finalizado.\n\n"
-				],
+			'TITLE'                  => "\nPOST INSTALL 6.1.0\n\n",
+			'MOVE_LAYOUT_FOLDER'     => "  Carpeta layout reubicada: \"%s\" -> \"%s\".\n",
+			'NEW_COMPONENT_FOLDER'   => "  Nueva carpeta para componentes: \"%s\".\n",
+			'MOVE_PARTIAL_FOLDER'    => "  Nueva carpeta de componentes: \"%s\".\n",
+			'MOVE_PARTIAL'           => "    Partial movido a componente: \"%s\" -> \"%s\".\n",
+			'DELETE_PARTIAL_FOLDER'  => "    Carpeta de partials borrada: \"%s\".\n",
+			'DELETE_PARTIALS_FOLDER' => "  Carpeta partials borrada: \"%s\".\n",
+			'DELETE_TEMPLATE_FOLDER' => "  Carpeta template borrada: \"%s\".\n",
+			'UPDATE_MODULES'         => "  Actualizando módulos:\n",
+			'UPDATE_MODULE'          => "    Actualizo módulo \"%s\".\n",
+			'END_TITLE'              => "\nPOST INSTALL 6.1.0 finalizado.\n\n"
+		],
 		'en' => [
-					'TITLE'                  => "\n\nPOST INSTALL 6.1.0\n\n",
-					'MOVE_LAYOUT_FOLDER'     => "  Layout folder moved: \"%s\" -> \"%s\".\n",
-					'NEW_COMPONENT_FOLDER'   => "  New component folder: \"%s\".\n",
-					'MOVE_PARTIAL_FOLDER'    => "  New component folder: \"%s\".\n",
-					'MOVE_PARTIAL'           => "    Partial moved to component: \"%s\" -> \"%s\".\n",
-					'DELETE_PARTIAL_FOLDER'  => "    Partials folder deleted: \"%s\".\n",
-					'DELETE_PARTIALS_FOLDER' => "  Partials folder deleted: \"%s\".\n",
-					'DELETE_TEMPLATE_FOLDER' => "  Template folder deleted: \"%s\".\n",
-					'END_TITLE' => "\nPOST INSTALL 6.1.0 finished.\n\n"
-				]
+			'TITLE'                  => "\n\nPOST INSTALL 6.1.0\n\n",
+			'MOVE_LAYOUT_FOLDER'     => "  Layout folder moved: \"%s\" -> \"%s\".\n",
+			'NEW_COMPONENT_FOLDER'   => "  New component folder: \"%s\".\n",
+			'MOVE_PARTIAL_FOLDER'    => "  New component folder: \"%s\".\n",
+			'MOVE_PARTIAL'           => "    Partial moved to component: \"%s\" -> \"%s\".\n",
+			'DELETE_PARTIAL_FOLDER'  => "    Partials folder deleted: \"%s\".\n",
+			'DELETE_PARTIALS_FOLDER' => "  Partials folder deleted: \"%s\".\n",
+			'DELETE_TEMPLATE_FOLDER' => "  Template folder deleted: \"%s\".\n",
+			'UPDATE_MODULES'         => "  Updating modules:\n",
+			'UPDATE_MODULE'          => "    Update module \"%s\".\n",
+			'END_TITLE' => "\nPOST INSTALL 6.1.0 finished.\n\n"
+		]
 	];
 
 	/**
@@ -68,7 +72,7 @@ class OPostInstall {
 			closedir($model);
 		}
 
-		$ret = sprintf($this->messages[$this->config->getLang()]['DELETE_PARTIAL_FOLDER'],
+		$ret .= sprintf($this->messages[$this->config->getLang()]['DELETE_PARTIAL_FOLDER'],
 			$this->colors->getColoredString($partial_path, 'light_green')
 		);
 		rmdir($partial_path);
@@ -126,6 +130,22 @@ class OPostInstall {
 		$ret .= sprintf($this->messages[$this->config->getLang()]['DELETE_TEMPLATE_FOLDER'],
 			$this->colors->getColoredString($template_path, 'light_green')
 		);
+
+		// Update modules
+		$ret .= $this->messages[$this->config->getLang()]['UPDATE_MODULES'];
+		if ($model = opendir($this->config->getDir('app_module'))) {
+			while (false !== ($entry = readdir($model))) {
+				if ($entry != '.' && $entry != '..') {
+					$module_path = $this->config->getDir('app_module').$entry.'/'.$entry.'.php';
+					$module_content = str_ireplace('->addPartial(', '->addComponent(', file_get_contents($module_path));
+					file_put_contents($module_path, $module_content);
+					$ret .= sprintf($this->messages[$this->config->getLang()]['UPDATE_MODULE'],
+						$this->colors->getColoredString($entry, 'light_green')
+					);
+				}
+			}
+			closedir($model);
+		}
 
 		$ret .= $this->messages[$this->config->getLang()]['END_TITLE'];
 
