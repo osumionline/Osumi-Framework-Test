@@ -25,5 +25,6 @@
 	"libs": ["another/library"],
 	"dir": {
 		"test": "{{web}}test/"
-	}
+	},
+	"environment": "dev"
 }
