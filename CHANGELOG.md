@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+## `6.4.0` (25/10/2020)
+
+Nueva función `OTools::getComponent`. Con esta función se puede acceder a los componentes (no a sus estilos o scripts) desde cualquier parte: un service, un task, desde otro componente...
+
+## `6.3.4` (24/10/2020)
+
+Corrección en la función `runTask` de `OTools`. Al llamar desde un módulo a una tarea usando esta función, no se cargaban los objetos auxiliares y la tarea no podía acceder ni a la configuración de la aplicación ni a los logs.
+
 ## `6.3.3` (12/10/2020)
 
 Corrección en `ORequest` para los valores numéricos. La comprobación de valores nulos no era estricta y los valores `0` los devolvía como `null`.

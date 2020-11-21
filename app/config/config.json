@@ -26,5 +26,5 @@
 	"dir": {
 		"test": "{{web}}test/"
 	},
-	"environment": "dev"
+	"environment": "prod"
 }
