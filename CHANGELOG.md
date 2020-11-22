@@ -1,6 +1,18 @@
 CHANGELOG
 =========
 
+## `6.5.1` (21/11/2020)
+
+Si se define un entorno, por ejemplo `prod`, ahora ya no es obligatorio que haya un archivo de configuración para ese entorno.
+
+De este modo se puede definir que una aplicación está en producción y así aprovecharse de la minimización de los resultados de las llamadas JSON.
+
+## `6.5.0` (21/11/2020)
+
+Si el entorno está definido como `prod` (producción), el resultado de las llamas de tipo JSON será minimizado.
+
+Para hacer esto, se ha incluido una nueva función llamada `OTools::minimifyJSON` a la que con pasar cualquier JSON, devuelve el mismo pero minimizado.
+
 ## `6.4.0` (25/10/2020)
 
 Nueva función `OTools::getComponent`. Con esta función se puede acceder a los componentes (no a sus estilos o scripts) desde cualquier parte: un service, un task, desde otro componente...
