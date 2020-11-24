@@ -24,10 +24,13 @@ class userService extends OService {
 		return $list;
 	}
 
-	public function getUser(int $id): User {
+	public function getUser(int $id): ?User {
 		$user = new User();
-		$user->find(['id'=>$id]);
-
-		return $user;
+		if ($user->find(['id' => $id])) {
+			return $user;
+		}
+		else {
+			return null;
+		}
 	}
 }
