@@ -94,7 +94,6 @@
 				"ofw/core/postinstall-6.0.0.php",
 				"ofw/core/postinstall-6.1.0.php",
 				"ofw/core/version.json",
-				"ofw/template/update/update.php",
 				"ofw/lib/routing/sfObjectRoute.class.php",
 				"ofw/lib/routing/sfObjectRouteCollection.class.php",
 				"ofw/lib/routing/sfPatternRouting.class.php",
