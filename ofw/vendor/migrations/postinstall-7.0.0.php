@@ -74,7 +74,7 @@ class OPostInstall {
 			"<?php declare(strict_types=1);\n\nnamespace OsumiFramework\\App\\Module;\n\nuse OsumiFramework\\OFW\\Core\\OModule;\nuse OsumiFramework\\OFW\\Web\\ORequest;\nuse OsumiFramework\\OFW\\Routing\\ORoute;\n",
 			file_get_contents($module_path)
 		);
-		$module_content = $this->addDB($module_content);
+		$module_content .= $this->addDB($module_content);
 		$module_content .= "\n";
 		file_put_contents($module_path, $module_content);
 
@@ -99,7 +99,7 @@ class OPostInstall {
 			"<?php declare(strict_types=1);\n\nnamespace OsumiFramework\\App\\Service;\n\nuse OsumiFramework\\OFW\\Core\\OService;\n",
 			file_get_contents($service_path)
 		);
-		$service_content = $this->addDB($service_content);
+		$service_content .= $this->addDB($service_content);
 		$service_content .= "\n";
 		file_put_contents($service_path, $service_content);
 
@@ -121,10 +121,10 @@ class OPostInstall {
 		$task_path = $this->config->getDir('app_task').$task.'.php';
 		$task_content = str_ireplace(
 			"<?php declare(strict_types=1);\n",
-			"<?php declare(strict_types=1);\n\nnamespace OsumiFramework\\App\\Service;\n\nuse OsumiFramework\\OFW\\Core\\OService;\n",
+			"<?php declare(strict_types=1);\n\nnamespace OsumiFramework\\App\\Task;\n\nuse OsumiFramework\\OFW\\Core\\OTask;\n",
 			file_get_contents($task_path)
 		);
-		$task_content = $this->addDB($task_content);
+		$task_content .= $this->addDB($task_content);
 		$task_content .= "\n";
 		file_put_contents($task_path, $task_content);
 

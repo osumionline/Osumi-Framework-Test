@@ -8,17 +8,20 @@ class ORoute {
 	private ?string $type   = null;
 	private ?string $prefix = null;
 	private ?string $filter = null;
+	private ?string $layout = null;
 
 	function __construct(
 		?string $url    = null,
 		?string $type   = null,
 		?string $prefix = null,
-		?string $filter = null
+		?string $filter = null,
+		?string $layout = null
 	) {
 		$this->url    = $url;
 		$this->type   = $type;
 		$this->prefix = $prefix;
 		$this->filter = $filter;
+		$this->layout = $layout;
 	}
 
 	/**
@@ -55,5 +58,14 @@ class ORoute {
 	 */
 	public function getFilter(): ?string {
 		return $this->filter;
+	}
+
+	/**
+	 * Get method's layout
+	 *
+	 * @return string Method's layout
+	 */
+	public function getLayout(): ?string {
+		return $this->layout;
 	}
 }
