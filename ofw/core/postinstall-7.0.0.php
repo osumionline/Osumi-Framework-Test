@@ -9,8 +9,9 @@ class OPostInstall {
 			'ADD_NAMESPACE_TO_MODULE'  => "  Archivo de módulo actualizado: \"%s\"\n",
 			'ADD_NAMESPACE_TO_SERVICE' => "  Archivo de servicio actualizado: \"%s\"\n",
 			'ADD_NAMESPACE_TO_TASK'    => "  Archivo de tarea actualizado: \"%s\"\n",
-			'CORE_FOLDER_DELETE'       => "  La carpeta \"%s\" no se puede eliminar automaticamente. Por favor, ejecuta el siguiente comando:\n",
+			'CORE_FOLDER_DELETE'       => "  La carpeta \"%s\" no se puede eliminar automaticamente. Por favor, ejecuta el siguiente comando:\n\n",
 			'POST_UPDATE'              => "  El archivo \"%s\" no se puede actualizar automaticamente. Por favor, ejecuta los siguientes comandos:\n\n",
+			'UPDATE_URLS'              => "  Recuerda que ahora debes actualizar las URLs manualmente para usar el nuevo sistema de enrutamientos:\n\n",
 			'END_TITLE'                => "\nPOST INSTALL 7.0.0 finalizado.\n\n"
 		],
 		'en' => [
@@ -19,8 +20,9 @@ class OPostInstall {
 			'ADD_NAMESPACE_TO_MODULE'  => "  Module file updated: \"%s\"\n",
 			'ADD_NAMESPACE_TO_SERVICE' => "  Service file updated: \"%s\"\n",
 			'ADD_NAMESPACE_TO_TASK'    => "  Task file updated: \"%s\"\n",
-			'CORE_FOLDER_DELETE'       => "  Folder \"%s\" cannot be automatically deleted. Please, run the following command:\n",
+			'CORE_FOLDER_DELETE'       => "  Folder \"%s\" cannot be automatically deleted. Please, run the following command:\n\n",
 			'POST_UPDATE'              => "  File \"%s\" could not be updated automatically. Please, run the following commands:\n\n",
+			'UPDATE_URLS'              => "  Remember that you have to update the URLs manually to use the new routing system:\n\n",
 			'END_TITLE'                => "\nPOST INSTALL 7.0.0 finished.\n\n"
 		]
 	];
@@ -171,7 +173,7 @@ class OPostInstall {
 		if (count($db_content) > 0) {
 			$to_be_added = array_merge($to_be_added, $db_content);
 		}
-		return "<?php declare(strict_types=1);\n" . implode("\n", $to_be_added) . "\n". $content;
+		return "<?php declare(strict_types=1);\n" . implode("\n", $to_be_added) . "\n\n". $content;
 	}
 
 	/**
@@ -253,6 +255,18 @@ class OPostInstall {
 
 		$ret .= "    ".$this->colors->getColoredString("rm ofw/template/update/update.php", 'light_green')."\n";
 		$ret .= "    ".$this->colors->getColoredString("mv ofw/template/update/update_7.php ofw/template/update/update.php", 'light_green')."\n";
+
+		$ret .= $this->messages[$this->config->getLang()]['UPDATE_URLS'];
+
+		$ret .= "  /**                                    #[ORoute(\n";
+		$ret .= "   * @prefix /api             ->            prefix: 'api',\n";
+		$ret .= "   * @type json                             type: 'json',\n";
+		$ret .= "   */                                    )]\n\n";
+
+		$ret .= "  /**                                    #[ORoute(\n";
+		$ret .= "   * @url /getUser             ->           '/getUser',\n";
+		$ret .= "   * @filter loginFilter                    filter: 'loginFilter',\n";
+		$ret .= "   */                                    )]\n\n";
 
 		$ret .= $this->messages[$this->config->getLang()]['END_TITLE'];
 
