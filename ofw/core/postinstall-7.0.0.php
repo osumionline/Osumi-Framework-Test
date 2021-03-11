@@ -168,7 +168,7 @@ class OPostInstall {
 			if ($model = opendir($models_path)) {
 				while (false !== ($entry = readdir($model))) {
 					if ($entry != '.' && $entry != '..') {
-echo "MODEL: ".$entry."\n";
+						$entry = str_ireplace(".php", "", $entry);
 						$ret .= $this->addNamespaceToModel($entry);
 						array_push($this->models_list, $entry);
 					}
@@ -176,16 +176,13 @@ echo "MODEL: ".$entry."\n";
 				closedir($model);
 			}
 		}
-echo "\n";
-var_dump($this->models_list);
-echo "\n";
+
 		// Modules
 		$modules_path = $this->config->getDir('app_module');
 		if (file_exists($modules_path)) {
 			if ($module = opendir($modules_path)) {
 				while (false !== ($entry = readdir($module))) {
 					if ($entry != '.' && $entry != '..') {
-echo "MODULE: ".$entry."\n";
 						$ret .= $this->addNamespaceToModule($entry);
 					}
 				}
@@ -199,7 +196,7 @@ echo "MODULE: ".$entry."\n";
 			if ($service = opendir($services_path)) {
 				while (false !== ($entry = readdir($service))) {
 					if ($entry != '.' && $entry != '..') {
-echo "SERVICE: ".$entry."\n";
+						$entry = str_ireplace(".php", "", $entry);
 						$ret .= $this->addNamespaceToService($entry);
 					}
 				}
@@ -213,7 +210,7 @@ echo "SERVICE: ".$entry."\n";
 			if ($task = opendir($tasks_path)) {
 				while (false !== ($entry = readdir($task))) {
 					if ($entry != '.' && $entry != '..') {
-echo "TASK: ".$entry."\n";
+						$entry = str_ireplace(".php", "", $entry);
 						$ret .= $this->addNamespaceToTask($entry);
 					}
 				}
