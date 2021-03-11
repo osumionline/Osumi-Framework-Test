@@ -9,6 +9,7 @@ class OPostInstall {
 			'ADD_NAMESPACE_TO_MODULE'  => "  Archivo de módulo actualizado: \"%s\"\n",
 			'ADD_NAMESPACE_TO_SERVICE' => "  Archivo de servicio actualizado: \"%s\"\n",
 			'ADD_NAMESPACE_TO_TASK'    => "  Archivo de tarea actualizado: \"%s\"\n",
+			'CORE_FOLDER_DELETE'       => "  Carpeta \"%s\" antigua eliminada.\n",
 			'POST_UPDATE'              => "  El archivo \"%s\" no se puede actualizar automaticamente. Por favor, ejecuta los siguientes comandos:\n\n",
 			'END_TITLE'                => "\nPOST INSTALL 7.0.0 finalizado.\n\n"
 		],
@@ -18,6 +19,7 @@ class OPostInstall {
 			'ADD_NAMESPACE_TO_MODULE'  => "  Module file updated: \"%s\"\n",
 			'ADD_NAMESPACE_TO_SERVICE' => "  Service file updated: \"%s\"\n",
 			'ADD_NAMESPACE_TO_TASK'    => "  Task file updated: \"%s\"\n",
+			'CORE_FOLDER_DELETE'       => "  Old \"%s\" folder deleted.\n",
 			'POST_UPDATE'              => "  File \"%s\" could not be updated automatically. Please, run the following commands:\n\n",
 			'END_TITLE'                => "\nPOST INSTALL 7.0.0 finished.\n\n"
 		]
@@ -46,11 +48,13 @@ class OPostInstall {
 		);
 
 		$model_path = $this->config->getDir('app_model').$model.'.php';
+echo "MODEL_PATH: ".$model_path."\n";
 		$model_content = str_ireplace(
 			"<?php declare(strict_types=1);\n",
 			"<?php declare(strict_types=1);\n\nnamespace OsumiFramework\\App\\Model;\n\nuse OsumiFramework\\OFW\\DB\\OModel;\n\n",
 			file_get_contents($model_path)
 		);
+echo "MODEL_CONTENT: \n".$model_content."\n\n";
 		file_put_contents($model_path, $model_content);
 
 		return $ret;
@@ -219,6 +223,11 @@ class OPostInstall {
 				closedir($task);
 			}
 		}
+
+		rmdir($this->config->getDir('ofw_core'));
+		$ret .= sprintf($this->messages[$this->config->getLang()]['CORE_FOLDER_DELETE'],
+			$this->colors->getColoredString("ofw/core", 'light_green')
+		);
 
 		$ret .= sprintf($this->messages[$this->config->getLang()]['POST_UPDATE'],
 			$this->colors->getColoredString("ofw/template/update/update.php", 'light_green')
