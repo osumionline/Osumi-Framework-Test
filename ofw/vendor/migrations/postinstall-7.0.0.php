@@ -4,10 +4,20 @@ class OPostInstall {
 	private ?OConfig $config = null;
 	private array    $messages = [
 		'es' => [
-			'TITLE' => "\nPOST INSTALL 7.0.0\n\n"
+			'TITLE'                    => "\nPOST INSTALL 7.0.0\n\n",
+			'ADD_NAMESPACE_TO_MODEL'   => "  Archivo de modelo actualizado: \"%s\"",
+			'ADD_NAMESPACE_TO_MODULE'  => "  Archivo de módulo actualizado: \"%s\"",
+			'ADD_NAMESPACE_TO_SERVICE' => "  Archivo de servicio actualizado: \"%s\"",
+			'ADD_NAMESPACE_TO_TASK'    => "  Archivo de tarea actualizado: \"%s\"",
+			'END_TITLE'                => "\nPOST INSTALL 7.0.0 finalizado.\n\n"
 		],
 		'en' => [
-			'TITLE' => "\n\nPOST INSTALL 7.0.0\n\n"
+			'TITLE'                    => "\n\nPOST INSTALL 7.0.0\n\n",
+			'ADD_NAMESPACE_TO_MODEL'   => "  Model file updated: \"%s\"",
+			'ADD_NAMESPACE_TO_MODULE'  => "  Module file updated: \"%s\"",
+			'ADD_NAMESPACE_TO_SERVICE' => "  Service file updated: \"%s\"",
+			'ADD_NAMESPACE_TO_TASK'    => "  Task file updated: \"%s\"",
+			'END_TITLE'                => "\nPOST INSTALL 7.0.0 finished.\n\n"
 		]
 	];
 	private array $models_list = [];
@@ -178,7 +188,7 @@ class OPostInstall {
 				closedir($module);
 			}
 		}
-		
+
 		// Services
 		$services_path = $this->config->getDir('app_service');
 		if (file_exists($services_path)) {
@@ -191,7 +201,7 @@ class OPostInstall {
 				closedir($service);
 			}
 		}
-		
+
 		// Tasks
 		$tasks_path = $this->config->getDir('app_task');
 		if (file_exists($tasks_path)) {
@@ -204,5 +214,9 @@ class OPostInstall {
 				closedir($task);
 			}
 		}
+
+		$ret .= $this->messages[$this->config->getLang()]['END_TITLE'];
+
+		return $ret;
 	}
 }
