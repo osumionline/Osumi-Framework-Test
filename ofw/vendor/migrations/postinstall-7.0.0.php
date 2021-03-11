@@ -9,6 +9,7 @@ class OPostInstall {
 			'ADD_NAMESPACE_TO_MODULE'  => "  Archivo de módulo actualizado: \"%s\"",
 			'ADD_NAMESPACE_TO_SERVICE' => "  Archivo de servicio actualizado: \"%s\"",
 			'ADD_NAMESPACE_TO_TASK'    => "  Archivo de tarea actualizado: \"%s\"",
+			'POST_UPDATE'              => "  El archivo \"%s\" no se puede actualizar automaticamente. Por favor, ejecuta el siguiente comando:\n\n",
 			'END_TITLE'                => "\nPOST INSTALL 7.0.0 finalizado.\n\n"
 		],
 		'en' => [
@@ -17,6 +18,7 @@ class OPostInstall {
 			'ADD_NAMESPACE_TO_MODULE'  => "  Module file updated: \"%s\"",
 			'ADD_NAMESPACE_TO_SERVICE' => "  Service file updated: \"%s\"",
 			'ADD_NAMESPACE_TO_TASK'    => "  Task file updated: \"%s\"",
+			'POST_UPDATE'              => "  File \"%s\" could not be updated automatically. Please, run the following command:\n\n",
 			'END_TITLE'                => "\nPOST INSTALL 7.0.0 finished.\n\n"
 		]
 	];
@@ -168,6 +170,7 @@ class OPostInstall {
 			if ($model = opendir($models_path)) {
 				while (false !== ($entry = readdir($model))) {
 					if ($entry != '.' && $entry != '..') {
+						$entry = str_ireplace(".php", "", $entry);
 						$ret .= $this->addNamespaceToModel($entry);
 						array_push($this->models_list, $entry);
 					}
@@ -195,6 +198,7 @@ class OPostInstall {
 			if ($service = opendir($services_path)) {
 				while (false !== ($entry = readdir($service))) {
 					if ($entry != '.' && $entry != '..') {
+						$entry = str_ireplace(".php", "", $entry);
 						$ret .= $this->addNamespaceToService($entry);
 					}
 				}
@@ -208,12 +212,19 @@ class OPostInstall {
 			if ($task = opendir($tasks_path)) {
 				while (false !== ($entry = readdir($task))) {
 					if ($entry != '.' && $entry != '..') {
+						$entry = str_ireplace(".php", "", $entry);
 						$ret .= $this->addNamespaceToTask($entry);
 					}
 				}
 				closedir($task);
 			}
 		}
+
+		$ret .= sprintf($this->messages[$this->config->getLang()]['POST_UPDATE'],
+			$this->colors->getColoredString("ofw/template/update/update.php", 'light_green')
+		);
+
+		$ret .= "    ".$this->colors->getColoredString("mv ofw/template/update/update_7.php ofw/template/update/update.php", 'light_green')."\n\n";
 
 		$ret .= $this->messages[$this->config->getLang()]['END_TITLE'];
 
