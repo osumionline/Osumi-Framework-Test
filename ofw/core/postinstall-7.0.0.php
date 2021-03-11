@@ -254,7 +254,7 @@ class OPostInstall {
 		);
 
 		$ret .= "    ".$this->colors->getColoredString("rm ofw/template/update/update.php", 'light_green')."\n";
-		$ret .= "    ".$this->colors->getColoredString("mv ofw/template/update/update_7.php ofw/template/update/update.php", 'light_green')."\n";
+		$ret .= "    ".$this->colors->getColoredString("mv ofw/template/update/update_7.php ofw/template/update/update.php", 'light_green')."\n\n";
 
 		$ret .= $this->messages[$this->config->getLang()]['UPDATE_URLS'];
 
