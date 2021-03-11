@@ -48,13 +48,14 @@ class OPostInstall {
 		);
 
 		$model_path = $this->config->getDir('app_model').$model.'.php';
-echo "MODEL_PATH: ".$model_path."\n";
+		$model_content = file_get_contents($model_path);
+		$model_content = str_ireplace("\r\n", "\n", $model_content);
 		$model_content = str_ireplace(
 			"<?php declare(strict_types=1);\n",
 			"<?php declare(strict_types=1);\n\nnamespace OsumiFramework\\App\\Model;\n\nuse OsumiFramework\\OFW\\DB\\OModel;\n\n",
-			file_get_contents($model_path)
+			$model_content
 		);
-echo "MODEL_CONTENT: \n".$model_content."\n\n";
+
 		file_put_contents($model_path, $model_content);
 
 		return $ret;
@@ -73,10 +74,12 @@ echo "MODEL_CONTENT: \n".$model_content."\n\n";
 		);
 
 		$module_path = $this->config->getDir('app_module').$module.'/'.$module.'.php';
+		$module_content = file_get_contents($module_path);
+		$module_content = str_ireplace("\r\n", "\n", $module_content);
 		$module_content = str_ireplace(
 			"<?php declare(strict_types=1);\n",
 			"<?php declare(strict_types=1);\n\nnamespace OsumiFramework\\App\\Module;\n\nuse OsumiFramework\\OFW\\Core\\OModule;\nuse OsumiFramework\\OFW\\Web\\ORequest;\nuse OsumiFramework\\OFW\\Routing\\ORoute;\n",
-			file_get_contents($module_path)
+			$module_content
 		);
 		$module_content .= $this->addDB($module_content);
 		$module_content .= "\n";
@@ -98,10 +101,12 @@ echo "MODEL_CONTENT: \n".$model_content."\n\n";
 		);
 
 		$service_path = $this->config->getDir('app_service').$service.'.php';
+		$service_content = file_get_contents($service_path);
+		$service_content = str_ireplace("\r\n", "\n", $service_content);
 		$service_content = str_ireplace(
 			"<?php declare(strict_types=1);\n",
 			"<?php declare(strict_types=1);\n\nnamespace OsumiFramework\\App\\Service;\n\nuse OsumiFramework\\OFW\\Core\\OService;\n",
-			file_get_contents($service_path)
+			$service_content
 		);
 		$service_content .= $this->addDB($service_content);
 		$service_content .= "\n";
@@ -123,10 +128,12 @@ echo "MODEL_CONTENT: \n".$model_content."\n\n";
 		);
 
 		$task_path = $this->config->getDir('app_task').$task.'.php';
+		$task_content = file_get_contents($task_path);
+		$task_content = str_ireplace("\r\n", "\n", $task_content);
 		$task_content = str_ireplace(
 			"<?php declare(strict_types=1);\n",
 			"<?php declare(strict_types=1);\n\nnamespace OsumiFramework\\App\\Task;\n\nuse OsumiFramework\\OFW\\Core\\OTask;\n",
-			file_get_contents($task_path)
+			$task_content
 		);
 		$task_content .= $this->addDB($task_content);
 		$task_content .= "\n";
@@ -221,6 +228,19 @@ echo "MODEL_CONTENT: \n".$model_content."\n\n";
 					}
 				}
 				closedir($task);
+			}
+		}
+
+		// Tasks
+		$core_path = $this->config->getDir('ofw_core');
+		if (file_exists($core_path)) {
+			if ($core_file = opendir($core_path)) {
+				while (false !== ($entry = readdir($core_file))) {
+					if ($entry != '.' && $entry != '..') {
+						echo "CORE FILE: ".$entry."\n";
+					}
+				}
+				closedir($core_file);
 			}
 		}
 
