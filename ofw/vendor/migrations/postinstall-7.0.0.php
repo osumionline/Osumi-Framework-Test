@@ -5,19 +5,19 @@ class OPostInstall {
 	private array    $messages = [
 		'es' => [
 			'TITLE'                    => "\nPOST INSTALL 7.0.0\n\n",
-			'ADD_NAMESPACE_TO_MODEL'   => "  Archivo de modelo actualizado: \"%s\"",
-			'ADD_NAMESPACE_TO_MODULE'  => "  Archivo de módulo actualizado: \"%s\"",
-			'ADD_NAMESPACE_TO_SERVICE' => "  Archivo de servicio actualizado: \"%s\"",
-			'ADD_NAMESPACE_TO_TASK'    => "  Archivo de tarea actualizado: \"%s\"",
+			'ADD_NAMESPACE_TO_MODEL'   => "  Archivo de modelo actualizado: \"%s\"\n",
+			'ADD_NAMESPACE_TO_MODULE'  => "  Archivo de módulo actualizado: \"%s\"\n",
+			'ADD_NAMESPACE_TO_SERVICE' => "  Archivo de servicio actualizado: \"%s\"\n",
+			'ADD_NAMESPACE_TO_TASK'    => "  Archivo de tarea actualizado: \"%s\"\n",
 			'POST_UPDATE'              => "  El archivo \"%s\" no se puede actualizar automaticamente. Por favor, ejecuta los siguientes comandos:\n\n",
 			'END_TITLE'                => "\nPOST INSTALL 7.0.0 finalizado.\n\n"
 		],
 		'en' => [
 			'TITLE'                    => "\n\nPOST INSTALL 7.0.0\n\n",
-			'ADD_NAMESPACE_TO_MODEL'   => "  Model file updated: \"%s\"",
-			'ADD_NAMESPACE_TO_MODULE'  => "  Module file updated: \"%s\"",
-			'ADD_NAMESPACE_TO_SERVICE' => "  Service file updated: \"%s\"",
-			'ADD_NAMESPACE_TO_TASK'    => "  Task file updated: \"%s\"",
+			'ADD_NAMESPACE_TO_MODEL'   => "  Model file updated: \"%s\"\n",
+			'ADD_NAMESPACE_TO_MODULE'  => "  Module file updated: \"%s\"\n",
+			'ADD_NAMESPACE_TO_SERVICE' => "  Service file updated: \"%s\"\n",
+			'ADD_NAMESPACE_TO_TASK'    => "  Task file updated: \"%s\"\n",
 			'POST_UPDATE'              => "  File \"%s\" could not be updated automatically. Please, run the following commands:\n\n",
 			'END_TITLE'                => "\nPOST INSTALL 7.0.0 finished.\n\n"
 		]
@@ -225,7 +225,7 @@ class OPostInstall {
 		);
 
 		$ret .= "    ".$this->colors->getColoredString("rm ofw/template/update/update.php", 'light_green')."\n";
-		$ret .= "    ".$this->colors->getColoredString("mv ofw/template/update/update_7.php ofw/template/update/update.php", 'light_green')."\n\n";
+		$ret .= "    ".$this->colors->getColoredString("mv ofw/template/update/update_7.php ofw/template/update/update.php", 'light_green')."\n";
 
 		$ret .= $this->messages[$this->config->getLang()]['END_TITLE'];
 
