@@ -1,4 +1,10 @@
 <?php declare(strict_types=1);
+
+namespace OsumiFramework\OFW\Plugins;
+
+/**
+ * Utility class to get user's browser and extra information based on the User Agent
+ */
 class OBrowser{
 	private ?array $browser_data = null;
 	private string $ua           = '';
@@ -439,7 +445,7 @@ class OBrowser{
 				$b_success = true;
 			break;
 			}
-    }
+		}
 
 		// Assigns defaults if the browser was not found in the loop test
 		if ( !$b_success ) {
@@ -497,418 +503,416 @@ class OBrowser{
 			}
 		}
 
-  	/**
-  	* Assemble these first so they can be included in full return data, using static variables
-  	* Note that there's no need to keep repacking these every time the script is called
-  	*/
-  	if ( !$a_moz_data ) {
-  		$a_moz_data = [ $moz_type, $moz_number, $moz_rv, $moz_rv_full, $moz_release_date ];
-  	}
-  	if ( !$a_webkit_data ) {
-  		$a_webkit_data = [ $webkit_type, $webkit_type_number, $browser_number ];
-  	}
-
-  	// Then pack the primary data array
-  	$a_full_assoc_data = [
-  			'browser_working'     => $browser_working,
-  			'browser_number'      => $browser_number,
-  			'ie_version'          => $ie_version,
-  			'dom'                 => $b_dom_browser,
-  			'safe'                => $b_safe_browser,
-  			'os'                  => $os_type,
-  			'os_number'           => $os_number,
-  			'browser_name'        => $browser_name,
-  			'ua_type'             => $ua_type,
-  			'browser_math_number' => $browser_math_number,
-  			'moz_data'            => $a_moz_data,
-  			'webkit_data'         => $a_webkit_data,
-  			'mobile_test'         => $mobile_test,
-  			'mobile_data'         => $a_mobile_data,
-  			'true_ie_number'      => $true_ie_number
-  		];
-  	$this->setBrowserData($a_full_assoc_data);
-  }
-
-  /**
-	* Gets which os from the browser string
-	*
-	* @param string $pv_browser_name Browsers name
-	*
-	* @param float $pv_version_number Browser version number
-	*
-	* @return array Returns OS information
-	*/
-  public function get_os_data ( string $pv_browser_name, float $pv_version_number  ): array {
-    $pv_browser_string = strtolower($this->getUa());
-  	// Initialize variables
-  	$os_working_type = '';
-  	$os_working_number = '';
-  	/**
-  	* Packs the os array. Use this order since some navigator user agents will put 'macintosh'
-  	* in the navigator user agent string which would make the nt test register true
-  	*/
-  	$a_mac = [ 'intel mac', 'ppc mac', 'mac68k' ]; // This is not used currently
-  	// Same logic, check in order to catch the os's in order, last is always default item
-  	$a_unix_types = [ 'dragonfly', 'freebsd', 'openbsd', 'netbsd', 'bsd', 'unixware', 'solaris', 'sunos', 'sun4', 'sun5', 'suni86', 'sun', 'irix5', 'irix6', 'irix', 'hpux9', 'hpux10', 'hpux11', 'hpux', 'hp-ux', 'aix1', 'aix2', 'aix3', 'aix4', 'aix5', 'aix', 'sco', 'unixware', 'mpras', 'reliant', 'dec', 'sinix', 'unix' ];
-  	// Only sometimes will you get a linux distro to id itself...
-  	$a_linux_distros = [ 'ubuntu', 'kubuntu', 'xubuntu', 'mepis', 'xandros', 'linspire', 'winspire', 'jolicloud', 'sidux', 'kanotix', 'debian', 'opensuse', 'suse', 'fedora', 'redhat', 'slackware', 'slax', 'mandrake', 'mandriva', 'gentoo', 'sabayon', 'linux' ];
-  	$a_linux_process = [ 'i386', 'i586', 'i686' ];// not use currently
-  	// Note, order of os very important in os array, you will get failed ids if changed
-  	$a_os_types = [ 'android', 'blackberry', 'iphone', 'palmos', 'palmsource', 'symbian', 'beos', 'os2', 'amiga', 'webtv', 'mac', 'nt', 'win', $a_unix_types, $a_linux_distros ];
-
-  	// Os tester
-  	$i_count = count( $a_os_types );
-  	for ( $i = 0; $i < $i_count; $i++ ) {
-  		// Unpacks os array, assigns to variable $a_os_working
-  		$os_working_data = $a_os_types[$i];
-  		/**
-  		* Assign os to global os variable, os flag true on success
-  		* !strstr($pv_browser_string, "linux" ) corrects a linux detection bug
-  		*/
-  		if ( !is_array( $os_working_data ) && strstr( $pv_browser_string, $os_working_data ) && !strstr( $pv_browser_string, "linux" ) ) {
-  			$os_working_type = $os_working_data;
-
-  			switch ( $os_working_type ) {
-  				// most windows now uses: NT X.Y syntax
-  				case 'nt':
-  					if ( strstr( $pv_browser_string, 'nt 6.1' ) ) { // Windows 7
-  						$os_working_number = 6.1;
-  					}
-  					elseif ( strstr( $pv_browser_string, 'nt 6.0' ) ) { // Windows vista/server 2008
-  						$os_working_number = 6.0;
-  					}
-  					elseif ( strstr( $pv_browser_string, 'nt 5.2' ) ) { // Windows server 2003
-  						$os_working_number = 5.2;
-  					}
-  					elseif ( strstr( $pv_browser_string, 'nt 5.1' ) || strstr( $pv_browser_string, 'xp' ) ) { // Windows xp
-  						$os_working_number = 5.1;//
-  					}
-  					elseif ( strstr( $pv_browser_string, 'nt 5' ) || strstr( $pv_browser_string, '2000' ) ) { // Windows 2000
-  						$os_working_number = 5.0;
-  					}
-  					elseif ( strstr( $pv_browser_string, 'nt 4' ) ) { // NT 4
-  						$os_working_number = 4;
-  					}
-  					elseif ( strstr( $pv_browser_string, 'nt 3' ) ) { // NT 3
-  						$os_working_number = 3;
-  					}
-  				break;
-  				case 'win':
-  					if ( strstr( $pv_browser_string, 'vista' ) ) { // Windows Vista, for opera ID
-  						$os_working_number = 6.0;
-  						$os_working_type = 'nt';
-  					}
-  					elseif ( strstr( $pv_browser_string, 'xp' ) ) { // Windows XP, for Opera ID
-  						$os_working_number = 5.1;
-  						$os_working_type = 'nt';
-  					}
-  					elseif ( strstr( $pv_browser_string, '2003' ) ) { // Windows Server 2003, for Opera ID
-  						$os_working_number = 5.2;
-  						$os_working_type = 'nt';
-  					}
-  					elseif ( strstr( $pv_browser_string, 'windows ce' ) ) { // Windows CE
-  						$os_working_number = 'ce';
-  						$os_working_type = 'nt';
-  					}
-  					elseif ( strstr( $pv_browser_string, '95' ) ) {
-  						$os_working_number = '95';
-  					}
-  					elseif ( ( strstr( $pv_browser_string, '9x 4.9' ) ) || ( strstr( $pv_browser_string, ' me' ) ) ) {
-  						$os_working_number = 'me';
-  					}
-  					elseif ( strstr( $pv_browser_string, '98' ) ) {
-  						$os_working_number = '98';
-  					}
-  					elseif ( strstr( $pv_browser_string, '2000' ) ) { // Windows 2000, for Opera ID
-  						$os_working_number = 5.0;
-  						$os_working_type = 'nt';
-  					}
-  				break;
-  				case 'mac':
-  					if ( strstr( $pv_browser_string, 'os x' ) ) {
-  						// If it doesn't have a version number, it is os x;
-  						if ( strstr( $pv_browser_string, 'os x ' ) ) {
-  							// Numbers are like: 10_2.4, others 10.2.4
-  							$os_working_number = str_replace( '_', '.', $this->get_item_version( 'os x' ) );
-  						}
-  						else {
-  							$os_working_number = 10;
-  						}
-  					}
-  					/**
-  					* This is a crude test for os x, since safari, camino, ie 5.2, & moz >= rv 1.3
-  					* are only made for os x
-  					*/
-  					elseif ( ( $pv_browser_name == 'saf' ) || ( $pv_browser_name == 'cam' ) ||
-  						( ( $pv_browser_name == 'moz' ) && ( $pv_version_number >= 1.3 ) ) ||
-  						( ( $pv_browser_name == 'ie' ) && ( $pv_version_number >= 5.2 ) ) ) {
-  						$os_working_number = 10;
-  					}
-  				break;
-  				case 'iphone':
-  					$os_working_number = 10;
-  				break;
-  				default:
-  				break;
-  			}
-  			break;
-  		}
-  		/**
-  		* Check that it's an array, check it's the second to last item
-  		* in the main os array, the unix one that is
-  		*/
-  		elseif ( is_array( $os_working_data ) && ( $i == ( $i_count - 2 ) ) ) {
-  			$j_count = count($os_working_data);
-  			for ($j = 0; $j < $j_count; $j++) {
-  				if ( strstr( $pv_browser_string, $os_working_data[$j] ) ) {
-  					$os_working_type = 'unix'; // If the os is in the unix array, it's unix, obviously...
-  					$os_working_number = ( $os_working_data[$j] != 'unix' ) ? $os_working_data[$j] : ''; // Assign sub unix version from the unix array
-  					break;
-  				}
-  			}
-  		}
-  		/**
-  		* Check that it's an array, check it's the last item
-  		* in the main os array, the linux one that is
-  		*/
-  		elseif ( is_array( $os_working_data ) && ( $i == ( $i_count - 1 ) ) ) {
-  			$j_count = count($os_working_data);
-  			for ($j = 0; $j < $j_count; $j++) {
-  				if ( strstr( $pv_browser_string, $os_working_data[$j] ) ) {
-  					$os_working_type = 'lin';
-  					// Assign linux distro from the linux array, there's a default
-  					// search for 'lin', if it's that, set version to ''
-  					$os_working_number = ( $os_working_data[$j] != 'linux' ) ? $os_working_data[$j] : '';
-  					break;
-  				}
-  			}
-  		}
-  	}
-
-  	// Pack the os data array for return to main function
-  	$a_os_data = [ $os_working_type, $os_working_number ];
-
-  	return $a_os_data;
-  }
-
-  /**
-  * Returns browser number, gecko rv number, or gecko release date
-  *
-	* @param string $pv_search_string String to be checked against User Agent
-	*
-	* @param bool $pv_b_break_last Defines if extra condition should be checked
-	*
-	* @param string $pv_extra_search Extra string to check
-	*
-	* @return string Returns version number
-  */
-  public function get_item_version( $pv_search_string, $pv_b_break_last=false, $pv_extra_search='' )
-  {
-    $pv_browser_user_agent = strtolower($this->getUa());
-  	// 12 is the longest that will be required, handles release dates: 20020323; 0.8.0+
-  	$substring_length = 15;
-  	$start_pos = 0; // Set $start_pos to 0 for first iteration
-  	// Initialize browser number, will return '' if not found
-  	$string_working_number = '';
-  	/**
-  	* Use the passed parameter for $pv_search_string
-  	* Start the substring slice right after these moz search strings
-  	* There are some cases of double msie id's, first in string and then with then number
-  	* $start_pos = 0;
-  	* This test covers you for multiple occurrences of string, only with ie though
-  	* with for example google bot you want the first occurance returned, since that's where the
-  	* numbering happens
-  	*/
-  	for ( $i = 0; $i < 4; $i++ ) {
-  		// Start the search after the first string occurrence
-  		if ( strpos( $pv_browser_user_agent, $pv_search_string, $start_pos ) !== false ) {
-  			// Update start position if position found
-  			$start_pos = strpos( $pv_browser_user_agent, $pv_search_string, $start_pos ) + strlen( $pv_search_string );
-  			/**
-  			* msie (and maybe other User Agents requires special handling because some apps inject
-  			* a second msie, usually at the beginning, custom modes allow breaking at first instance
-  			* if $pv_b_break_last $pv_extra_search conditions exist. Since we only want this test
-  			* to run if and only if we need it, it's triggered by caller passing these values.
-  			*/
-  			if ( !$pv_b_break_last || ( $pv_extra_search && strstr( $pv_browser_user_agent, $pv_extra_search ) ) ) {
-  				break;
-  			}
-  		}
-  		else {
-  			break;
-  		}
-  	}
-  	/**
-  	* Handles things like extra omniweb/v456, gecko/, blackberry9700
-  	* also corrects for the omniweb 'v'
-  	*/
-  	$start_pos += $this->get_set_count( 'get' );
-  	$string_working_number = substr( $pv_browser_user_agent, $start_pos, $substring_length );
-
-  	// Find the space, ;, or parentheses that ends the number
-  	$string_working_number = substr( $string_working_number, 0, strcspn($string_working_number, ' );/') );
-
 		/**
-  	* Make sure the returned value is actually the id number and not a string
-  	* otherwise return ''
-  	* strcspn( $string_working_number, '0123456789.') == strlen( $string_working_number)
+		 * Assemble these first so they can be included in full return data, using static variables
+		 * Note that there's no need to keep repacking these every time the script is called
 		*/
-   	if ( !is_numeric( substr( $string_working_number, 0, 1 ) ) ) {
-  		$string_working_number = '';
-  	}
+		if ( !$a_moz_data ) {
+			$a_moz_data = [ $moz_type, $moz_number, $moz_rv, $moz_rv_full, $moz_release_date ];
+		}
+		if ( !$a_webkit_data ) {
+			$a_webkit_data = [ $webkit_type, $webkit_type_number, $browser_number ];
+		}
 
-  	return $string_working_number;
-  }
+		// Then pack the primary data array
+		$a_full_assoc_data = [
+			'browser_working'     => $browser_working,
+			'browser_number'      => $browser_number,
+			'ie_version'          => $ie_version,
+			'dom'                 => $b_dom_browser,
+			'safe'                => $b_safe_browser,
+			'os'                  => $os_type,
+			'os_number'           => $os_number,
+			'browser_name'        => $browser_name,
+			'ua_type'             => $ua_type,
+			'browser_math_number' => $browser_math_number,
+			'moz_data'            => $a_moz_data,
+			'webkit_data'         => $a_webkit_data,
+			'mobile_test'         => $mobile_test,
+			'mobile_data'         => $a_mobile_data,
+			'true_ie_number'      => $true_ie_number
+		];
+		$this->setBrowserData($a_full_assoc_data);
+	}
 
 	/**
-	 * Gets/sets number of slices to be counted
+	 * Gets which os from the browser string
 	 *
-	 * @param string $pv_type Type of operation (get/set)
+	 * @param string $pv_browser_name Browsers name
 	 *
-	 * @param int $pv_value Default Number to be set
+	 * @param float $pv_version_number Browser version number
 	 *
-	 * @return int Returns slice count value
+	 * @return array Returns OS information
 	 */
-  public function get_set_count( $pv_type, $pv_value=null ): ?int {
-  	static $slice_increment;
-  	$return_value = '';
-  	switch ( $pv_type ) {
-  		case 'get':
-  			// Set if unset, ie, first use. note that empty and isset are not good tests here
-  			if ( is_null( $slice_increment ) ) {
-  				$slice_increment = 1;
-  			}
-  			$return_value = $slice_increment;
-  			$slice_increment = 1; // Reset to default
-  			return $return_value;
-  		break;
-  		case 'set':
-  			$slice_increment = $pv_value;
-  		break;
-  	}
-  }
+	public function get_os_data ( string $pv_browser_name, float $pv_version_number  ): array {
+		$pv_browser_string = strtolower($this->getUa());
+		// Initialize variables
+		$os_working_type = '';
+		$os_working_number = '';
+		/**
+		* Packs the os array. Use this order since some navigator user agents will put 'macintosh'
+		* in the navigator user agent string which would make the nt test register true
+		*/
+		$a_mac = [ 'intel mac', 'ppc mac', 'mac68k' ]; // This is not used currently
+		// Same logic, check in order to catch the os's in order, last is always default item
+		$a_unix_types = [ 'dragonfly', 'freebsd', 'openbsd', 'netbsd', 'bsd', 'unixware', 'solaris', 'sunos', 'sun4', 'sun5', 'suni86', 'sun', 'irix5', 'irix6', 'irix', 'hpux9', 'hpux10', 'hpux11', 'hpux', 'hp-ux', 'aix1', 'aix2', 'aix3', 'aix4', 'aix5', 'aix', 'sco', 'unixware', 'mpras', 'reliant', 'dec', 'sinix', 'unix' ];
+		// Only sometimes will you get a linux distro to id itself...
+		$a_linux_distros = [ 'ubuntu', 'kubuntu', 'xubuntu', 'mepis', 'xandros', 'linspire', 'winspire', 'jolicloud', 'sidux', 'kanotix', 'debian', 'opensuse', 'suse', 'fedora', 'redhat', 'slackware', 'slax', 'mandrake', 'mandriva', 'gentoo', 'sabayon', 'linux' ];
+		$a_linux_process = [ 'i386', 'i586', 'i686' ];// not use currently
+		// Note, order of os very important in os array, you will get failed ids if changed
+		$a_os_types = [ 'android', 'blackberry', 'iphone', 'palmos', 'palmsource', 'symbian', 'beos', 'os2', 'amiga', 'webtv', 'mac', 'nt', 'win', $a_unix_types, $a_linux_distros ];
 
-  /**
-   * Checks if browser is a mobile device
+		// Os tester
+		$i_count = count( $a_os_types );
+		for ( $i = 0; $i < $i_count; $i++ ) {
+			// Unpacks os array, assigns to variable $a_os_working
+			$os_working_data = $a_os_types[$i];
+			/**
+			* Assign os to global os variable, os flag true on success
+			* !strstr($pv_browser_string, "linux" ) corrects a linux detection bug
+			*/
+			if ( !is_array( $os_working_data ) && strstr( $pv_browser_string, $os_working_data ) && !strstr( $pv_browser_string, "linux" ) ) {
+				$os_working_type = $os_working_data;
+
+				switch ( $os_working_type ) {
+					// most windows now uses: NT X.Y syntax
+					case 'nt':
+						if ( strstr( $pv_browser_string, 'nt 6.1' ) ) { // Windows 7
+							$os_working_number = 6.1;
+						}
+						elseif ( strstr( $pv_browser_string, 'nt 6.0' ) ) { // Windows vista/server 2008
+							$os_working_number = 6.0;
+						}
+						elseif ( strstr( $pv_browser_string, 'nt 5.2' ) ) { // Windows server 2003
+							$os_working_number = 5.2;
+						}
+						elseif ( strstr( $pv_browser_string, 'nt 5.1' ) || strstr( $pv_browser_string, 'xp' ) ) { // Windows xp
+							$os_working_number = 5.1;//
+						}
+						elseif ( strstr( $pv_browser_string, 'nt 5' ) || strstr( $pv_browser_string, '2000' ) ) { // Windows 2000
+							$os_working_number = 5.0;
+						}
+						elseif ( strstr( $pv_browser_string, 'nt 4' ) ) { // NT 4
+							$os_working_number = 4;
+						}
+						elseif ( strstr( $pv_browser_string, 'nt 3' ) ) { // NT 3
+							$os_working_number = 3;
+						}
+					break;
+					case 'win':
+						if ( strstr( $pv_browser_string, 'vista' ) ) { // Windows Vista, for opera ID
+							$os_working_number = 6.0;
+							$os_working_type = 'nt';
+						}
+						elseif ( strstr( $pv_browser_string, 'xp' ) ) { // Windows XP, for Opera ID
+							$os_working_number = 5.1;
+							$os_working_type = 'nt';
+						}
+						elseif ( strstr( $pv_browser_string, '2003' ) ) { // Windows Server 2003, for Opera ID
+							$os_working_number = 5.2;
+							$os_working_type = 'nt';
+						}
+						elseif ( strstr( $pv_browser_string, 'windows ce' ) ) { // Windows CE
+							$os_working_number = 'ce';
+							$os_working_type = 'nt';
+						}
+						elseif ( strstr( $pv_browser_string, '95' ) ) {
+							$os_working_number = '95';
+						}
+						elseif ( ( strstr( $pv_browser_string, '9x 4.9' ) ) || ( strstr( $pv_browser_string, ' me' ) ) ) {
+							$os_working_number = 'me';
+						}
+						elseif ( strstr( $pv_browser_string, '98' ) ) {
+							$os_working_number = '98';
+						}
+						elseif ( strstr( $pv_browser_string, '2000' ) ) { // Windows 2000, for Opera ID
+							$os_working_number = 5.0;
+							$os_working_type = 'nt';
+						}
+					break;
+					case 'mac':
+						if ( strstr( $pv_browser_string, 'os x' ) ) {
+							// If it doesn't have a version number, it is os x;
+							if ( strstr( $pv_browser_string, 'os x ' ) ) {
+								// Numbers are like: 10_2.4, others 10.2.4
+								$os_working_number = str_replace( '_', '.', $this->get_item_version( 'os x' ) );
+							}
+							else {
+								$os_working_number = 10;
+							}
+						}
+						/**
+						* This is a crude test for os x, since safari, camino, ie 5.2, & moz >= rv 1.3
+						* are only made for os x
+						*/
+						elseif ( ( $pv_browser_name == 'saf' ) || ( $pv_browser_name == 'cam' ) ||
+							( ( $pv_browser_name == 'moz' ) && ( $pv_version_number >= 1.3 ) ) ||
+							( ( $pv_browser_name == 'ie' ) && ( $pv_version_number >= 5.2 ) ) ) {
+							$os_working_number = 10;
+						}
+					break;
+					case 'iphone':
+						$os_working_number = 10;
+					break;
+					default:
+					break;
+				}
+				break;
+			}
+			/**
+			* Check that it's an array, check it's the second to last item
+			* in the main os array, the unix one that is
+			*/
+			elseif ( is_array( $os_working_data ) && ( $i == ( $i_count - 2 ) ) ) {
+				$j_count = count($os_working_data);
+				for ($j = 0; $j < $j_count; $j++) {
+					if ( strstr( $pv_browser_string, $os_working_data[$j] ) ) {
+						$os_working_type = 'unix'; // If the os is in the unix array, it's unix, obviously...
+						$os_working_number = ( $os_working_data[$j] != 'unix' ) ? $os_working_data[$j] : ''; // Assign sub unix version from the unix array
+						break;
+					}
+				}
+			}
+			/**
+			* Check that it's an array, check it's the last item
+			* in the main os array, the linux one that is
+			*/
+			elseif ( is_array( $os_working_data ) && ( $i == ( $i_count - 1 ) ) ) {
+				$j_count = count($os_working_data);
+				for ($j = 0; $j < $j_count; $j++) {
+					if ( strstr( $pv_browser_string, $os_working_data[$j] ) ) {
+						$os_working_type = 'lin';
+						// Assign linux distro from the linux array, there's a default
+						// search for 'lin', if it's that, set version to ''
+						$os_working_number = ( $os_working_data[$j] != 'linux' ) ? $os_working_data[$j] : '';
+						break;
+					}
+				}
+			}
+		}
+
+		// Pack the os data array for return to main function
+		$a_os_data = [ $os_working_type, $os_working_number ];
+
+		return $a_os_data;
+	}
+
+	/**
+	 * Returns browser number, gecko rv number, or gecko release date
+	 *
+	 * @param string $pv_search_string String to be checked against User Agent
+	 *
+	 * @param bool $pv_b_break_last Defines if extra condition should be checked
+	 *
+	 * @param string $pv_extra_search Extra string to check
+	 *
+	 * @return string Returns version number
+	 */
+	public function get_item_version( $pv_search_string, $pv_b_break_last=false, $pv_extra_search='' ) {
+		$pv_browser_user_agent = strtolower($this->getUa());
+		// 12 is the longest that will be required, handles release dates: 20020323; 0.8.0+
+		$substring_length = 15;
+		$start_pos = 0; // Set $start_pos to 0 for first iteration
+		// Initialize browser number, will return '' if not found
+		$string_working_number = '';
+		/**
+		 * Use the passed parameter for $pv_search_string
+		 * Start the substring slice right after these moz search strings
+		 * There are some cases of double msie id's, first in string and then with then number
+		 * $start_pos = 0;
+		 * This test covers you for multiple occurrences of string, only with ie though
+		 * with for example google bot you want the first occurance returned, since that's where the
+		 * numbering happens
+		 */
+		for ( $i = 0; $i < 4; $i++ ) {
+			// Start the search after the first string occurrence
+			if ( strpos( $pv_browser_user_agent, $pv_search_string, $start_pos ) !== false ) {
+				// Update start position if position found
+				$start_pos = strpos( $pv_browser_user_agent, $pv_search_string, $start_pos ) + strlen( $pv_search_string );
+				/**
+				 * msie (and maybe other User Agents requires special handling because some apps inject
+				 * a second msie, usually at the beginning, custom modes allow breaking at first instance
+				 * if $pv_b_break_last $pv_extra_search conditions exist. Since we only want this test
+				 * to run if and only if we need it, it's triggered by caller passing these values.
+				 */
+				if ( !$pv_b_break_last || ( $pv_extra_search && strstr( $pv_browser_user_agent, $pv_extra_search ) ) ) {
+					break;
+				}
+			}
+			else {
+				break;
+			}
+		}
+		/**
+		 * Handles things like extra omniweb/v456, gecko/, blackberry9700
+		 * also corrects for the omniweb 'v'
+		 */
+		$start_pos += $this->get_set_count( 'get' );
+		$string_working_number = substr( $pv_browser_user_agent, $start_pos, $substring_length );
+
+		// Find the space, ;, or parentheses that ends the number
+		$string_working_number = substr( $string_working_number, 0, strcspn($string_working_number, ' );/') );
+
+		/**
+		 * Make sure the returned value is actually the id number and not a string
+		 * otherwise return ''
+		 * strcspn( $string_working_number, '0123456789.') == strlen( $string_working_number)
+		 */
+		if ( !is_numeric( substr( $string_working_number, 0, 1 ) ) ) {
+			$string_working_number = '';
+		}
+
+		return $string_working_number;
+	}
+
+	/**
+	* Gets/sets number of slices to be counted
+	*
+	* @param string $pv_type Type of operation (get/set)
+	*
+	* @param int $pv_value Default Number to be set
+	*
+	* @return int Returns slice count value
+	*/
+	public function get_set_count( $pv_type, $pv_value=null ): ?int {
+		static $slice_increment;
+		$return_value = '';
+		switch ( $pv_type ) {
+			case 'get':
+				// Set if unset, ie, first use. note that empty and isset are not good tests here
+				if ( is_null( $slice_increment ) ) {
+					$slice_increment = 1;
+				}
+				$return_value = $slice_increment;
+				$slice_increment = 1; // Reset to default
+				return $return_value;
+			break;
+			case 'set':
+				$slice_increment = $pv_value;
+			break;
+		}
+	}
+
+	/**
+	 * Checks if browser is a mobile device
 	 *
 	 * @return string Returns browsers device
-   */
-  public function check_is_mobile(): string {
-    $pv_browser_user_agent = strtolower($this->getUa());
+	 */
+	public function check_is_mobile(): string {
+		$pv_browser_user_agent = strtolower($this->getUa());
 
-  	$mobile_working_test = '';
-  	/**
-  	* These will search for basic mobile hints, this should catch most of them, first check
-  	* known hand held device os, then check device names, then mobile browser names
-  	* This list is almost the same but not exactly as the 4 arrays in function below
-  	*/
-  	$a_mobile_search = [
-  	/**
-  	* Make sure to use only data here that always will be a mobile, so this list is not
-  	* identical to the list of get_mobile_data
-  	*/
-  	// OS
-  	'android', 'epoc', 'linux armv', 'palmos', 'palmsource', 'windows ce', 'windows phone os', 'symbianos', 'symbian os', 'symbian', 'webos',
-  	// Devices - iPod before iPhone or fails
-  	'benq', 'blackberry', 'danger hiptop', 'ddipocket', ' droid', 'ipad', 'ipod', 'iphone', 'kindle', 'lge-cx', 'lge-lx', 'lge-mx', 'lge vx', 'lge ', 'lge-', 'lg;lx', 'nintendo wii', 'nokia', 'palm', 'pdxgw', 'playstation', 'sagem', 'samsung', 'sec-sgh', 'sharp', 'sonyericsson', 'sprint', 'zune', 'j-phone', 'n410', 'mot 24', 'mot-', 'htc-', 'htc_', 'htc ', 'sec-', 'sie-m', 'sie-s', 'spv ', 'vodaphone', 'smartphone', 'armv', 'midp', 'mobilephone',
-  	// Browsers
-  	'avantgo', 'blazer', 'elaine', 'eudoraweb', 'iemobile',  'minimo', 'mobile safari', 'mobileexplorer', 'opera mobi', 'opera mini', 'netfront', 'opwv', 'polaris', 'semc-browser', 'up.browser', 'webpro', 'wms pie', 'xiino',
-  	// Services - astel out of business
-  	'astel',  'docomo',  'novarra-vision', 'portalmmm', 'reqwirelessweb', 'vodafone'
-  	];
+		$mobile_working_test = '';
+		/**
+		 * These will search for basic mobile hints, this should catch most of them, first check
+		 * known hand held device os, then check device names, then mobile browser names
+		 * This list is almost the same but not exactly as the 4 arrays in function below
+		 */
+		$a_mobile_search = [
+			/**
+			 * Make sure to use only data here that always will be a mobile, so this list is not
+			 * identical to the list of get_mobile_data
+			 */
+			// OS
+			'android', 'epoc', 'linux armv', 'palmos', 'palmsource', 'windows ce', 'windows phone os', 'symbianos', 'symbian os', 'symbian', 'webos',
+			// Devices - iPod before iPhone or fails
+			'benq', 'blackberry', 'danger hiptop', 'ddipocket', ' droid', 'ipad', 'ipod', 'iphone', 'kindle', 'lge-cx', 'lge-lx', 'lge-mx', 'lge vx', 'lge ', 'lge-', 'lg;lx', 'nintendo wii', 'nokia', 'palm', 'pdxgw', 'playstation', 'sagem', 'samsung', 'sec-sgh', 'sharp', 'sonyericsson', 'sprint', 'zune', 'j-phone', 'n410', 'mot 24', 'mot-', 'htc-', 'htc_', 'htc ', 'sec-', 'sie-m', 'sie-s', 'spv ', 'vodaphone', 'smartphone', 'armv', 'midp', 'mobilephone',
+			// Browsers
+			'avantgo', 'blazer', 'elaine', 'eudoraweb', 'iemobile',  'minimo', 'mobile safari', 'mobileexplorer', 'opera mobi', 'opera mini', 'netfront', 'opwv', 'polaris', 'semc-browser', 'up.browser', 'webpro', 'wms pie', 'xiino',
+			// Services - astel out of business
+			'astel',  'docomo',  'novarra-vision', 'portalmmm', 'reqwirelessweb', 'vodafone'
+		];
 
-  	// Then do basic mobile type search, this uses data from: get_mobile_data()
-  	$j_count = count( $a_mobile_search );
-  	for ($j = 0; $j < $j_count; $j++) {
-  		if ( strstr( $pv_browser_user_agent, $a_mobile_search[$j] ) ) {
-  			$mobile_working_test = $a_mobile_search[$j];
-  			break;
-  		}
-  	}
+		// Then do basic mobile type search, this uses data from: get_mobile_data()
+		$j_count = count( $a_mobile_search );
+		for ($j = 0; $j < $j_count; $j++) {
+			if ( strstr( $pv_browser_user_agent, $a_mobile_search[$j] ) ) {
+				$mobile_working_test = $a_mobile_search[$j];
+				break;
+			}
+		}
 
-  	return $mobile_working_test;
-  }
+		return $mobile_working_test;
+	}
 
-  /**
-   * Get Mobile devices data
-	 *
-	 * @return array Mobile devices data
-   */
-  public function get_mobile_data(): array {
-    $pv_browser_user_agent = strtolower($this->getUa());
-  	$mobile_browser = '';
-  	$mobile_browser_number = '';
-  	$mobile_device = '';
-  	$mobile_device_number = '';
-  	$mobile_os = ''; // Will usually be null, sorry
-  	$mobile_os_number = '';
-  	$mobile_server = '';
-  	$mobile_server_number = '';
+	/**
+	* Get Mobile devices data
+	*
+	* @return array Mobile devices data
+	*/
+	public function get_mobile_data(): array {
+		$pv_browser_user_agent = strtolower($this->getUa());
+		$mobile_browser = '';
+		$mobile_browser_number = '';
+		$mobile_device = '';
+		$mobile_device_number = '';
+		$mobile_os = ''; // Will usually be null, sorry
+		$mobile_os_number = '';
+		$mobile_server = '';
+		$mobile_server_number = '';
 
-  	// Browsers, show it as a handheld, but is not the os
-  	$a_mobile_browser = [ 'avantgo', 'blazer', 'elaine', 'eudoraweb', 'iemobile',  'minimo', 'mobile safari', 'mobileexplorer', 'opera mobi', 'opera mini', 'netfront', 'opwv', 'polaris', 'semc-browser', 'up.browser', 'webpro', 'wms pie', 'xiino' ];
-  	/**
-  	* This goes from easiest to detect to hardest, so don't use this for output unless you
-  	* clean it up more is my advice.
-  	* Special Notes: do not include milestone in general mobile type test above, it's too generic
-  	*/
-  	$a_mobile_device = [ 'benq', 'blackberry', 'danger hiptop', 'ddipocket', ' droid', 'htc_dream', 'htc espresso', 'htc hero', 'htc halo', 'htc huangshan', 'htc legend', 'htc liberty', 'htc paradise', 'htc supersonic', 'htc tattoo', 'ipad', 'ipod', 'iphone', 'kindle', 'lge-cx', 'lge-lx', 'lge-mx', 'lge vx', 'lg;lx', 'nintendo wii', 'nokia', 'palm', 'pdxgw', 'playstation', 'sagem', 'samsung', 'sec-sgh', 'sharp', 'sonyericsson', 'sprint', 'zunehd', 'zune', 'j-phone', 'milestone', 'n410', 'mot 24', 'mot-', 'htc-', 'htc_',  'htc ', 'lge ', 'lge-', 'sec-', 'sie-m', 'sie-s', 'spv ', 'smartphone', 'armv', 'midp', 'mobilephone' ];
-  	/**
-  	* Note: linux alone can't be searched for, and almost all linux devices are armv types
-  	* iPad 'cpu os' is how the real os number is handled
-  	*/
-  	$a_mobile_os = [ 'android', 'epoc', 'cpu os', 'iphone os', 'palmos', 'palmsource', 'windows phone os', 'windows ce', 'symbianos', 'symbian os', 'symbian', 'webos', 'linux armv'  ];
+		// Browsers, show it as a handheld, but is not the os
+		$a_mobile_browser = [ 'avantgo', 'blazer', 'elaine', 'eudoraweb', 'iemobile',  'minimo', 'mobile safari', 'mobileexplorer', 'opera mobi', 'opera mini', 'netfront', 'opwv', 'polaris', 'semc-browser', 'up.browser', 'webpro', 'wms pie', 'xiino' ];
+		/**
+		 * This goes from easiest to detect to hardest, so don't use this for output unless you
+		 * clean it up more is my advice.
+		 * Special Notes: do not include milestone in general mobile type test above, it's too generic
+		 */
+		$a_mobile_device = [ 'benq', 'blackberry', 'danger hiptop', 'ddipocket', ' droid', 'htc_dream', 'htc espresso', 'htc hero', 'htc halo', 'htc huangshan', 'htc legend', 'htc liberty', 'htc paradise', 'htc supersonic', 'htc tattoo', 'ipad', 'ipod', 'iphone', 'kindle', 'lge-cx', 'lge-lx', 'lge-mx', 'lge vx', 'lg;lx', 'nintendo wii', 'nokia', 'palm', 'pdxgw', 'playstation', 'sagem', 'samsung', 'sec-sgh', 'sharp', 'sonyericsson', 'sprint', 'zunehd', 'zune', 'j-phone', 'milestone', 'n410', 'mot 24', 'mot-', 'htc-', 'htc_',  'htc ', 'lge ', 'lge-', 'sec-', 'sie-m', 'sie-s', 'spv ', 'smartphone', 'armv', 'midp', 'mobilephone' ];
+		/**
+		 * Note: linux alone can't be searched for, and almost all linux devices are armv types
+		 * iPad 'cpu os' is how the real os number is handled
+		 */
+		$a_mobile_os = [ 'android', 'epoc', 'cpu os', 'iphone os', 'palmos', 'palmsource', 'windows phone os', 'windows ce', 'symbianos', 'symbian os', 'symbian', 'webos', 'linux armv'  ];
 
-  	// Sometimes there is just no other id for the unit that the CTS type service/server
-  	$a_mobile_server = [ 'astel', 'docomo', 'novarra-vision', 'portalmmm', 'reqwirelessweb', 'vodafone' ];
+		// Sometimes there is just no other id for the unit that the CTS type service/server
+		$a_mobile_server = [ 'astel', 'docomo', 'novarra-vision', 'portalmmm', 'reqwirelessweb', 'vodafone' ];
 
-  	$k_count = count( $a_mobile_browser );
-  	for ( $k = 0; $k < $k_count; $k++ ) {
-  		if ( strstr( $pv_browser_user_agent, $a_mobile_browser[$k] ) ) {
-  			$mobile_browser = $a_mobile_browser[$k];
-  			// This may or may not work, highly unreliable because mobile ua strings are random
-  			$mobile_browser_number = $this->get_item_version( $mobile_browser );
-  			break;
-  		}
-  	}
-  	$k_count = count( $a_mobile_device );
-  	for ( $k = 0; $k < $k_count; $k++ ) {
-  		if ( strstr( $pv_browser_user_agent, $a_mobile_device[$k] ) ) {
-  			$mobile_device = trim ( $a_mobile_device[$k], '-_' ); // But not space trims yet
-  			if ( $mobile_device == 'blackberry' )
-  			{
-  				$this->get_set_count( 'set', 0 );
-  			}
-  			$mobile_device_number = $this->get_item_version( $mobile_device );
-  			$mobile_device = trim( $mobile_device ); // Some of the id search strings have white space
-  			break;
-  		}
-  	}
-  	$k_count = count( $a_mobile_os );
-  	for ( $k = 0; $k < $k_count; $k++ ) {
-  		if ( strstr( $pv_browser_user_agent, $a_mobile_os[$k] ) ) {
-  			$mobile_os = $a_mobile_os[$k];
-  			// This may or may not work, highly unreliable
-  			$mobile_os_number = str_replace( '_', '.', $this->get_item_version( $mobile_os ) );
-  			break;
-  		}
-  	}
-  	$k_count = count( $a_mobile_server );
-  	for ( $k = 0; $k < $k_count; $k++ ) {
-  		if ( strstr( $pv_browser_user_agent, $a_mobile_server[$k] ) ) {
-  			$mobile_server = $a_mobile_server[$k];
-  			// This may or may not work, highly unreliable
-  			$mobile_server_number = $this->get_item_version( $mobile_server );
-  			break;
-  		}
-  	}
-  	// Just for cases where we know it's a mobile device already
-  	if ( !$mobile_os && ( $mobile_browser || $mobile_device || $mobile_server ) && strstr( $pv_browser_user_agent, 'linux' ) ) {
-  		$mobile_os = 'linux';
-  		$mobile_os_number = $this->get_item_version( 'linux' );
-  	}
+		$k_count = count( $a_mobile_browser );
+		for ( $k = 0; $k < $k_count; $k++ ) {
+			if ( strstr( $pv_browser_user_agent, $a_mobile_browser[$k] ) ) {
+				$mobile_browser = $a_mobile_browser[$k];
+				// This may or may not work, highly unreliable because mobile ua strings are random
+				$mobile_browser_number = $this->get_item_version( $mobile_browser );
+				break;
+			}
+		}
+		$k_count = count( $a_mobile_device );
+		for ( $k = 0; $k < $k_count; $k++ ) {
+			if ( strstr( $pv_browser_user_agent, $a_mobile_device[$k] ) ) {
+				$mobile_device = trim ( $a_mobile_device[$k], '-_' ); // But not space trims yet
+				if ( $mobile_device == 'blackberry' ) {
+					$this->get_set_count( 'set', 0 );
+				}
+				$mobile_device_number = $this->get_item_version( $mobile_device );
+				$mobile_device = trim( $mobile_device ); // Some of the id search strings have white space
+				break;
+			}
+		}
+		$k_count = count( $a_mobile_os );
+		for ( $k = 0; $k < $k_count; $k++ ) {
+			if ( strstr( $pv_browser_user_agent, $a_mobile_os[$k] ) ) {
+				$mobile_os = $a_mobile_os[$k];
+				// This may or may not work, highly unreliable
+				$mobile_os_number = str_replace( '_', '.', $this->get_item_version( $mobile_os ) );
+				break;
+			}
+		}
+		$k_count = count( $a_mobile_server );
+		for ( $k = 0; $k < $k_count; $k++ ) {
+			if ( strstr( $pv_browser_user_agent, $a_mobile_server[$k] ) ) {
+				$mobile_server = $a_mobile_server[$k];
+				// This may or may not work, highly unreliable
+				$mobile_server_number = $this->get_item_version( $mobile_server );
+				break;
+			}
+		}
+		// Just for cases where we know it's a mobile device already
+		if ( !$mobile_os && ( $mobile_browser || $mobile_device || $mobile_server ) && strstr( $pv_browser_user_agent, 'linux' ) ) {
+			$mobile_os = 'linux';
+			$mobile_os_number = $this->get_item_version( 'linux' );
+		}
 
-  	$a_mobile_data = [ $mobile_device, $mobile_browser, $mobile_browser_number, $mobile_os, $mobile_os_number, $mobile_server, $mobile_server_number, $mobile_device_number ];
-  	return $a_mobile_data;
-  }
+		$a_mobile_data = [ $mobile_device, $mobile_browser, $mobile_browser_number, $mobile_os, $mobile_os_number, $mobile_server, $mobile_server_number, $mobile_device_number ];
+		return $a_mobile_data;
+	}
 }

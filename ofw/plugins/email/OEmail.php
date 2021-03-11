@@ -1,4 +1,12 @@
 <?php declare(strict_types=1);
+
+namespace OsumiFramework\OFW\Plugins;
+
+use OsumiFramework\OFW\Log\OLog;
+
+/**
+ * Class to send emails, as plain text or HTML
+ */
 class OEmail {
 	private bool    $debug        = false;
 	private ?OLog   $l            = null;

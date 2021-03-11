@@ -1,4 +1,9 @@
 <?php declare(strict_types=1);
+
+namespace OsumiFramework\App\Task;
+
+use OsumiFramework\OFW\Core\OTask;
+
 class emailTask extends OTask {
 	public function __toString() {
 		return "email: Función para enviar emails de prueba";

@@ -1,4 +1,9 @@
 <?php declare(strict_types=1);
+
+namespace OsumiFramework\OFW\Plugins;
+
+use OsumiFramework\OFW\Tools\OTools;
+
 class OToken {
 	private ?string $secret = null;
 	private array $params = [];

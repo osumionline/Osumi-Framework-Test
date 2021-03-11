@@ -1,4 +1,13 @@
 <?php declare(strict_types=1);
+
+namespace OsumiFramework\App\Module;
+
+use OsumiFramework\OFW\Core\OModule;
+use OsumiFramework\OFW\Web\ORequest;
+use OsumiFramework\OFW\Routing\ORoute;
+use OsumiFramework\App\Service\userService;
+use OsumiFramework\App\Service\photoService;
+
 class home extends OModule {
 	private ?userService  $user_service;
 	private ?photoService $photo_service;
@@ -11,10 +20,10 @@ class home extends OModule {
 	/**
 	 * Start page
 	 *
-	 * @url /
 	 * @param ORequest $req Request object with method, headers, parameters and filters used
 	 * @return void
 	 */
+	#[ORoute('/')]
 	public function start(ORequest $req): void {
 		$users = $this->user_service->getUsers();
 
@@ -25,10 +34,10 @@ class home extends OModule {
 	/**
 	 * User's page
 	 *
-	 * @url /user/:id
 	 * @param ORequest $req Request object with method, headers, parameters and filters used
 	 * @return void
 	 */
+	 #[ORoute('/user/:id')]
 	public function user(ORequest $req): void {
 		$user = $this->user_service->getUser($req->getParamInt('id'));
 		$list = $this->photo_service->getPhotos($user->get('id'));
@@ -40,11 +49,13 @@ class home extends OModule {
 	/**
 	 * Test page for filters
 	 *
-	 * @url /filter
-	 * @filter testFilter
 	 * @param ORequest $req Request object with method, headers, parameters and filters used
 	 * @return void
 	 */
+	#[ORoute(
+		'/filter',
+		filter: 'testFilter'
+	)]
 	public function filter(ORequest $req): void {
 		echo '<pre>';
 		var_dump($req);

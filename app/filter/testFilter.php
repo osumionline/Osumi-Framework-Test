@@ -1,6 +1,6 @@
 <?php
 /*
- * Filtro de prueba
+ * Test filter
  */
 function testFilter($params, $headers) {
 	global $c;

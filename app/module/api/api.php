@@ -1,10 +1,19 @@
 <?php declare(strict_types=1);
+
+namespace OsumiFramework\App\Module;
+
+use OsumiFramework\OFW\Core\OModule;
+use OsumiFramework\OFW\Web\ORequest;
+use OsumiFramework\OFW\Routing\ORoute;
+use OsumiFramework\App\Service\userService;
+
 /**
- * Módulo API de prueba
- *
- * @type json
- * @prefix /api
+ * Sample API module
  */
+#[ORoute(
+	type: 'json',
+	prefix: '/api'
+)]
 class api extends OModule {
 	private ?userService $user_service;
 
@@ -13,34 +22,34 @@ class api extends OModule {
 	}
 
 	/**
-	 * Función para obtener la fecha
+	 * Function used to obtain current date
 	 *
-	 * @url /getDate
 	 * @param ORequest $req Request object with method, headers, parameters and filters used
 	 * @return void
 	 */
+	#[ORoute('/getDate')]
 	public function getDate(ORequest $req): void {
 		$this->getTemplate()->add('date', $this->user_service->getLastUpdate());
 	}
-	
+
 	/**
-	 * Función para obtener la lista de usuarios
+	 * Function used to get the user list
 	 *
-	 * @url /getUsers
 	 * @param ORequest $req Request object with method, headers, parameters and filters used
 	 * @return void
 	 */
+	#[ORoute('/getUsers')]
 	public function getUsers(ORequest $req): void {
 		$this->getTemplate()->addModelComponentList('list', $this->user_service->getUsers(), ['pass']);
 	}
-	
+
 	/**
-	 * Función para obtener los datos de un usuario
+	 * Function used to get a users data
 	 *
-	 * @url /getUser/:id
 	 * @param ORequest $req Request object with method, headers, parameters and filters used
 	 * @return void
 	 */
+	#[ORoute('/getUser/:id')]
 	public function getUser(ORequest $req): void {
 		$status = 'ok';
 		$user = $this->user_service->getUser($req->getParamInt('id'));
