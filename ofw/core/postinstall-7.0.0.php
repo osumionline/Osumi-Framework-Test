@@ -27,6 +27,7 @@ class OPostInstall {
 		]
 	];
 	private array $models_list = [];
+	private array $services_list = [];
 
 	/**
 	 * Store global configuration locally
@@ -55,7 +56,34 @@ class OPostInstall {
 			"use OsumiFramework\\OFW\\Core\\OModel;"
 		];
 		$model_content = $this->updateContent($model_path, $to_be_added);
+
+		// Update OCore:: -> OModel::
+		$model_content = str_ireplace("OCore::", "OModel::", $model_content);
+
 		file_put_contents($model_path, $model_content);
+
+		return $ret;
+	}
+
+	/**
+	 * Add namespace support to service file
+	 *
+	 * @param string $service Name of the service file
+	 *
+	 * @return string Returns information messages
+	 */
+	private function addNamespaceToService(string $service): string {
+		$ret = sprintf($this->messages[$this->config->getLang()]['ADD_NAMESPACE_TO_SERVICE'],
+			$this->colors->getColoredString($service, 'light_green')
+		);
+
+		$service_path = $this->config->getDir('app_service').$service.'.php';
+		$to_be_added = [
+			"\nnamespace OsumiFramework\\App\\Service;\n",
+			"use OsumiFramework\\OFW\\Core\\OService;"
+		];
+		$service_content = $this->updateContent($service_path, $to_be_added);
+		file_put_contents($service_path, $service_content);
 
 		return $ret;
 	}
@@ -81,29 +109,6 @@ class OPostInstall {
 		];
 		$module_content = $this->updateContent($module_path, $to_be_added);
 		file_put_contents($module_path, $module_content);
-
-		return $ret;
-	}
-
-	/**
-	 * Add namespace support to service file
-	 *
-	 * @param string $service Name of the service file
-	 *
-	 * @return string Returns information messages
-	 */
-	private function addNamespaceToService(string $service): string {
-		$ret = sprintf($this->messages[$this->config->getLang()]['ADD_NAMESPACE_TO_SERVICE'],
-			$this->colors->getColoredString($service, 'light_green')
-		);
-
-		$service_path = $this->config->getDir('app_service').$service.'.php';
-		$to_be_added = [
-			"\nnamespace OsumiFramework\\App\\Service;\n",
-			"use OsumiFramework\\OFW\\Core\\OService;"
-		];
-		$service_content = $this->updateContent($service_path, $to_be_added);
-		file_put_contents($service_path, $service_content);
 
 		return $ret;
 	}
@@ -156,6 +161,26 @@ class OPostInstall {
 	}
 
 	/**
+	 * Add used service namespaces
+	 *
+	 * @param string $content Content of the code file to be checked
+	 *
+	 * @return array New namespaces to be added
+	 */
+	private function addServices(string $content): array {
+		$ret = [];
+
+		// Check if service classes are used and add them if necessary
+		foreach ($this->services_list as $service) {
+			if (stripos($content, "new ".$service."Service")!==false) {
+				array_push($ret, "use OsumiFramework\\App\Service\\".$service."Service;");
+			}
+		}
+
+		return $ret;
+	}
+
+	/**
 	 * Builds a file with the given namespaces to be added
 	 *
 	 * @param string $path Path of the code file
@@ -172,6 +197,10 @@ class OPostInstall {
 		$db_content = $this->addDB($content);
 		if (count($db_content) > 0) {
 			$to_be_added = array_merge($to_be_added, $db_content);
+		}
+		$services_content = $this->addServices($content);
+		if (count($services_content) > 0) {
+			$to_be_added = array_merge($to_be_added, $services_content);
 		}
 		return "<?php declare(strict_types=1);\n" . implode("\n", $to_be_added) . "\n\n". $content;
 	}
@@ -202,6 +231,21 @@ class OPostInstall {
 			}
 		}
 
+		// Services
+		$services_path = $this->config->getDir('app_service');
+		if (file_exists($services_path)) {
+			if ($service = opendir($services_path)) {
+				while (false !== ($entry = readdir($service))) {
+					if ($entry != '.' && $entry != '..') {
+						$entry = str_ireplace(".php", "", $entry);
+						$ret .= $this->addNamespaceToService($entry);
+						array_push($this->services_list, $entry);
+					}
+				}
+				closedir($service);
+			}
+		}
+
 		// Modules
 		$modules_path = $this->config->getDir('app_module');
 		if (file_exists($modules_path)) {
@@ -212,20 +256,6 @@ class OPostInstall {
 					}
 				}
 				closedir($module);
-			}
-		}
-
-		// Services
-		$services_path = $this->config->getDir('app_service');
-		if (file_exists($services_path)) {
-			if ($service = opendir($services_path)) {
-				while (false !== ($entry = readdir($service))) {
-					if ($entry != '.' && $entry != '..') {
-						$entry = str_ireplace(".php", "", $entry);
-						$ret .= $this->addNamespaceToService($entry);
-					}
-				}
-				closedir($service);
 			}
 		}
 
