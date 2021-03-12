@@ -9,6 +9,7 @@ class OPostInstall {
 			'ADD_NAMESPACE_TO_MODULE'  => "  Archivo de módulo actualizado: \"%s\"\n",
 			'ADD_NAMESPACE_TO_SERVICE' => "  Archivo de servicio actualizado: \"%s\"\n",
 			'ADD_NAMESPACE_TO_TASK'    => "  Archivo de tarea actualizado: \"%s\"\n",
+			'ADD_NAMESPACE_TO_FILTER'  => "  Archivo de filtro actualizado: \"%s\"\n",
 			'CORE_FOLDER_DELETE'       => "  La carpeta \"%s\" no se puede eliminar automaticamente. Por favor, ejecuta el siguiente comando:\n\n",
 			'POST_UPDATE'              => "  El archivo \"%s\" no se puede actualizar automaticamente. Por favor, ejecuta los siguientes comandos:\n\n",
 			'UPDATE_URLS'              => "  Recuerda que ahora debes actualizar las URLs manualmente para usar el nuevo sistema de enrutamientos:\n\n",
@@ -20,6 +21,7 @@ class OPostInstall {
 			'ADD_NAMESPACE_TO_MODULE'  => "  Module file updated: \"%s\"\n",
 			'ADD_NAMESPACE_TO_SERVICE' => "  Service file updated: \"%s\"\n",
 			'ADD_NAMESPACE_TO_TASK'    => "  Task file updated: \"%s\"\n",
+			'ADD_NAMESPACE_TO_FILTER'  => "  Filter file updated: \"%s\"\n",
 			'CORE_FOLDER_DELETE'       => "  Folder \"%s\" cannot be automatically deleted. Please, run the following command:\n\n",
 			'POST_UPDATE'              => "  File \"%s\" could not be updated automatically. Please, run the following commands:\n\n",
 			'UPDATE_URLS'              => "  Remember that you have to update the URLs manually to use the new routing system:\n\n",
@@ -28,6 +30,7 @@ class OPostInstall {
 	];
 	private array $models_list = [];
 	private array $services_list = [];
+	private array $plugins_list = [];
 
 	/**
 	 * Store global configuration locally
@@ -84,6 +87,28 @@ class OPostInstall {
 		];
 		$service_content = $this->updateContent($service_path, $to_be_added);
 		file_put_contents($service_path, $service_content);
+
+		return $ret;
+	}
+
+	/**
+	 * Add namespace support to filter file
+	 *
+	 * @param string $filter Name of the filter file
+	 *
+	 * @return string Returns information messages
+	 */
+	private function addNamespaceToFilter(string $filter): string {
+		$ret = sprintf($this->messages[$this->config->getLang()]['ADD_NAMESPACE_TO_FILTER'],
+			$this->colors->getColoredString($filter, 'light_green')
+		);
+
+		$filter_path = $this->config->getDir('app_filter').$filter.'.php';
+		$to_be_added = [
+			"\nnamespace OsumiFramework\\App\\Filter;\n"
+		];
+		$filter_content = $this->updateContent($filter_path, $to_be_added);
+		file_put_contents($filter_path, $filter_content);
 
 		return $ret;
 	}
@@ -153,7 +178,7 @@ class OPostInstall {
 		// Check if model classes are used and add them if necessary
 		foreach ($this->models_list as $model) {
 			if (stripos($content, "new ".ucfirst($model))!==false) {
-				array_push($ret, "use OsumiFramework\\App\Model\\".ucfirst($model).";");
+				array_push($ret, "use OsumiFramework\\App\\Model\\".ucfirst($model).";");
 			}
 		}
 
@@ -173,7 +198,27 @@ class OPostInstall {
 		// Check if service classes are used and add them if necessary
 		foreach ($this->services_list as $service) {
 			if (stripos($content, "new ".$service."Service")!==false) {
-				array_push($ret, "use OsumiFramework\\App\Service\\".$service."Service;");
+				array_push($ret, "use OsumiFramework\\App\\Service\\".$service."Service;");
+			}
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Add used plugin namespaces
+	 *
+	 * @param string $content Content of the code file to be checked
+	 *
+	 * @return array New namespaces to be added
+	 */
+	private function addPlugins(string $content): array {
+		$ret = [];
+
+		// Check if plugin classes are used and add them if necessary
+		foreach ($this->plugins_list as $plugin) {
+			if (stripos($content, "new ".$plugin)!==false) {
+				array_push($ret, "use OsumiFramework\\OFW\\Plugins\\".$plugin.";");
 			}
 		}
 
@@ -202,6 +247,10 @@ class OPostInstall {
 		if (count($services_content) > 0) {
 			$to_be_added = array_merge($to_be_added, $services_content);
 		}
+		$plugins_content = $this->addPlugins($content);
+		if (count($plugins_content) > 0) {
+			$to_be_added = array_merge($to_be_added, $plugins_content);
+		}
 		return "<?php declare(strict_types=1);\n" . implode("\n", $to_be_added) . "\n\n". $content;
 	}
 
@@ -213,6 +262,12 @@ class OPostInstall {
 	public function run(): string {
 		$ret = '';
 		$ret .= $this->messages[$this->config->getLang()]['TITLE'];
+
+		// Find installed plugins
+		foreach ($this->config->getPlugins() as $p) {
+			$plugin_name = str_ireplace(".php", "", $p->getFileName());
+			array_push($this->plugins_list, $plugin_name);
+		}
 
 		// Add namespaces
 
@@ -243,6 +298,20 @@ class OPostInstall {
 					}
 				}
 				closedir($service);
+			}
+		}
+
+		// Filters
+		$filters_path = $this->config->getDir('app_filter');
+		if (file_exists($filters_path)) {
+			if ($filter = opendir($filters_path)) {
+				while (false !== ($entry = readdir($filter))) {
+					if ($entry != '.' && $entry != '..') {
+						$entry = str_ireplace(".php", "", $entry);
+						$ret .= $this->addNamespaceToFilter($entry);
+					}
+				}
+				closedir($filter);
 			}
 		}
 
