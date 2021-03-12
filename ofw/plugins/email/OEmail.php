@@ -5,7 +5,7 @@ namespace OsumiFramework\OFW\Plugins;
 use OsumiFramework\OFW\Log\OLog;
 
 /**
- * Class to send emails, as plain text or HTML
+ * Utility class to send emails using PHP's mail function
  */
 class OEmail {
 	private bool    $debug        = false;
@@ -391,7 +391,7 @@ class OEmail {
 
 				// Body
 				$body = $this->getBody($separator);
-				
+
 				// Attachments
 				foreach ($this->attachments as $attachment) {
 					$body .= $this->getAttachment($attachment, $separator);
