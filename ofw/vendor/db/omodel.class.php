@@ -32,7 +32,7 @@ class OModel {
 		self::LONGTEXT => ['default'=>'',    'original'=>'',    'value'=>'',    'incr'=>false, 'size'=>0,  'nullable'=>false, 'comment'=>'', 'ref'=>'', 'by'=>''],
 		self::FLOAT    => ['default'=>0,     'original'=>0,     'value'=>0,     'incr'=>false, 'size'=>0,  'nullable'=>false, 'comment'=>'', 'ref'=>'', 'by'=>'']
 	];
-	
+
 	private   bool    $debug      = false;
 	private   ?OLog   $l          = null;
 	protected ?ODB    $db         = null;
@@ -231,7 +231,7 @@ class OModel {
 			if (count($updated_fields)==0){
 				return false;
 			}
-			$sql .= implode($updated_fields, ", ");
+			$sql .= implode(", ", $updated_fields);
 			$sql .= " WHERE ";
 			foreach ($this->pk as $i => $pk_ind) {
 				if ($i!=0) {
@@ -252,7 +252,7 @@ class OModel {
 			foreach ($this->model as $field_name => $field) {
 				array_push($insert_fields, "`".$field_name."`");
 			}
-			$sql .= implode($insert_fields, ",");
+			$sql .= implode(",", $insert_fields);
 			$sql .= ") VALUES (";
 			$insert_fields = [];
 			foreach ($this->model as $field) {
@@ -265,7 +265,7 @@ class OModel {
 					array_push($query_params, $value);
 				}
 			}
-			$sql .= implode($insert_fields, ",");
+			$sql .= implode(",", $insert_fields);
 			$sql .= ")";
 
 			$save_type = 'i';
@@ -380,7 +380,7 @@ class OModel {
 		foreach ($this->pk as $pk_field) {
 			array_push($delete_fields, "`".$pk_field."` = '".$this->model[$pk_field]['value']."' ");
 		}
-		$sql .= implode('AND ', $delete_fields);
+		$sql .= implode("AND ", $delete_fields);
 
 		$this->db->query($sql);
 
@@ -503,7 +503,7 @@ class OModel {
 					}
 					$sql .= ",\n";
 				}
-				$sql .= "  PRIMARY KEY (`".implode('`,`',$this->pk)."`)\n";
+				$sql .= "  PRIMARY KEY (`".implode('`,`', $this->pk)."`)\n";
 				$sql .= ") ENGINE=InnoDB DEFAULT CHARSET=" . $core->config->getDb('charset') . " COLLATE=" . $core->config->getDb('collate') . ";\n";
 
 				$ret = $sql;

@@ -1,4 +1,7 @@
 <?php
+
+namespace OsumiFramework\App\Filter;
+
 /*
  * Test filter
  */

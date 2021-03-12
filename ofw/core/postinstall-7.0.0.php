@@ -290,12 +290,12 @@ class OPostInstall {
 
 		$ret .= "  /**                                    #[ORoute(\n";
 		$ret .= "   * @prefix /api             ->            prefix: 'api',\n";
-		$ret .= "   * @type json                             type: 'json',\n";
+		$ret .= "   * @type json                             type: 'json'\n";
 		$ret .= "   */                                    )]\n\n";
 
 		$ret .= "  /**                                    #[ORoute(\n";
 		$ret .= "   * @url /getUser             ->           '/getUser',\n";
-		$ret .= "   * @filter loginFilter                    filter: 'loginFilter',\n";
+		$ret .= "   * @filter loginFilter                    filter: 'loginFilter'\n";
 		$ret .= "   */                                    )]\n\n";
 
 		$ret .= $this->messages[$this->config->getLang()]['END_TITLE'];
