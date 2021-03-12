@@ -265,7 +265,9 @@ class OPostInstall {
 
 		// Find installed plugins
 		foreach ($this->config->getPlugins() as $p) {
-			$plugin_name = str_ireplace(".php", "", $p->getFileName());
+			$plugin = new OPlugin($p);
+			$plugin->loadConfig();
+			$plugin_name = str_ireplace(".php", "", $plugin->getFileName());
 			array_push($this->plugins_list, $plugin_name);
 		}
 
