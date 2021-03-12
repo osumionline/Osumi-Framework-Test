@@ -12,7 +12,7 @@ class OCache {
 	private bool $loaded = false;
 	private ?string $route = null;
 	private bool $is_hit = false;
-	private mixed $value = null;
+	private mixed $value;
 	private int $expires_after = 0;
 
 	/**
