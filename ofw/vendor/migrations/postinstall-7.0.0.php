@@ -56,7 +56,7 @@ class OPostInstall {
 		$model_path = $this->config->getDir('app_model').$model.'.php';
 		$to_be_added = [
 			"\nnamespace OsumiFramework\\App\\Model;\n",
-			"use OsumiFramework\\OFW\\Core\\OModel;"
+			"use OsumiFramework\\OFW\\DB\\OModel;"
 		];
 		$model_content = $this->updateContent($model_path, $to_be_added);
 
