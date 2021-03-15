@@ -255,13 +255,13 @@ class OPostInstall {
 	}
 
 	/**
-	 * Get modules PHPDoc block
+	 * Get modules PHPDoc information
 	 *
 	 * @param string $module Module name
 	 *
 	 * @return string Modules PHPDoc block, if any
 	 */
-	public static function getModuleDocumentation(string $module): ?string {
+	public function getModuleDocumentation(string $module): ?string {
 		$class = new ReflectionClass($module);
 		$class_doc = $class->getDocComment();
 		if ($class_doc !== false) {
@@ -278,7 +278,7 @@ class OPostInstall {
 	 *
 	 * @return array List of items with module name, method name and associated phpDoc information
 	 */
-	public static function getDocumentation(string $inspectclass): array {
+	public function getDocumentation(string $inspectclass): array {
 		$class = new ReflectionClass($inspectclass);
 
 		$class_params = [
