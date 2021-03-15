@@ -312,7 +312,7 @@ class OPostInstall {
 				'prefix' => $class_params['prefix'],
 				'filter' => $class_params['filter'],
 				'doc' => $ref->getDocComment()
-			)]);
+			]));
 		}
 		return $arr;
 	}
