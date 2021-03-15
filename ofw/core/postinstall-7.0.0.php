@@ -334,6 +334,7 @@ class OPostInstall {
 			'filter'  => $item['filter'],
 			'comment' => null,
 			'url'     => null,
+			'layout'  => null,
 			'doc'     => $item['doc']
 		];
 		foreach ($docs as $line) {
@@ -348,7 +349,7 @@ class OPostInstall {
 				else {
 					$words = explode(' ', $line);
 					$command = substr(array_shift($words), 1);
-					$command_list = ['url', 'type', 'prefix', 'filter'];
+					$command_list = ['url', 'type', 'prefix', 'filter', 'layout'];
 					if (in_array($command, $command_list)) {
 						$info[$command] = implode(' ', $words);
 					}
