@@ -255,6 +255,111 @@ class OPostInstall {
 	}
 
 	/**
+	 * Get modules PHPDoc block
+	 *
+	 * @param string $module Module name
+	 *
+	 * @return string Modules PHPDoc block, if any
+	 */
+	public static function getModuleDocumentation(string $module): ?string {
+		$class = new ReflectionClass($module);
+		$class_doc = $class->getDocComment();
+		if ($class_doc !== false) {
+			return $class_doc;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get module methods phpDoc information
+	 *
+	 * @param string $inspectclass Module name
+	 *
+	 * @return array List of items with module name, method name and associated phpDoc information
+	 */
+	public static function getDocumentation(string $inspectclass): array {
+		$class = new ReflectionClass($inspectclass);
+
+		$class_params = [
+			'module' => $inspectclass,
+			'action' => null,
+			'type'   => 'html',
+			'prefix' => null,
+			'filter' => null,
+			'doc'    => null
+		];
+		$class_doc = $this->getModuleDocumentation($inspectclass);
+		if (!is_null($class_doc)) {
+			$class_params['doc'] = $class_doc;
+			$class_params = $this->parseAnnotations($class_params);
+		}
+
+		$methods = [];
+		foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+			if ($method->class == $class->getName() && $method->name != '__construct') {
+				 array_push($methods, $method->name);
+			}
+		}
+
+		$arr = [];
+		foreach($methods as $method) {
+			$ref = new ReflectionMethod($inspectclass, $method);
+			array_push($arr, $this->parseAnnotations([
+				'module' => $class_params['module'],
+				'action' => $method,
+				'type'   => $class_params['type'],
+				'prefix' => $class_params['prefix'],
+				'filter' => $class_params['filter'],
+				'doc' => $ref->getDocComment()
+			)]);
+		}
+		return $arr;
+	}
+
+	/**
+	 * Get OFW annotations from a method's phpDoc information block
+	 *
+	 * @param array $item getDocumentation return element with name of the module, name of the method and associated phpDoc information
+	 *
+	 * @return array Received method information and new information gathered from the phpDoc block
+	 */
+	function parseAnnotations(array $item): array {
+		$docs = explode("\n", $item['doc']);
+		$info = [
+			'module'  => $item['module'],
+			'action'  => $item['action'],
+			'type'    => $item['type'],
+			'prefix'  => $item['prefix'],
+			'filter'  => $item['filter'],
+			'comment' => null,
+			'url'     => null,
+			'doc'     => $item['doc']
+		];
+		foreach ($docs as $line) {
+			$line = trim($line);
+			if ($line!='/**' && $line!='*' && $line!='*/') {
+				if (substr($line, 0, 2)=='* ') {
+					$line = substr($line, 2);
+				}
+				if (substr($line, 0, 1)!='@') {
+					$info['comment'] = $line;
+				}
+				else {
+					$words = explode(' ', $line);
+					$command = substr(array_shift($words), 1);
+					$command_list = ['url', 'type', 'prefix', 'filter'];
+					if (in_array($command, $command_list)) {
+						$info[$command] = implode(' ', $words);
+					}
+				}
+			}
+		}
+
+		return $info;
+	}
+
+	/**
 	 * Runs the v6.1.0 update post-installation tasks
 	 *
 	 * @return string
@@ -323,7 +428,9 @@ class OPostInstall {
 			if ($module = opendir($modules_path)) {
 				while (false !== ($entry = readdir($module))) {
 					if ($entry != '.' && $entry != '..') {
+						require_once $this->config->getDir('app_module').$entry.'/'.$entry.'.php';
 						$ret .= $this->addNamespaceToModule($entry);
+						var_dump($this->getDocumentation($entry));
 					}
 				}
 				closedir($module);
