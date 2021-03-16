@@ -7,14 +7,27 @@ use OsumiFramework\OFW\DB\ODB;
 use OsumiFramework\App\Model\User;
 
 class userService extends OService {
+	/**
+	 * Load service tools
+	 */
 	function __construct() {
 		$this->loadService();
 	}
 
+	/**
+	 * Get current date and time
+	 *
+	 * @return string Current date and time
+	 */
 	public function getLastUpdate(): string {
 		return date('d-m-Y H:i:s');
 	}
 
+	/**
+	 * Get list of all users
+	 *
+	 * @return array List of all users
+	 */
 	public function getUsers(): array {
 		$db = new ODB();
 		$sql = "SELECT * FROM `user`";
@@ -31,6 +44,13 @@ class userService extends OService {
 		return $list;
 	}
 
+	/**
+	 * Get one specific user
+	 *
+	 * @param int $id Id of the user
+	 *
+	 * @return User Asked user
+	 */
 	public function getUser(int $id): ?User {
 		$user = new User();
 		if ($user->find(['id' => $id])) {

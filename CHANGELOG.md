@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-## `7.0.0` (23/11/2020)
+## `7.0.0` (16/03/2021)
 
 ¡Nueva versión 7.0!
 
@@ -129,6 +129,8 @@ use OsumiFramework\OFW\Web\ORequest;
 use OsumiFramework\OFW\Routing\ORoute;
 use OsumiFramework\App\Service\userService;
 ```
+
+Al actualizar una aplicación automáticamente se modificarán todos los archivos con las nuevas sintaxis.
 
 ## `6.6.0` (23/11/2020)
 
