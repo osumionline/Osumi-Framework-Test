@@ -10,9 +10,9 @@ class OPostInstall {
 			'ADD_NAMESPACE_TO_SERVICE' => "  Archivo de servicio actualizado: \"%s\"\n",
 			'ADD_NAMESPACE_TO_TASK'    => "  Archivo de tarea actualizado: \"%s\"\n",
 			'ADD_NAMESPACE_TO_FILTER'  => "  Archivo de filtro actualizado: \"%s\"\n",
-			'CORE_FOLDER_DELETE'       => "  La carpeta \"%s\" no se puede eliminar automaticamente. Por favor, ejecuta el siguiente comando:\n\n",
-			'POST_UPDATE'              => "  El archivo \"%s\" no se puede actualizar automaticamente. Por favor, ejecuta los siguientes comandos:\n\n",
-			'UPDATE_URLS'              => "  Recuerda que ahora debes actualizar las URLs manualmente para usar el nuevo sistema de enrutamientos:\n\n",
+			'CORE_FOLDER_DELETE'       => "  La carpeta \"%s\" no se pudo eliminar automaticamente. Por favor, ejecuta el siguiente comando:\n\n",
+			'POST_UPDATE'              => "  El archivo \"%s\" no se pudo actualizar automaticamente. Por favor, ejecuta los siguientes comandos:\n\n",
+			'URL_CACHE_DELETE'         => "  Archivo cache de URLs borrado: \"%s\"\n",
 			'END_TITLE'                => "\nPOST INSTALL 7.0.0 finalizado.\n\n"
 		],
 		'en' => [
@@ -22,9 +22,9 @@ class OPostInstall {
 			'ADD_NAMESPACE_TO_SERVICE' => "  Service file updated: \"%s\"\n",
 			'ADD_NAMESPACE_TO_TASK'    => "  Task file updated: \"%s\"\n",
 			'ADD_NAMESPACE_TO_FILTER'  => "  Filter file updated: \"%s\"\n",
-			'CORE_FOLDER_DELETE'       => "  Folder \"%s\" cannot be automatically deleted. Please, run the following command:\n\n",
+			'CORE_FOLDER_DELETE'       => "  Folder \"%s\" could not be automatically deleted. Please, run the following command:\n\n",
 			'POST_UPDATE'              => "  File \"%s\" could not be updated automatically. Please, run the following commands:\n\n",
-			'UPDATE_URLS'              => "  Remember that you have to update the URLs manually to use the new routing system:\n\n",
+			'URL_CACHE_DELETE'         => "  URL cache file deleted: \"%s\"\n",
 			'END_TITLE'                => "\nPOST INSTALL 7.0.0 finished.\n\n"
 		]
 	];
@@ -133,6 +133,7 @@ class OPostInstall {
 			"use OsumiFramework\\OFW\\Routing\\ORoute;"
 		];
 		$module_content = $this->updateContent($module_path, $to_be_added);
+		$module_content = $this->updateModuleBlocks($module, $module_content);
 		file_put_contents($module_path, $module_content);
 
 		return $ret;
@@ -238,6 +239,7 @@ class OPostInstall {
 		$content = file_get_contents($path);
 		$content = str_ireplace("\r\n", "\n", $content);
 		$content = str_ireplace("<?php declare(strict_types=1);\n", "", $content);
+		$content = str_ireplace("mktime()", "time()", $content);
 
 		$db_content = $this->addDB($content);
 		if (count($db_content) > 0) {
@@ -252,6 +254,238 @@ class OPostInstall {
 			$to_be_added = array_merge($to_be_added, $plugins_content);
 		}
 		return "<?php declare(strict_types=1);\n" . implode("\n", $to_be_added) . "\n\n". $content;
+	}
+
+	/**
+	 * Update modules and module methods PHPDoc blocks to the new ORoute syntax
+	 *
+	 * @param string $module Module name
+	 *
+	 * @param string $module_content Module files content
+	 *
+	 * @return string Updated module content
+	 */
+	private function updateModuleBlocks(string $module, string $module_content): string {
+		$module_block = $this->getModuleBlock($module);
+		if (!is_null($module_block['doc'])) {
+			$module_oroute = $this->getORoute($module_block, 'module');
+			$module_content = str_ireplace($module_block['doc'], $module_oroute['new'], $module_content);
+		}
+		$module_methods = $this->getDocumentation($module);
+		foreach ($module_methods['methods'] as $method) {
+			$method_oroute = $this->getORoute($method, 'method');
+			$new_block = $method['doc'];
+			$to_remove = ['url', 'type', 'prefix', 'filter', 'layout'];
+			foreach ($to_remove as $remove) {
+				if ($method_oroute[$remove]) {
+					$new_block = str_ireplace("\t * @".$remove." ".$method[$remove]."\n", "", $new_block);
+				}
+			}
+			$module_content = str_ireplace($method['doc'], $new_block."\n".$method_oroute['new'], $module_content);
+		}
+
+		return $module_content;
+	}
+
+	/**
+	 * Get new ORoute function with required parameters
+	 *
+	 * @param array $item Module or method block information
+	 *
+	 * @param string $mode Module or method
+	 *
+	 * @return array New ORoute syntax with required parameters
+	 */
+	private function getORoute(array $item, string $mode): array {
+		$separator = ($mode=='module') ? "" : "\t";
+		$ret = [
+			'new' => $separator."#[ORoute(",
+			'url' => false,
+			'type' => false,
+			'prefix' => false,
+			'filter' => false,
+			'layout' => false
+		];
+		$break = false;
+		if (!is_null($item['url']) && is_null($item['type']) && is_null($item['prefix']) && is_null($item['filter']) && is_null($item['layout'])){
+			$ret['new'] .= "'".$item['url']."'";
+			$ret['url'] = true;
+		}
+		else {
+			$ret['new'] .= "\n";
+			if (!is_null($item['url'])) {
+				$ret['new'] .= $separator."\t'".$item['url']."'";
+				$break = true;
+				$ret['url'] = true;
+			}
+			if (!is_null($item['type'])) {
+				if ($break) {
+					$ret['new'] .=",\n";
+				}
+				$ret['new'] .= $separator."\ttype: '".$item['type']."'";
+				$break = true;
+				$ret['type'] = true;
+			}
+			if (!is_null($item['prefix'])) {
+				if ($break) {
+					$ret['new'] .=",\n";
+				}
+				$ret['new'] .= $separator."\tprefix: '".$item['prefix']."'";
+				$break = true;
+				$ret['prefix'] = true;
+			}
+			if (!is_null($item['filter'])) {
+				if ($break) {
+					$ret['new'] .=",\n";
+				}
+				$ret['new'] .= $separator."\tfilter: '".$item['filter']."'";
+				$break = true;
+				$ret['filter'] = true;
+			}
+			if (!is_null($item['layout'])) {
+				if ($break) {
+					$ret['new'] .=",\n";
+				}
+				$ret['new'] .= $separator."\tlayout: '".$item['layout']."'";
+				$break = true;
+				$ret['layout'] = true;
+			}
+			$ret['new'] .="\n";
+		}
+		$ret['new'] .= ($break ? $separator : "").")]";
+		return $ret;
+	}
+
+	/**
+	 * Get modules PHPDoc information
+	 *
+	 * @param string $module Module name
+	 *
+	 * @return string Modules PHPDoc block, if any
+	 */
+	private function getModuleDocumentation(string $module): ?string {
+		$class = new ReflectionClass($module);
+		$class_doc = $class->getDocComment();
+		if ($class_doc !== false) {
+			return $class_doc;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get modules PHPDoc block, if any
+	 *
+	 * @param string $module Module name
+	 *
+	 * @return string Modules PHPDoc block information parsed
+	 */
+	private function getModuleBlock(string $module): array {
+		// Module phpblock
+		$class_params = [
+			'module' => $module,
+			'action' => null,
+			'type'   => 'html',
+			'prefix' => null,
+			'filter' => null,
+			'doc'    => null
+		];
+		$class_doc = $this->getModuleDocumentation($module);
+		if (!is_null($class_doc)) {
+			$class_params['doc'] = $class_doc;
+			$class_params = $this->parseAnnotations($class_params);
+		}
+
+		return $class_params;
+	}
+
+	/**
+	 * Get module methods phpDoc information
+	 *
+	 * @param string $inspectclass Module name
+	 *
+	 * @return array List of items with module name, method name and associated phpDoc information
+	 */
+	private function getDocumentation(string $inspectclass): array {
+		$class = new ReflectionClass($inspectclass);
+
+		$class_params = [
+			'module' => $inspectclass,
+			'action' => null,
+			'type'   => 'html',
+			'prefix' => null,
+			'filter' => null,
+			'doc'    => null
+		];
+		$class_doc = $this->getModuleDocumentation($inspectclass);
+		if (!is_null($class_doc)) {
+			$class_params['doc'] = $class_doc;
+			$class_params = $this->parseAnnotations($class_params);
+		}
+
+		$methods = [];
+		foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+			if ($method->class == $class->getName() && $method->name != '__construct') {
+				 array_push($methods, $method->name);
+			}
+		}
+
+		$arr = ['class' => $class_params, 'methods' => []];
+		foreach($methods as $method) {
+			$ref = new ReflectionMethod($inspectclass, $method);
+			array_push($arr['methods'], $this->parseAnnotations([
+				'module' => $class_params['module'],
+				'action' => $method,
+				'type'   => $class_params['type'],
+				'prefix' => $class_params['prefix'],
+				'filter' => $class_params['filter'],
+				'doc' => $ref->getDocComment()
+			]));
+		}
+		return $arr;
+	}
+
+	/**
+	 * Get OFW annotations from a method's phpDoc information block
+	 *
+	 * @param array $item getDocumentation return element with name of the module, name of the method and associated phpDoc information
+	 *
+	 * @return array Received method information and new information gathered from the phpDoc block
+	 */
+	private function parseAnnotations(array $item): array {
+		$docs = explode("\n", $item['doc']);
+		$info = [
+			'module'  => $item['module'],
+			'action'  => $item['action'],
+			'type'    => null,
+			'prefix'  => null,
+			'filter'  => null,
+			'comment' => null,
+			'url'     => null,
+			'layout'  => null,
+			'doc'     => $item['doc']
+		];
+		foreach ($docs as $line) {
+			$line = trim($line);
+			if ($line!='/**' && $line!='*' && $line!='*/') {
+				if (substr($line, 0, 2)=='* ') {
+					$line = substr($line, 2);
+				}
+				if (substr($line, 0, 1)!='@') {
+					$info['comment'] = $line;
+				}
+				else {
+					$words = explode(' ', $line);
+					$command = substr(array_shift($words), 1);
+					$command_list = ['url', 'type', 'prefix', 'filter', 'layout'];
+					if (in_array($command, $command_list)) {
+						$info[$command] = implode(' ', $words);
+					}
+				}
+			}
+		}
+
+		return $info;
 	}
 
 	/**
@@ -323,6 +557,7 @@ class OPostInstall {
 			if ($module = opendir($modules_path)) {
 				while (false !== ($entry = readdir($module))) {
 					if ($entry != '.' && $entry != '..') {
+						require_once $this->config->getDir('app_module').$entry.'/'.$entry.'.php';
 						$ret .= $this->addNamespaceToModule($entry);
 					}
 				}
@@ -357,17 +592,13 @@ class OPostInstall {
 		$ret .= "    ".$this->colors->getColoredString("rm ofw/template/update/update.php", 'light_green')."\n";
 		$ret .= "    ".$this->colors->getColoredString("mv ofw/template/update/update_7.php ofw/template/update/update.php", 'light_green')."\n\n";
 
-		$ret .= $this->messages[$this->config->getLang()]['UPDATE_URLS'];
-
-		$ret .= "  /**                                    #[ORoute(\n";
-		$ret .= "   * @prefix /api             ->            prefix: 'api',\n";
-		$ret .= "   * @type json                             type: 'json'\n";
-		$ret .= "   */                                    )]\n\n";
-
-		$ret .= "  /**                                    #[ORoute(\n";
-		$ret .= "   * @url /getUser             ->           '/getUser',\n";
-		$ret .= "   * @filter loginFilter                    filter: 'loginFilter'\n";
-		$ret .= "   */                                    )]\n\n";
+		$url_cache_file = $this->config->getDir('ofw_cache').'urls.cache.json';
+		if (file_exists($url_cache_file)) {
+			unlink($url_cache_file);
+			$ret .= sprintf($this->messages[$this->config->getLang()]['URL_CACHE_DELETE'],
+				$this->colors->getColoredString($url_cache_file, 'light_green')
+			);
+		}
 
 		$ret .= $this->messages[$this->config->getLang()]['END_TITLE'];
 
