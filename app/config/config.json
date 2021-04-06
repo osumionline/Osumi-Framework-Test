@@ -13,7 +13,7 @@
 	"base_url": "https://dev.osumi.es/",
 	"admin_email": "igorosabel@osumi.es",
 	"default_title": "Osumi Framework Dev",
-	"lang": "en",
+	"lang": "eu",
 	"css": ["common"],
 	"ext_css": [],
 	"js": ["common"],
