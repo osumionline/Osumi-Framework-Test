@@ -1,6 +1,42 @@
 CHANGELOG
 =========
 
+## `7.5.0` (31/05/2021)
+
+Mejora en `OLog`. Ahora ademas de la fecha, nivel de log, clase que le ha llamado y el mensaje, también se guardará el nombre del archivo y la línea desde donde se ha ejecutado la llamada a logear.
+
+## `7.4.1` (28/05/2021)
+
+Corrección en la función `OTools::curlRequest`. En el caso de que una llamada cURL falle, la ejecución devuelve el valor `false` y la función estaba preparada para devolver un `string`.
+
+## `7.4.0` (24/05/2021)
+
+Añado el método `getCacheContainer` a los módulos, servicios y tareas. De este modo no es necesario acceder al objeto global `core`. Por ejemplo:
+
+```php
+class api extends OModule {
+/**
+ * Función para obtener la fecha
+ *
+ * @url /getDate
+ * @param ORequest $req Request object with method, headers, parameters and filters used
+ * @return void
+ */
+public function getDate(ORequest $req): void {
+  $this->getCacheContainer()->deleteItem('last_date');
+}
+```
+
+## `7.3.2` (21/05/2021)
+
+Corrección de estilo al crear nuevos servicios o tareas mediante el comando `php ofw.php add`, se han añadido unos saltos de líneas para separar mejor los namespaces de las clases que se usan.
+
+Corrección al crear un componente de modelo. Al crear un componente de modelo se generan dos archivos, un componente para un objeto de modelo y un componente para crear listados de objetos de modelo. En el listado faltaba por incluir la clase `OTools`.
+
+## `7.3.1` (19/05/2021)
+
+Corrección al crear nuevos servicios o tareas mediante el comando `php ofw.php add`. Los nuevos servicios y tareas no incluían los nuevos namespaces.
+
 ## `7.3.0` (12/04/2021)
 
 Cambios en el sistema de logs. Nuevos campos en el archivo `config`:
@@ -15,7 +51,7 @@ Cambios en el sistema de logs. Nuevos campos en el archivo `config`:
 ...
 ```
 
-* `name` indica el nombre del archivo donde se escriben los logs. 
+* `name` indica el nombre del archivo donde se escriben los logs.
 * `max_file_size` indica el tamaño máximo (en MB) del archivo de logs. El valor por defecto es 50MB.
 * `max_num_files` indica el número de archivos que se rotarán. El valor por defecto es de 3 archivos de rotación.
 

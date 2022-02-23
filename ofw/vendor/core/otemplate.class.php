@@ -10,12 +10,14 @@ use OsumiFramework\Plugins\Translate\OTranslate;
  * OTemplate - Class used by the controllers to show the required template and its data
  */
 class OTemplate {
+	private string      $mode          = 'module';
 	private string      $environment   = '';
 	private bool        $debug         = false;
 	private ?OLog       $l             = null;
 	private string      $component_dir = '';
 	private string      $layout_dir    = '';
 	private string      $modules_dir   = '';
+	private string      $plugins_dir   = '';
 	private ?string     $template      = null;
 	private string      $action        = '';
 	private string      $module        = '';
@@ -39,18 +41,20 @@ class OTemplate {
 	/**
 	 * Load on startup applications configuration and check if there are translations
 	 */
-	function __construct() {
+	function __construct(string $mode = 'module') {
 		global $core;
+		$this->mode        = $mode;
 		$this->environment = $core->config->getEnvironment();
-		$this->debug = ($core->config->getLog('level') == 'ALL');
+		$this->debug       = ($core->config->getLog('level') == 'ALL');
 		if ($this->debug) {
 			$this->l = new OLog('OTemplate');
 		}
 
 		$this->component_dir = $core->config->getDir('app_component');
-		$this->layout_dir = $core->config->getDir('app_layout');
-		$this->modules_dir = $core->config->getDir('app_module');
-		$this->title = $core->config->getDefaultTitle();
+		$this->layout_dir    = $core->config->getDir('app_layout');
+		$this->modules_dir   = $core->config->getDir('app_module');
+		$this->plugins_dir   = $core->config->getDir('ofw_plugins');
+		$this->title         = $core->config->getDefaultTitle();
 
 		if ($core->config->getPlugin('translate')) {
 			$this->lang = $core->config->getLang();
@@ -371,7 +375,9 @@ class OTemplate {
 	public function process(): string {
 		global $core;
 		$this->log('process - Type: '.$this->type);
-		$this->template     = file_get_contents($this->modules_dir.$this->module.'/template/'.$this->action.'.'.$this->type);
+		$this->template = file_get_contents(
+			(($this->mode==='module') ? $this->modules_dir : $this->plugins_dir).$this->module.'/template/'.$this->action.'.'.$this->type
+		);
 		foreach ($core->config->getCssList() as $css) {
 			$this->addCss($css);
 		}

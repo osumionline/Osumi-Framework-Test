@@ -8,6 +8,7 @@ use \ReflectionObject;
 use OsumiFramework\OFW\Cache\OCache;
 use OsumiFramework\OFW\DB\OModel;
 use OsumiFramework\OFW\Routing\ORoute;
+use OsumiFramework\OFW\Core\OPlugin;
 
 /**
  * OTools - Utility class with auxiliary tools
@@ -261,7 +262,7 @@ class OTools {
 			'mode'    => $mode,
 			'version' => self::getVersion(),
 			'title'   => $core->config->getDefaultTitle(),
-			'message' => $res['message'],
+			'message' => array_key_exists('message', $res) ? $res['message'] : '',
 			'res'     => $res
 		];
 
@@ -313,9 +314,9 @@ class OTools {
 	 *
 	 * @param array $data Key / value array with parameters to be sent
 	 *
-	 * @return string Result of the curl request
+	 * @return string|false Result of the curl request or false if the execution failed
 	 */
-	public static function curlRequest(string $method, string $url, array $data): string {
+	public static function curlRequest(string $method, string $url, array $data): string|false {
 		$ch = curl_init();
 		if ($method=='get') {
 			$url .= '?';
@@ -483,6 +484,7 @@ class OTools {
 	public static function updateUrls(bool $silent=false): ?string {
 		global $core;
 		$urls = self::getModuleUrls();
+		$urls = array_merge($urls, self::getPluginUrls());
 
 		$urls_cache_file = $core->cacheContainer->getItem('urls');
 		$urls_cache_file->set(json_encode($urls, JSON_UNESCAPED_UNICODE));
@@ -563,9 +565,11 @@ class OTools {
 	/**
 	 * Get information from all the modules and actions to build the url cache file
 	 *
+	 * @param bool $with_prefix Sets if the prefixx should be returned or parsed, defaults to parsed
+	 *
 	 * @return array List of every action with it's information: module, action, type, url, prefix and filter
 	 */
-	public static function getModuleUrls(): array {
+	public static function getModuleUrls(bool $with_prefix = false): array {
 		global $core;
 		$modules = [];
 		if (file_exists($core->config->getDir('app_module'))) {
@@ -584,14 +588,50 @@ class OTools {
 		foreach ($modules as $module) {
 			$methods = self::getDocumentation($module);
 			foreach ($methods as $method) {
-				if (!is_null($method['prefix'])) {
-					$method['url'] = $method['prefix'].$method['url'];
+				if (!$with_prefix) {
+					if (!is_null($method['prefix'])) {
+						$method['url'] = $method['prefix'].$method['url'];
+					}
+					unset($method['prefix']);
 				}
-				unset($method['prefix']);
+				$method['mode']   = 'module';
+				$method['plugin'] = null;
 				array_push($list, $method);
 			}
 		}
 
+		return $list;
+	}
+
+	/**
+	 * Get information from all the installed plugins and look if they  have any  URLs
+	 *
+	 * @return array List of every action with it's information: module, action, type, url, prefix and filter
+	 */
+	public static function getPluginUrls(): array {
+		global $core;
+		$list = [];
+		$plugins = $core->config->getInstalledPlugins();
+		foreach ($core->config->getPlugins() as $p) {
+			$plugin = new OPlugin($p);
+			$plugin->loadConfig();
+
+			if (count($plugin->getUrls())>0) {
+				var_dump($plugin);
+				foreach ($plugin->getUrls() as $url) {
+					array_push($list, [
+						'module' => str_ireplace('.php', '', $plugin->getFileName()),
+						'plugin' => $plugin->getName(),
+						'action' => $url['action'],
+						'type'   => (array_key_exists('type', $url) ? $url['type'] : 'html'),
+						'filter' => null,
+						'layout' => null,
+						'url'    => $url['url'],
+						'mode'   => 'plugin'
+					]);
+				}
+			}
+		}
 		return $list;
 	}
 
@@ -747,7 +787,9 @@ class OTools {
 		if (file_exists($service_file)) {
 			return ['status' => 'exists', 'name' => $name];
 		}
-		$str_service = "<"."?php declare(strict_types=1);\n";
+		$str_service = "<"."?php declare(strict_types=1);\n\n";
+		$str_service .= "namespace OsumiFramework\App\Service;\n\n";
+		$str_service .= "use OsumiFramework\OFW\Core\OService;\n\n";
 		$str_service .= "class ".$name." extends OService {\n";
 		$str_service .= "	function __construct() {\n";
 		$str_service .= "		$"."this->loadService();\n";
@@ -777,7 +819,9 @@ class OTools {
 		if (file_exists($ofw_task_file)) {
 			return ['status' => 'ofw-exists', 'name' => $name];
 		}
-		$str_task = "<"."?php declare(strict_types=1);\n";
+		$str_task = "<"."?php declare(strict_types=1);\n\n";
+		$str_task .= "namespace OsumiFramework\App\Task;\n\n";
+		$str_task .= "use OsumiFramework\OFW\Core\OTask;\n\n";
 		$str_task .= "class ".$name."Task extends OTask {\n";
 		$str_task .= "	public function __toString() {\n";
 		$str_task .= "		return \"".$name.": ".self::getMessage('TASK_ADD_TASK_MESSAGE', [$name])."\";\n";
@@ -822,6 +866,7 @@ class OTools {
 		$cont             = 0;
 
 		$list_content = "<"."?php\n";
+		$list_content .= "use OsumiFramework\OFW\Tools\OTools;\n\n";
 		$list_content .= "foreach ($"."values['list'] as $"."i => $".strtolower($values['model_name']).") {\n";
 		$list_content .= "	echo OTools::getComponent('model/".strtolower($values['model_name'])."', [ '".strtolower($values['model_name'])."' => $".strtolower($values['model_name'])." ]);\n";
 		$list_content .= "	if ($"."i<count($"."values['list'])-1) {\n";
@@ -930,7 +975,12 @@ class OTools {
 				continue;
 			}
 
-			$status = self::addModule($url['module']);
+			if ($url['mode']==='module') {
+				$status = self::addModule($url['module']);
+			}
+			else {
+				$status = ['status' => 'plugin', 'name' => $url['module']];
+			}
 			if ($status=='ok') {
 				$all_updated = false;
 				if (!$silent) {
@@ -945,8 +995,13 @@ class OTools {
 
 			}
 
-			$status = self::addAction($url['module'], $url['action'], $url['url'], $url['type'], $url['layout']);
-			if ($status=='ok') {
+			if ($url['mode']==='module') {
+				$status = self::addAction($url['module'], $url['action'], $url['url'], $url['type'], $url['layout']);
+			}
+			else {
+				$status = ['status' => 'plugin'];
+			}
+			if ($status['status']=='ok') {
 				$all_updated = false;
 				if (!$silent) {
 					$ret .= "    ".self::getMessage('TASK_UPDATE_URLS_NEW_ACTION', [

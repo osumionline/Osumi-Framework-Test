@@ -113,6 +113,8 @@ class OUrl {
 			'headers' => getallheaders(),
 			'method'  => strtolower($this->method),
 			'layout'  => 'default',
+			'mode'    => 'module',
+			'plugin'  => null,
 			'res'     => false
 		];
 
@@ -125,6 +127,8 @@ class OUrl {
 				$found         = true;
 				$ret['module'] = $this->urls[$i]['module'];
 				$ret['action'] = $this->urls[$i]['action'];
+				$ret['mode']   = $this->urls[$i]['mode'];
+				$ret['plugin'] = $this->urls[$i]['plugin'];
 				$ret['res']    = true;
 
 				if (array_key_exists('type', $this->urls[$i])) {

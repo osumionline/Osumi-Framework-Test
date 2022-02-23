@@ -25,11 +25,12 @@
 	"ext_js": [],
 	"extra": {
 		"key": "value",
-		"foo": "bar"
+		"foo": "bar",
+		"secret": "1234"
 	},
 	"libs": ["another/library"],
 	"dir": {
 		"test": "{{web}}test/"
 	},
-	"environment": "prod"
+	"environment": "dev"
 }

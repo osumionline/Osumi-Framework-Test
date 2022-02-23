@@ -1,6 +1,48 @@
 {
-	"version": "7.3.0",
+	"version": "7.5.0",
 	"updates": {
+		"7.5.0": {
+			"message": "7.5.0 - Mejora en OLog",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/vendor/version.json",
+				"ofw/vendor/log/olog.class.php"
+			]
+		},
+		"7.4.1": {
+			"message": "7.4.1 - Corrección en llamadas cURL",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/vendor/version.json",
+				"ofw/vendor/tools/otools.class.php"
+			]
+		},
+		"7.4.0": {
+			"message": "7.4.0 - Acceso a Cache Container desde módulos, servicios y tareas",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/vendor/version.json",
+				"ofw/vendor/core/omodule.class.php",
+				"ofw/vendor/core/oservice.class.php",
+				"ofw/vendor/core/otask.class.php"
+			]
+		},
+		"7.3.2": {
+			"message": "7.3.2 - Corrección de estilo al crear servicios y tareas y corrección al crear componentes de modelo",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/vendor/version.json",
+				"ofw/vendor/tools/otools.class.php"
+			]
+		},
+		"7.3.1": {
+			"message": "7.3.1 - Corrección al crear servicios y tareas, faltaban namespaces",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/vendor/version.json",
+				"ofw/vendor/tools/otools.class.php"
+			]
+		},
 		"7.3.0": {
 			"message": "7.3.0 - Nuevo valor name en config y opciones para limitar tamaño y rotar los logs",
 			"files": [

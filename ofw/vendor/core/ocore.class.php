@@ -216,11 +216,20 @@ class OCore {
 				}
 			}
 
-			$module_path = $this->config->getDir('app_module').'/'.$url_result['module'].'/'.$url_result['module'].'.php';
+			$module_path = null;
+			if ($url_result['mode']==='module') {
+				$module_path = $this->config->getDir('app_module').'/'.$url_result['module'].'/'.$url_result['module'].'.php';
+			}
 
-			if (file_exists($module_path)) {
-				require_once $module_path;
-				$module_name = "\\OsumiFramework\\App\\Module\\".$url_result['module'];
+			if (is_null($module_path) || file_exists($module_path)) {
+				if (!is_null($module_path)) {
+					require_once $module_path;
+					$module_name = "\\OsumiFramework\\App\\Module\\".$url_result['module'];
+				}
+				else {
+					$module_name = "\\OsumiFramework\\OFW\\Plugins\\".$url_result['module'];
+				}
+
 				$module = new $module_name;
 
 				if (method_exists($module, $url_result['action'])) {

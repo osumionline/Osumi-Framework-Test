@@ -12,6 +12,7 @@ class OPlugin {
 	private string $description  = '';
 	private string $file_name    = '';
 	private array  $dependencies = [];
+	private array  $urls         = [];
 	private array  $config       = [];
 
 	/**
@@ -126,6 +127,26 @@ class OPlugin {
 	}
 
 	/**
+	 * Set the list of URLs the plugin has (eg a control panel)
+	 *
+	 * @param string[] $u List of URLs
+	 *
+	 * @return void
+	 */
+	public function setUrls(array $u): void {
+		$this->urls = $u;
+	}
+
+	/**
+	 * Get the list of URLs the plugin has (eg a control panel)
+	 *
+	 * @return string[] List of URLs
+	 */
+	public function getUrls(): array {
+		return $this->urls;
+	}
+
+	/**
 	 * Set the list of configurations the plugin has
 	 *
 	 * @param string[] $d List of configuration parameters
@@ -162,6 +183,7 @@ class OPlugin {
 		$this->setDescription($config['description']);
 		$this->setFileName($config['file_name']);
 		$this->setDependencies(array_key_exists('dependencies', $config) ? $config['dependencies'] : []);
+		$this->setUrls(array_key_exists('urls', $config) ? $config['urls'] : []);
 		$this->setConfig(array_key_exists('config', $config) ? $config['config'] : []);
 	}
 

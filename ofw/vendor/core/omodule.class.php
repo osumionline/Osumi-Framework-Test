@@ -6,17 +6,19 @@ use OsumiFramework\OFW\DB\ODB;
 use OsumiFramework\OFW\Log\OLog;
 use OsumiFramework\OFW\Web\OSession;
 use OsumiFramework\OFW\Web\OCookie;
+use OsumiFramework\OFW\Cache\OCacheContainer;
 
 /**
  * OModule - Base class for the module classes providing access to the framework configuration, database, template, logs, session or cookies
  */
 class OModule {
-	protected ?OConfig   $config   = null;
-	protected ?ODB       $db       = null;
-	protected ?OTemplate $template = null;
-	protected ?OLog      $log      = null;
-	protected ?OSession  $session  = null;
-	protected ?OCookie   $cookie   = null;
+	protected ?OConfig         $config   = null;
+	protected ?ODB             $db       = null;
+	protected ?OTemplate       $template = null;
+	protected ?OLog            $log      = null;
+	protected ?OSession        $session  = null;
+	protected ?OCookie         $cookie   = null;
+	protected ?OCacheContainer $cacheContainer = null;
 
 	/**
 	 * Load matched URL configuration value into the module
@@ -30,10 +32,11 @@ class OModule {
 
 		$this->config   = $core->config;
 		$this->session  = $core->session;
+		$this->cacheContainer = $core->cacheContainer;
 		if (!is_null($core->dbContainer)) {
-			$this->db   = new ODB();
+			$this->db = new ODB();
 		}
-		$this->template = new OTemplate();
+		$this->template = new OTemplate($url_result['mode']);
 		$this->log      = new OLog(get_class($this));
 		$this->cookie   = new OCookie();
 
@@ -44,7 +47,7 @@ class OModule {
 		$this->session->addParam('current', $url_result['module'].'/'.$url_result['action']);
 
 		// Load module, action and layout into the template
-		$this->template->setModule($url_result['module']);
+		$this->template->setModule(($url_result['mode']=='module') ? $url_result['module'] : $url_result['plugin']);
 		$this->template->setAction($url_result['action']);
 		$this->template->setType($url_result['type']);
 		$this->template->loadLayout($url_result['layout']);
@@ -102,5 +105,14 @@ class OModule {
 	 */
 	public final function getCookie(): OCookie {
 		return $this->cookie;
+	}
+
+	/**
+	 * Get access to the cache container
+	 *
+	 * @return OCacheContainer Cache container class object
+	 */
+	public final function getCacheContainer(): OCacheContainer {
+		return $this->cacheContainer;
 	}
 }
