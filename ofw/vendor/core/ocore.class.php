@@ -3,6 +3,7 @@
 namespace OsumiFramework\OFW\Core;
 
 use \PDO;
+use \ReflectionParameter;
 use OsumiFramework\OFW\DB\ODBContainer;
 use OsumiFramework\OFW\Cache\OCacheContainer;
 use OsumiFramework\OFW\Web\OSession;
@@ -56,6 +57,7 @@ class OCore {
 		require $this->config->getDir('ofw_vendor').'log/olog.class.php';
 		require $this->config->getDir('ofw_vendor').'cache/ocache.container.class.php';
 		require $this->config->getDir('ofw_vendor').'cache/ocache.class.php';
+		require $this->config->getDir('ofw_vendor').'core/odto.interface.php';
 		require $this->config->getDir('ofw_vendor').'core/omodule.class.php';
 		require $this->config->getDir('ofw_vendor').'core/oservice.class.php';
 		require $this->config->getDir('ofw_vendor').'core/oplugin.class.php';
@@ -131,6 +133,18 @@ class OCore {
 			}
 		}
 
+		// DTOs
+		if (file_exists($this->config->getDir('app_dto'))) {
+			if ($model = opendir($this->config->getDir('app_dto'))) {
+				while (false !== ($entry = readdir($model))) {
+					if ($entry != '.' && $entry != '..') {
+						require $this->config->getDir('app_dto').$entry;
+					}
+				}
+				closedir($model);
+			}
+		}
+
 		// User services
 		if (file_exists($this->config->getDir('app_service'))) {
 			if ($model = opendir($this->config->getDir('app_service'))) {
@@ -143,8 +157,8 @@ class OCore {
 			}
 		}
 
+		// Filters
 		if (!$from_cli) {
-			// Filters
 			if (file_exists($this->config->getDir('app_filter'))) {
 				if ($model = opendir($this->config->getDir('app_filter'))) {
 					while (false !== ($entry = readdir($model))) {
@@ -157,7 +171,7 @@ class OCore {
 			}
 		}
 
-		// App
+		// Database model classes
 		if (file_exists($this->config->getDir('app_model'))) {
 			if ($model = opendir($this->config->getDir('app_model'))) {
 				while (false !== ($entry = readdir($model))) {
@@ -216,25 +230,38 @@ class OCore {
 				}
 			}
 
-			$module_path = null;
-			if ($url_result['mode']==='module') {
-				$module_path = $this->config->getDir('app_module').'/'.$url_result['module'].'/'.$url_result['module'].'.php';
+			// If there are any "utils" classes required to be loaded, load before the controller
+			if (array_key_exists('utils', $url_result) && !is_null($url_result['utils'])) {
+				$utils = explode(',', $url_result['utils']);
+				foreach ($utils as $util) {
+					$util_file = $this->config->getDir('app_utils').$util.'.php';
+					if (file_exists($util_file)) {
+						require_once $util_file;
+					}
+				}
 			}
 
-			if (is_null($module_path) || file_exists($module_path)) {
-				if (!is_null($module_path)) {
-					require_once $module_path;
-					$module_name = "\\OsumiFramework\\App\\Module\\".$url_result['module'];
-				}
-				else {
-					$module_name = "\\OsumiFramework\\OFW\\Plugins\\".$url_result['module'];
-				}
+			$module_path = $this->config->getDir('app_module').'/'.$url_result['module'].'/'.$url_result['module'].'.php';
 
+			if (file_exists($module_path)) {
+				require_once $module_path;
+				$module_name = "\\OsumiFramework\\App\\Module\\".$url_result['module'];
 				$module = new $module_name;
 
 				if (method_exists($module, $url_result['action'])) {
+					$reflection_param = new ReflectionParameter([$module_name, $url_result['action']], 0);
+					$reflection_param_type = $reflection_param->getType()->getName();
+					$req = new ORequest($url_result);
+					if (str_starts_with($reflection_param_type, 'OsumiFramework\App\DTO')) {
+						$param = new $reflection_param_type;
+						$param->load($req);
+					}
+					else {
+						$param = $req;
+					}
+
 					$module->loadModule($url_result);
-					call_user_func(array($module, $url_result['action']), new ORequest($url_result));
+					call_user_func([$module, $url_result['action']], $param);
 					echo $module->getTemplate()->process();
 				}
 				else {

@@ -66,7 +66,7 @@ class OUrl {
 		$this->check_url = $check_url;
 		$check_params = stripos($check_url, '?');
 		if ($check_params !== false) {
-			$check_url = substr($check_url, 0, $check_params);
+			$this->check_url = substr($check_url, 0, $check_params);
 		}
 		if (!is_null($get)) {
 			foreach ($get as $key => $value) {
@@ -113,8 +113,6 @@ class OUrl {
 			'headers' => getallheaders(),
 			'method'  => strtolower($this->method),
 			'layout'  => 'default',
-			'mode'    => 'module',
-			'plugin'  => null,
 			'res'     => false
 		];
 
@@ -127,8 +125,6 @@ class OUrl {
 				$found         = true;
 				$ret['module'] = $this->urls[$i]['module'];
 				$ret['action'] = $this->urls[$i]['action'];
-				$ret['mode']   = $this->urls[$i]['mode'];
-				$ret['plugin'] = $this->urls[$i]['plugin'];
 				$ret['res']    = true;
 
 				if (array_key_exists('type', $this->urls[$i])) {

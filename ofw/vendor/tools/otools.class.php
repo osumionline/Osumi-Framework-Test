@@ -8,7 +8,6 @@ use \ReflectionObject;
 use OsumiFramework\OFW\Cache\OCache;
 use OsumiFramework\OFW\DB\OModel;
 use OsumiFramework\OFW\Routing\ORoute;
-use OsumiFramework\OFW\Core\OPlugin;
 
 /**
  * OTools - Utility class with auxiliary tools
@@ -262,7 +261,7 @@ class OTools {
 			'mode'    => $mode,
 			'version' => self::getVersion(),
 			'title'   => $core->config->getDefaultTitle(),
-			'message' => array_key_exists('message', $res) ? $res['message'] : '',
+			'message' => $res['message'],
 			'res'     => $res
 		];
 
@@ -484,7 +483,6 @@ class OTools {
 	public static function updateUrls(bool $silent=false): ?string {
 		global $core;
 		$urls = self::getModuleUrls();
-		$urls = array_merge($urls, self::getPluginUrls());
 
 		$urls_cache_file = $core->cacheContainer->getItem('urls');
 		$urls_cache_file->set(json_encode($urls, JSON_UNESCAPED_UNICODE));
@@ -512,7 +510,8 @@ class OTools {
 			'type'   => 'html',
 			'prefix' => null,
 			'filter' => null,
-			'layout' => null
+			'layout' => null,
+			'utils'  => null
 		];
 
 		foreach ($reflector->getAttributes() as $attr) {
@@ -522,6 +521,7 @@ class OTools {
 				$class_params['prefix'] = !is_null($class_route->getPrefix()) ? $class_route->getPrefix() : $class_params['prefix'];
 				$class_params['filter'] = !is_null($class_route->getFilter()) ? $class_route->getFilter() : $class_params['filter'];
 				$class_params['layout'] = !is_null($class_route->getLayout()) ? $class_route->getLayout() : $class_params['layout'];
+				$class_params['utils']  = !is_null($class_route->getUtils())  ? $class_route->getUtils()  : $class_params['layout'];
 				break;
 			}
 		}
@@ -543,6 +543,7 @@ class OTools {
 				'prefix' => $class_params['prefix'],
 				'filter' => $class_params['filter'],
 				'layout' => $class_params['layout'],
+				'utils'  => $class_params['utils'],
 				'url'    => null
 			];
 			foreach ($ref->getAttributes() as $attr) {
@@ -553,6 +554,7 @@ class OTools {
 					$method_params['prefix'] = !is_null($method_route->getPrefix()) ? $method_route->getPrefix() : $method_params['prefix'];
 					$method_params['filter'] = !is_null($method_route->getFilter()) ? $method_route->getFilter() : $method_params['filter'];
 					$method_params['layout'] = !is_null($method_route->getLayout()) ? $method_route->getLayout() : $method_params['layout'];
+					$method_params['utils']  = !is_null($method_route->getUtils())  ? $method_route->getUtils()  : $method_params['utils'];
 					break;
 				}
 			}
@@ -565,11 +567,9 @@ class OTools {
 	/**
 	 * Get information from all the modules and actions to build the url cache file
 	 *
-	 * @param bool $with_prefix Sets if the prefixx should be returned or parsed, defaults to parsed
-	 *
 	 * @return array List of every action with it's information: module, action, type, url, prefix and filter
 	 */
-	public static function getModuleUrls(bool $with_prefix = false): array {
+	public static function getModuleUrls(): array {
 		global $core;
 		$modules = [];
 		if (file_exists($core->config->getDir('app_module'))) {
@@ -588,50 +588,14 @@ class OTools {
 		foreach ($modules as $module) {
 			$methods = self::getDocumentation($module);
 			foreach ($methods as $method) {
-				if (!$with_prefix) {
-					if (!is_null($method['prefix'])) {
-						$method['url'] = $method['prefix'].$method['url'];
-					}
-					unset($method['prefix']);
+				if (!is_null($method['prefix'])) {
+					$method['url'] = $method['prefix'].$method['url'];
 				}
-				$method['mode']   = 'module';
-				$method['plugin'] = null;
+				unset($method['prefix']);
 				array_push($list, $method);
 			}
 		}
 
-		return $list;
-	}
-
-	/**
-	 * Get information from all the installed plugins and look if they  have any  URLs
-	 *
-	 * @return array List of every action with it's information: module, action, type, url, prefix and filter
-	 */
-	public static function getPluginUrls(): array {
-		global $core;
-		$list = [];
-		$plugins = $core->config->getInstalledPlugins();
-		foreach ($core->config->getPlugins() as $p) {
-			$plugin = new OPlugin($p);
-			$plugin->loadConfig();
-
-			if (count($plugin->getUrls())>0) {
-				var_dump($plugin);
-				foreach ($plugin->getUrls() as $url) {
-					array_push($list, [
-						'module' => str_ireplace('.php', '', $plugin->getFileName()),
-						'plugin' => $plugin->getName(),
-						'action' => $url['action'],
-						'type'   => (array_key_exists('type', $url) ? $url['type'] : 'html'),
-						'filter' => null,
-						'layout' => null,
-						'url'    => $url['url'],
-						'mode'   => 'plugin'
-					]);
-				}
-			}
-		}
 		return $list;
 	}
 
@@ -678,9 +642,11 @@ class OTools {
 	 *
 	 * @param string $layout Layout of the new action
 	 *
+	 * @param string $utils "utils" folder's classes to be loaded into the method (comma separated values)
+	 *
 	 * @return array Status of the operation (status, module name, action name, action url and action type)
 	 */
-	public static function addAction(string $module, string $action, string $url, string $type=null, string $layout=null): array {
+	public static function addAction(string $module, string $action, string $url, string $type=null, string $layout=null, string $utils=null): array {
 		global $core;
 
 		$module_path      = $core->config->getDir('app_module').$module;
@@ -692,7 +658,8 @@ class OTools {
 			'action' => $action,
 			'url'    => $url,
 			'type'   => $type,
-			'layout' => $layout
+			'layout' => $layout,
+			'utils'  => $utils
 		];
 
 		if (!file_exists($module_path) || !file_exists($module_file)) {
@@ -715,7 +682,8 @@ class OTools {
 				'type'   => $type,
 				'prefix' => null,
 				'filter' => null,
-				'layout' => null
+				'layout' => null,
+				'utils'  => null
 			];
 			if (!is_null($class_params['prefix'])) {
 				if (stripos($url, $class_params['prefix'])!==false) {
@@ -735,6 +703,7 @@ class OTools {
 			$layout = 'default';
 		}
 		$status['layout'] = $layout;
+		$status['utils']  = $utils;
 
 		$action_template  = $module_templates.'/'.$action.'.'.$type;
 		if (file_exists($action_template)) {
@@ -756,6 +725,9 @@ class OTools {
 		}
 		if (!is_null($layout) && $layout != 'default') {
 			$str_action .= ", layout: '".$layout."'";
+		}
+		if (!is_null($utils)) {
+			$str_action .= ", utils: '".$utils."'";
 		}
 		$str_action .= ")]\n";
 		$str_action .= "	public function ".$action."(ORequest $"."req): void {}\n";
@@ -975,12 +947,7 @@ class OTools {
 				continue;
 			}
 
-			if ($url['mode']==='module') {
-				$status = self::addModule($url['module']);
-			}
-			else {
-				$status = ['status' => 'plugin', 'name' => $url['module']];
-			}
+			$status = self::addModule($url['module']);
 			if ($status=='ok') {
 				$all_updated = false;
 				if (!$silent) {
@@ -995,13 +962,8 @@ class OTools {
 
 			}
 
-			if ($url['mode']==='module') {
-				$status = self::addAction($url['module'], $url['action'], $url['url'], $url['type'], $url['layout']);
-			}
-			else {
-				$status = ['status' => 'plugin'];
-			}
-			if ($status['status']=='ok') {
+			$status = self::addAction($url['module'], $url['action'], $url['url'], $url['type'], $url['layout']);
+			if ($status=='ok') {
 				$all_updated = false;
 				if (!$silent) {
 					$ret .= "    ".self::getMessage('TASK_UPDATE_URLS_NEW_ACTION', [

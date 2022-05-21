@@ -1,6 +1,78 @@
 {
-	"version": "7.5.0",
+	"version": "7.9.2",
 	"updates": {
+		"7.9.2": {
+			"message": "7.9.2 - Corrección en OModel (booleanos)",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/vendor/version.json",
+				"ofw/vendor/db/omodel.class.php"
+			]
+		},
+		"7.9.1": {
+			"message": "7.9.1 - Corrección en OModel",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/vendor/version.json",
+				"ofw/vendor/db/omodel.class.php"
+			]
+		},
+		"7.9.0": {
+			"message": "7.9.0 - Nuevas clases auxiliares utils",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/locale/en.po",
+				"ofw/locale/es.po",
+				"ofw/locale/eu.po",
+				"ofw/template/add/createAction.php",
+				"ofw/vendor/core/oconfig.class.php",
+				"ofw/vendor/core/ocore.class.php",
+				"ofw/vendor/routing/oroute.class.php",
+				"ofw/vendor/tools/otools.class.php",
+				"ofw/vendor/version.json"
+			]
+		},
+		"7.8.0": {
+			"message": "7.8.0 - Nuevo CLI",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/vendor/version.json",
+				"ofw/vendor/cli/cli.php"
+			],
+			"deletes": [
+				"ofw.php"
+			]
+		},
+		"7.7.0": {
+			"message": "7.7.0 - Nueva tarea reset",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/vendor/version.json",
+				"ofw/locale/en.po",
+				"ofw/locale/es.po",
+				"ofw/locale/eu.po",
+				"ofw/task/reset.php"
+			]
+		},
+		"7.6.1": {
+			"message": "7.6.1 - Corrección en rutas con parametros GET",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/vendor/version.json",
+				"ofw/vendor/routing/ourl.class.php"
+			]
+		},
+		"7.6.0": {
+			"message": "7.6.0 - DTOs como parámetros de las acciones",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/vendor/version.json",
+				"ofw/vendor/core/oconfig.class.php",
+				"ofw/vendor/core/ocore.class.php",
+				"ofw/vendor/core/odto.interface.php",
+				"ofw/vendor/web/orequest.class.php"
+			]
+		},
 		"7.5.0": {
 			"message": "7.5.0 - Mejora en OLog",
 			"files": [

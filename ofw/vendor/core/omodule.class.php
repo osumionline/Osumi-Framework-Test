@@ -36,7 +36,7 @@ class OModule {
 		if (!is_null($core->dbContainer)) {
 			$this->db = new ODB();
 		}
-		$this->template = new OTemplate($url_result['mode']);
+		$this->template = new OTemplate();
 		$this->log      = new OLog(get_class($this));
 		$this->cookie   = new OCookie();
 
@@ -47,7 +47,7 @@ class OModule {
 		$this->session->addParam('current', $url_result['module'].'/'.$url_result['action']);
 
 		// Load module, action and layout into the template
-		$this->template->setModule(($url_result['mode']=='module') ? $url_result['module'] : $url_result['plugin']);
+		$this->template->setModule($url_result['module']);
 		$this->template->setAction($url_result['action']);
 		$this->template->setType($url_result['type']);
 		$this->template->loadLayout($url_result['layout']);

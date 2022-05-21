@@ -1,6 +1,195 @@
 CHANGELOG
 =========
 
+## `7.9.2` (10/05/2022)
+
+Corrección en clase `OModel`. Al usar la función `find` en objetos de modelo, las búsquedas cuyo valor fuese booleano fallaban ya que eran tomadas como cadenas de texto vacías. OFW almacena los valores booleanos como números enteros donde el valor 1 representa `true` y el valor 0 representa `false`.
+
+```php
+$tabla->find([
+  'id' => 12,
+  'valor' => false
+])
+```
+
+SQL resultante (antes):
+
+```sql
+SELECT * FROM `tabla` WHERE `id` = 12 AND `valor` = ''
+```
+
+SQL OFW 7.9.2:
+
+```sql
+SELECT * FROM `tabla` WHERE `id` = 12 AND `valor` = 0;
+```
+
+## `7.9.1` (09/05/2022)
+
+Corrección en clase `OModel`. Al usar la función `find` en objetos de modelo, las búsquedas cuyo valor fuese nulo fallaban ya que eran tomadas como cadenas de texto vacías:
+
+```php
+$tabla->find([
+  'id' => 12,
+  'valor' => null
+])
+```
+
+SQL resultante (antes):
+
+```sql
+SELECT * FROM `tabla` WHERE `id` = 12 AND `valor` = ''
+```
+
+SQL OFW 7.9.1:
+
+```sql
+SELECT * FROM `tabla` WHERE `id` = 12 AND `valor` IS NULL
+```
+
+## `7.9.0` (21/03/2022)
+
+Nuevas clases auxiliares `utils`. Ahora se pueden usar clases auxiliares que no se cargarán por defecto con todo el Framework.
+
+Por ejemplo, una clase llamada `PDF` encargada de crear archivos PDF. Esta clase solo se utilizará en ocasiones puntuales, por lo que no es necesario incluirla en cada una de las llamadas que reciba la aplicación.
+
+Estas nuevas clases se guardarán en la carpeta `app/utils`, bajo el namespace `OsumiFramework\App\Utils` (por ejemplo `OsumiFramework\App\Utils\PDF`).
+
+Hay dos formas de incluirlas:
+
+Usando ORoute
+-------------
+
+Cada acción de un módulo tiene un decorador de tipo `ORoute` con el que configurar su URL, el tipo de retorno... Ahora acepta un nuevo parámetro `utils`, una cadena de texto con los nombres de las clases a cargar separados por comas. Por ejemplo:
+
+```php
+#[ORoute(
+  '/getUser/:id',
+  utils: 'PDF'
+)]
+public function getUser(ORequest $req): void {
+...
+}
+```
+
+Manualmente
+-----------
+
+La función `getDir` de la clase `OConfig` ahora soporta un nuevo parámetro `app_utils`, que apunta a la carpeta `app/utils`. De este modo se puede crear una ruta al archivo que se quiera cargar e incluirlo a mano:
+
+```php
+$pdf_class_route = $this->getConfig()->getDir('app_utils').'PDF.php';
+require_once $pdf_class_route;
+```
+
+## `7.8.0` (27/12/2021)
+
+¡Nuevo `Osumi Framework CLI`!
+
+Esta actualización prepara el framework para ser usado mediante la nueva herramienta CLI. Esta nueva herramienta es un ejecutable de línea de comandos para ser usado independientemente de cada proyecto, sustituyendo al archivo `ofw.php`.
+
+Una vez descargado el CLI, hay que mover el ejecutable a una carpeta que esté en el PATH. A continuación ofrece una nueva opción `new` con la que crear un proyecto desde cero.
+
+```
+  $ ofw new prueba
+  Cloning into 'prueba'...
+  remote: Enumerating objects: 2052, done.
+  remote: Counting objects: 100% (269/269), done.
+  remote: Compressing objects: 100% (193/193), done.
+  remote: Total 2052 (delta 145), reused 159 (delta 61), pack-reused 1783
+  Receiving objects: 100% (2052/2052), 1.23 MiB | 0 bytes/s, done.
+  Resolving deltas: 100% (1233/1233), done.
+```
+
+Esta tarea crea una nueva aplicación descargando el repositorio oficial y ejecutando la nueva tarea `reset`, de modo que queda listo para empezar a ser usado.
+
+Por otra parte, estando dentro de una carpeta que contenga una aplicación `Osumi Framework`, puede ser usado del mismo modo que se usaba el archivo `ofw.php`:
+
+```
+  $ ofw version
+
+
+  ==============================================================================================================
+
+    Osumi Framework
+
+    7.8.0 - Nuevo CLI
+
+    GitHub:  https://github.com/igorosabel/Osumi-Framework
+    Twitter: https://twitter.com/osumionline
+
+  ==============================================================================================================
+```
+
+Al estar el ejecutable en el path, en caso de que haya varios proyectos en la misma máquina, el ejecutable es el mismo para todos y deja de ser necesario el archivo `ofw.php`.
+
+## `7.7.0` (26/12/2021)
+
+Nueva tarea `reset`. Esta tarea borra todo el contenido generado por el usuario, una especie de sistema de auto-destrucción que resetea el estado de la aplicación a cero.
+
+Esto sirve para la creación de aplicaciones nuevas. Al bajar el repositorio de Github, este incluye una aplicación de ejemplo con abundante código, y hay que borrar todo antes de poder empezar a crear contenido nuevo.
+
+Esta tarea consiste de dos pasos, para asegurarse, ya que el borrado es definitivo e irreversible.
+
+El primer paso consiste en ejecutar la tarea:
+
+```
+  php ofw.php reset
+```
+
+Tras un aviso y una cuenta atrás de 15 segundos, que se puede interrumpir presionando Control + C, se ofrecerá un código de confirmación. Este código es de un solo uso y tiene una caducidad de 15 minutos. En caso de escribir mal el código o si se introduce pasados 15 minutos, el código deja de ser válido y hay que volver a solicitar uno nuevo.
+
+A continuación, hay que volver a llamar a la tarea pasándole el código que se ha creado en el primer paso. Por ejemplo:
+
+```
+  php ofw.php reset 0f982313a901
+```
+
+Tras ejecutar este comando, la aplicación se habrá reseteado.
+
+¡Asegúrate de tener copias de seguridad!
+
+## `7.6.1` (11/12/2021)
+
+Corrección en rutas con parámetros GET. Los parámetros pasados por GET no se estaban ignorando, de modo que las rutas que los recibiesen nunca coincidían y devolvían un error 404.
+
+## `7.6.0` (18/10/2021)
+
+Ahora las acciones de los métodos, ademas poder recibir un objeto de tipo `ORequest`, pueden recibir objetos DTO (Data Transfer Object) personalizados.
+
+Estos DTOs son clases que se guardan en la carpeta `app/dto` y tienen que implementar la interfaz `ODTO`, para asegurar que contienen dos métodos necesarios. Por ejemplo:
+
+```php
+class UserDTO implements ODTO{
+  private int $id_user = -1;
+
+  public function getIdUser(): int {
+    return $this->id_user;
+    }
+  private function setIdUser(int $id_user): void {
+    $this->id_user = $id_user;
+  }
+
+  public function isValid(): bool {
+    return ($this->getIdUser() != -1);
+  }
+
+  public function load(ORequest $req): void {
+    $id_user = $req->getParamInt('id');
+    if (!is_null($id_user)) {
+      $this->setIdUser($id_user);
+    }
+  }
+}
+```
+
+En el ejemplo, la clase `UserDTO` implementa la interfaz `ODTO` y debe tener los métodos `isValid` y `load`:
+
+* La función `load` recibe un objeto de tipo `ORequest` tal y como lo recibían antes las acciones de los módulos. Esta función se usará para cargar los datos recibidos en las variables apropiadas del DTO.
+* La función `isValid` sirve para realizar una validación de los datos obtenidos.
+
+De este modo las acciones de los módulos que reciban los mismos parámetros (por ejemplo un id de usuario) pueden compartir un mismo DTO que obtiene y valida los datos. Así se evita repetir el mismo código en cada acción: obtener datos, validar datos...
+
 ## `7.5.0` (31/05/2021)
 
 Mejora en `OLog`. Ahora ademas de la fecha, nivel de log, clase que le ha llamado y el mensaje, también se guardará el nombre del archivo y la línea desde donde se ha ejecutado la llamada a logear.

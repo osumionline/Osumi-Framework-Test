@@ -413,10 +413,7 @@ msgid "TASK_ADD_ACTION_TEMPLATE"
 msgstr "<strong>%s</strong> ekintza berria badabil!"
 
 msgid "TASK_ADD_ACTION_ERROR"
-msgstr "Ekintza modulura doan izena adierazi behar duzu, sortu nahi duzun ekintzaren izena eta bere URLa. Adibidez:"
-
-msgid "TASK_ADD_ACTION_OPTIONAL"
-msgstr "AUKERAZKOA: Ekintza berriak zer nolako itzulera izango duen adierazi dezakezu (lehenetsitakoa HTML da), adibidez:"
+msgstr "Ekintza modulura doan izena adierazi behar duzu, sortu nahi duzun ekintzaren izena, bere URLa, zer nolako itzulera izango duen eta utils hautazko klaseen izenak. Adibidez:"
 
 msgid "TASK_ADD_ACTION_NO_MODULE"
 msgstr "Eskatutako "%s" modulua ezin izan da aurkitu "%s"(e)n"
@@ -501,3 +498,27 @@ msgstr "Adibidez"
 
 msgid "OFW_WRONG_OPTION"
 msgstr ""%s" aukera oker dago."
+
+msgid "TASK_RESET"
+msgstr "Ezabatzen du framework-eko ez diren fitxategi guztiak, instalazio berrietan erabiltzeko."
+
+msgid "TASK_RESET_WARNING"
+msgstr "¡Kontuz!"
+
+msgid "TASK_RESET_CONTINUE"
+msgstr "Jarraian, framework-etik kanpoko eduki guztia ezabatzeari ekingo diogu, amaieran instalatu berri den aplikazio baten egoera izango du."
+
+msgid "TASK_RESET_TIME_TO_CANCEL"
+msgstr "Prozesu hau bertan behera uzteko 15 segundo dituzu Kontrol + C sakatuta."
+
+msgid "TASK_RESET_RESET_KEY_CREATED"
+msgstr "Berrezarri gakoa sortu da. Datu guztiak ezabatzea berresteko, exekutatu komando hau hurrengo 15 minutuetan:"
+
+msgid "TASK_RESET_DATA_ERASED"
+msgstr "Datuak ezabatu dira!"
+
+msgid "TASK_RESET_ERROR"
+msgstr "ERROREA!"
+
+msgid "TASK_RESET_GET_NEW_KEY"
+msgstr "Errore bat gertatu da berrezartzeko gakoa balioztatzean edo dagoeneko iraungi da. Sortu berriro gako berri bat komando hau exekutatuz:"

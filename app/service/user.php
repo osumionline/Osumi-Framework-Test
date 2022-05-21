@@ -51,13 +51,10 @@ class userService extends OService {
 	 *
 	 * @return User Asked user
 	 */
-	public function getUser(int $id): ?User {
+	public function getUser(int $id): User {
 		$user = new User();
-		if ($user->find(['id' => $id])) {
-			return $user;
-		}
-		else {
-			return null;
-		}
+		$user->find(['id'=>$id]);
+
+		return $user;
 	}
 }

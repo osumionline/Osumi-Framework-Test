@@ -4,14 +4,16 @@
 		<meta charset="utf-8" />
 		<!-- Set the viewport width to device width for mobile -->
 		<meta name="viewport" content="width=device-width" />
-		<meta name="Description" content="Demo application for Osumi Framework. See https://github.com/igorosabel/Osumi-Framework">
+		<meta name="Description" content="Demo application for Osumi Framework">
 		<title>{{title}}</title>
-		<link rel="icon" type="image/x-icon" href="favicon.ico">
+		<link type="image/x-icon" href="/favicon.png" rel="icon">
+		<link type="image/x-icon" href="/favicon.png" rel="shortcut icon">
 		{{css}}
 		{{js}}
 	</head>
 
 	<body>
+		<div id="mesg_box"></div>
 		{{body}}
 	</body>
 </html>
