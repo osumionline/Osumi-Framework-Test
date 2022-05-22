@@ -8,6 +8,8 @@ use \ReflectionObject;
 use OsumiFramework\OFW\Cache\OCache;
 use OsumiFramework\OFW\DB\OModel;
 use OsumiFramework\OFW\Routing\ORoute;
+use OsumiFramework\OFW\Routing\OModule;
+use OsumiFramework\OFW\Routing\OModuleAction;
 
 /**
  * OTools - Utility class with auxiliary tools
@@ -489,6 +491,21 @@ class OTools {
 		$urls_cache_file->save();
 
 		return self::updateControllers($silent);
+	}
+
+	/**
+	 * Get the attribute class from a module or an action.
+	 *
+	 * @param $class Class from which information will be taken
+	 *
+	 * @return OModule | OModuleAction Attribute class obtained from the class
+	 */
+	public static function getClassAttributes($class): OModule | OModuleAction {
+		$reflector = new ReflectionClass($class::class);
+		foreach ($reflector->getAttributes() as $attr) {
+			$attributes = $attr->newInstance();
+		}
+		return $attributes;
 	}
 
 	/**
@@ -1082,7 +1099,7 @@ class OTools {
 	}
 
 	/**
-	 * Convert underscore notation to camel case (eg id_user -> idUser)
+	 * Convert underscore notation (snake case) to camel case (eg id_user -> idUser)
 	 *
 	 * @param string $string Text string to convert
 	 *
@@ -1098,5 +1115,18 @@ class OTools {
 		}
 
 		return $str;
+	}
+
+	/**
+	 * Convert camel case (idUser) or Pascal case (IdUser) notation to snake case (eg IdUser -> id_user)
+	 *
+	 * @param string $string Text string to convert
+	 *
+	 * @param stringn $glue Character to use between words, defaults to underscore (_)
+	 *
+	 * @return string Converted text string
+	 */
+	public static function toSnakeCase(string $str, string $glue = '_'): string {
+		return ltrim(preg_replace_callback('/[A-Z]/', fn($matches) => $glue . strtolower($matches[0]), $str), $glue);
 	}
 }

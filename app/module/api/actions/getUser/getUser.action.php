@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace OsumiFramework\App\Module;
+namespace OsumiFramework\App\Module\Action;
 
-use OsumiFramework\OFW\Core\OModuleAction;
-use OsumiFramework\OFW\Core\OAction;
+use OsumiFramework\OFW\Routing\OModuleAction;
+use OsumiFramework\OFW\Routing\OAction;
 use OsumiFramework\OFW\Web\ORequest;
 
 #[OModuleAction(

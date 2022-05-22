@@ -1,15 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace OsumiFramework\App\Module;
+namespace OsumiFramework\App\Module\Action;
 
-use OsumiFramework\OFW\Core\OModuleAction;
-use OsumiFramework\OFW\Core\OAction;
+use OsumiFramework\OFW\Routing\OModuleAction;
+use OsumiFramework\OFW\Routing\OAction;
 use OsumiFramework\OFW\Web\ORequest;
+use OsumiFramework\App\Component\UsersComponent;
 
 #[OModuleAction(
 	url: '/',
 	services: 'user',
-	css: 'start'
+	inlineCSS: 'start',
+	inlineJS: 'start, test',
+	components: 'home/users'
 )]
 class startAction extends OAction {
 	/**
@@ -20,8 +23,9 @@ class startAction extends OAction {
 	 */
 	public function run(ORequest $req):void {
 		$users = $this->user_service->getUsers();
+		$users_component = new UsersComponent(['users' => $users]);
 
 		$this->getTemplate()->add('date', $this->user_service->getLastUpdate());
-		$this->getTemplate()->addComponent('users', 'home/users', ['users' => $users]);
+		$this->getTemplate()->add('users', $users_component);
 	}
 }

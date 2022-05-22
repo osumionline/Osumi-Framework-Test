@@ -2,7 +2,7 @@
 
 namespace OsumiFramework\App\Module;
 
-use OsumiFramework\OFW\Core\OModule;
+use OsumiFramework\OFW\Routing\OModule;
 
 /**
  * Sample API module
