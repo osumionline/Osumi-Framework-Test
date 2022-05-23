@@ -191,16 +191,16 @@ class OCore {
 			// If there is a filter defined, apply it before the controller
 			if (array_key_exists('filter', $url_result) && !is_null($url_result['filter'])) {
 				// Check if the filter's file exist as it is loaded per request
-				$filter_route = $this->config->getDir('app_filter').$url_result['filter'].'Filter.php';
+				$filter_route = $this->config->getDir('app_filter').$url_result['filter'].'.filter.php';
 				if (file_exists($filter_route)) {
 					require_once $filter_route;
 
 					$url_result[$url_result['filter']] = call_user_func(
-						"\\OsumiFramework\\App\\Filter\\".$url_result['filter'],
+						"\\OsumiFramework\\App\\Filter\\".$url_result['filter']."Filter",
 						$url_result['params'],
 						$url_result['headers']
 					);
-	
+
 					// If status is 'error', return 403 Forbidden
 					if ($url_result[$url_result['filter']]['status']=='error') {
 						if (array_key_exists('return', $url_result[$url_result['filter']])) {
@@ -240,7 +240,7 @@ class OCore {
 					if (file_exists($action_path)) {
 						require_once $action_path;
 						$action_name = "\\OsumiFramework\\App\\Module\\Action\\".$url_result['action'].'Action';
-						
+
 						$action = new $action_name;
 						$action_attributes = OTools::getClassAttributes($action);
 						$reflection_param = new ReflectionParameter([$action_name, 'run'], 0);
