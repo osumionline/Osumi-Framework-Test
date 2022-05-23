@@ -19,8 +19,10 @@ class OModule {
 		$this->type    = $type;
 		$this->prefix  = $prefix;
 		$this->actions = $actions;
-		foreach (explode(',', $this->actions) as $action) {
-			array_push($this->action_list, trim($action));
+		if  ($this->actions != '') {
+			foreach (explode(',', $this->actions) as $action) {
+				array_push($this->action_list, trim($action));
+			}
 		}
 	}
 

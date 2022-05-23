@@ -13,6 +13,7 @@ class OModuleAction {
 	private array   $component_list  = [];
 	private ?string $filter          = null;
 	private ?string $layout          = null;
+	private ?string $type            = null;
 	private ?string $inline_css      = null;
 	private array   $inline_css_list = [];
 	private ?string $css             = null;
@@ -30,6 +31,7 @@ class OModuleAction {
 		?string $components = null,
 		?string $filter     = null,
 		?string $layout     = null,
+		?string $type       = null,
 		?string $inlineCSS  = null,
 		?string $css        = null,
 		?string $inlineJS   = null,
@@ -40,6 +42,7 @@ class OModuleAction {
 		$this->components = $components;
 		$this->filter     = $filter;
 		$this->layout     = $layout;
+		$this->type       = $type;
 		$this->inline_css = $inlineCSS;
 		$this->css        = $css;
 		$this->inline_js  = $inlineJS;
@@ -141,6 +144,15 @@ class OModuleAction {
 	}
 
 	/**
+	 * Get method's type
+	 *
+	 * @return string Method's type
+	 */
+	public function getType(): ?string {
+		return $this->type;
+	}
+
+	/**
 	 * Get list of CSS files to be inlined on an action
 	 *
 	 * @return ?string Action's inline CSS files
@@ -220,7 +232,7 @@ class OModuleAction {
 	public function getUtils(): ?string {
 		return $this->utils;
 	}
-	
+
 	/**
 	 * Get list of utils used on an action as an array
 	 *
