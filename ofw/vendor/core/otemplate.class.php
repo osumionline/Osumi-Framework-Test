@@ -219,7 +219,7 @@ class OTemplate {
 	 */
 	public function add(string $key, $value, $extra=null): void {
 		$temp = ['name' => $key, 'value' => strval($value)];
-		if (!is_string($value) && str_starts_with(get_class($value), 'OsumiFramework\App\Component')) {
+		if (is_object($value) && str_starts_with(get_class($value), 'OsumiFramework\App\Component')) {
 			if (property_exists($value, 'css')) {
 				foreach ($value->css as $item) {
 					$css_path = $value->getPath().$item.'.css';
@@ -235,6 +235,9 @@ class OTemplate {
 						$this->addJs($js_path, true);
 					}
 				}
+			}
+			if (!is_null($value->getValue('extra'))) {
+				$extra = $value->getValue('extra');
 			}
 		}
 		if (!is_null($extra)) {
@@ -337,7 +340,7 @@ class OTemplate {
 		}
 		$this->add($where, $output, array_key_exists('extra', $values) ? $values['extra'] : null);
 	}
-	
+
 	/**
 	 * Add a model object's JSON representation into a substitution key on the template
 	 *
