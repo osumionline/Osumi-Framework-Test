@@ -168,7 +168,7 @@ class OPostInstall {
 		// Update components to the new OComponent
 		$ret .= $this->messages[$this->config->getLang()]['UPDATING_COMPONENTS'];
 
-		//$this->searchAndUpdateComponents($this->config->getDir('app_component'));
+		$this->searchAndUpdateComponents($this->config->getDir('app_component'));
 
 		$ret .= $this->messages[$this->config->getLang()]['COMPONENTS_UPDATED'];
 
