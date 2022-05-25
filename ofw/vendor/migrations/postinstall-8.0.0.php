@@ -1,4 +1,10 @@
 <?php declare(strict_types=1);
+
+namespace OsumiFramework\OFW\Migrations;
+
+use OsumiFramework\OFW\Core\OConfig;
+use OsumiFramework\OFW\Tools\OColors;
+
 class OPostInstall {
 	private ?OColors $colors = null;
 	private ?OConfig $config = null;
@@ -162,7 +168,7 @@ class OPostInstall {
 		// Update components to the new OComponent
 		$ret .= $this->messages[$this->config->getLang()]['UPDATING_COMPONENTS'];
 
-		$this->searchAndUpdateComponents($this->config->getDir('app_component'));
+		//$this->searchAndUpdateComponents($this->config->getDir('app_component'));
 
 		$ret .= $this->messages[$this->config->getLang()]['COMPONENTS_UPDATED'];
 
@@ -173,12 +179,14 @@ class OPostInstall {
 		if (file_exists($filters_path)) {
 			if ($folder = opendir($filters_path)) {
 				while (false !== ($file = readdir($folder))) {
-					if ($file != '.' && $file != '..') {
-						$name_data = explode('.', $file);
+					if ($file != '.' && $file != '..' && stripos($file, '.filter.') === false) {
+						$name_data = explode('.', str_replace('Filter', '', $file));
 						$ext = array_pop($name_data);
 						array_push($name_data, 'filter');
 						array_push($name_data, $ext);
-						rename($filters_path.$file, $filters_path.implode('.', $name_data));
+						$new_name = implode('.', $name_data);
+
+						rename($filters_path.$file, $filters_path.$new_name);
 					}
 				}
 				closedir($folder);
@@ -194,7 +202,7 @@ class OPostInstall {
 		if (file_exists($layout_path)) {
 			if ($folder = opendir($layout_path)) {
 				while (false !== ($file = readdir($folder))) {
-					if ($file != '.' && $file != '..') {
+					if ($file != '.' && $file != '..' && stripos($file, '.layout.') === false) {
 						$name_data = explode('.', $file);
 						$ext = array_pop($name_data);
 						array_push($name_data, 'layout');
@@ -215,12 +223,15 @@ class OPostInstall {
 		if (file_exists($model_path)) {
 			if ($folder = opendir($model_path)) {
 				while (false !== ($file = readdir($folder))) {
-					if ($file != '.' && $file != '..') {
+					if ($file != '.' && $file != '..' && stripos($file, '.model.') === false) {
 						$model_content = file_get_contents($model_path.$file);
-						preg_match('/\$table_name  = '(.*?)';/i', $model_content, $matches);
+						preg_match('/\$table_name = \'(.*?)\';/i', $model_content, $matches);
+
 						$table_name = $matches[1];
-						$model_content = preg_replace('/^(\s+)\$table_name(\s+)=(\s+)'(.*?)';$/mi', '', $model_content);
+						$model_content = preg_replace('/^(\s+)\$table_name(\s+)=(\s+)\'(.*?)\';$/mi', '', $model_content);
 						$model_content = str_ireplace('parent::load($table_name, $model);', 'parent::load($model);', $model_content);
+						$model_content = str_ireplace("function __construct() {\n\n", "function __construct() {\n", $model_content);
+						file_put_contents($model_path.$file, $model_content);
 
 						rename($model_path.$file, $model_path.$table_name.'.model.php');
 					}
@@ -239,113 +250,176 @@ class OPostInstall {
 			if ($folder = opendir($module_path)) {
 				// Every folder on app_module is a module
 				while (false !== ($file = readdir($folder))) {
-					$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_PROCESSING'],
-						$this->colors->getColoredString($file, 'light_green')
-					);
+					if ($file != '.' && $file != '..') {
+						$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_PROCESSING'],
+							$this->colors->getColoredString($file, 'light_green')
+						);
+						$old_module_path = $module_path.$file."/".$file.".php";
+						$new_module_path = $module_path.$file."/".$file.".module.php";
 
-					// Rename module to the new convention
-					rename($module_path.$file.'/'.$file.'.php', $module_path.$file.'/'.$file.'.module.php');
+						// Rename module to the new convention
+						rename($old_module_path, $new_module_path);
 
-					$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_FILE_RENAMED'],
-						$this->colors->getColoredString($module_path.$file.'/'.$file.'.php', 'light_green'),
-						$this->colors->getColoredString($module_path.$file.'/'.$file.'.module.php', 'light_green'),
-					);
+						$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_FILE_RENAMED'],
+							$this->colors->getColoredString($module_path.$file.'/'.$file.'.php', 'light_green'),
+							$this->colors->getColoredString($module_path.$file.'/'.$file.'.module.php', 'light_green'),
+						);
 
-					// Create the new actions folder
-					$actions_folder = $module_path.$file.'/actions';
-					mkdir($actions_folder);
+						// Create the new actions folder
+						$actions_folder = $module_path.$file.'/actions';
+						mkdir($actions_folder);
 
-					$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_CREATE_ACTIONS_FOLDER'],
-						$this->colors->getColoredString($actions_folder, 'light_green')
-					);
+						$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_CREATE_ACTIONS_FOLDER'],
+							$this->colors->getColoredString($actions_folder, 'light_green')
+						);
 
-					$module_template_folder = $module_path.$file.'/template';
+						$module_template_folder = $module_path.$file.'/template';
 
-					// Read module files content
-					$module_content = file_get_contents($module_path.$file.'/'.$file.'.module.php');
+						// Read module files content
+						$module_content = file_get_contents($new_module_path);
 
-					// Search all services used in the module
-					preg_match('/private \?(.*?)Service/i', $module_content, $service_matches);
-					$service_list = [];
-					for ($i=1; $i<count($service_matches); $i++) {
-						array_push($service_list, $service_matches[$i]);
+						// Search all actions
+						preg_match_all('/function (.*?)\(/', $module_content, $action_matches);
+						$action_list = [];
+						for ($i=0; $i<count($action_matches[1]); $i++) {
+							if (trim($action_matches[1][$i]) != '__construct') {
+								array_push($action_list, trim($action_matches[1][$i]));
+							}
+						}
+
+						// Update module class name
+						$module_content = str_ireplace("class ".$file." extends OModule", "class ".$file."Module", $module_content);
+						$module_content_array = explode("\n", $module_content);
+						$module_content_array_result = [];
+						for ($i=0; $i<count($module_content_array); $i++) {
+							if (!preg_match('/^use (.*?);$/', $module_content_array[$i])) {
+								array_push($module_content_array_result, $module_content_array[$i]);
+							}
+						}
+						$module_content = implode("\n", $module_content_array_result);
+						$module_content = str_ireplace("namespace OsumiFramework\App\Module;\n\n\n", "namespace OsumiFramework\App\Module;\n\n", $module_content);
+
+						if (stripos($module_content, ";\n\n#[ORoute(") !== false) {
+							$module_content = str_ireplace(
+								";\n\n#[ORoute(\n",
+								";\n\nuse OsumiFramework\OFW\Routing\OModule;\n\n#[OModule(\n\tactions: '".implode(', ', $action_list)."',\n",
+								$module_content
+							);
+						}
+						else {
+							$module_content = str_ireplace(
+								"class ".$file."Module",
+								"use OsumiFramework\OFW\Routing\OModule;\n\n#[OModule(\n\tactions: '".implode(', ', $action_list)."'\n)]\nclass ".$file."Module",
+								$module_content
+							);
+						}
+						file_put_contents($new_module_path, $module_content);
+
+						// Search all services used in the module
+						preg_match('/private \?(.*?)Service/i', $module_content, $service_matches);
+						$service_list = [];
+						for ($i=1; $i<count($service_matches); $i++) {
+							array_push($service_list, $service_matches[$i]);
+						}
+
+						if (count($service_list) > 0) {
+							$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_SERVICES_FOUND'],
+								$this->colors->getColoredString(implode(', ', $service_list), 'light_green')
+							);
+						}
+
+						// For every action
+						foreach ($action_list as $action_name) {
+							$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_ACTION_PROCESSING'],
+								$this->colors->getColoredString($action_name, 'light_green')
+							);
+
+							// Create actions folder
+							mkdir($actions_folder.'/'.$action_name);
+
+							$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_ACTION_CREATE_FOLDER'],
+								$this->colors->getColoredString($actions_folder.'/'.$action_name, 'light_green')
+							);
+
+							// Get actions parameter and type
+							preg_match('/function '.$action_name.'\((.*?)\): void/', $module_content, $function_data);
+							$data_parameter = $function_data[1];
+							if (stripos($data_parameter, 'ORequest') === false) {
+								$data = explode(' ', $data_parameter);
+								$data_namespace = "use OsumiFramework\App\DTO\\".$data[0].";\n\n";
+								preg_match('/\* @param '.$data[0].' (.*?)$/m', $module_content, $data_info_match);
+								$data_info = "	 * @param ".$data[0]." ".$data_info_match[1]."\n";
+							}
+							else {
+								$data_namespace = "use OsumiFramework\OFW\Web\ORequest;\n\n";
+								$data_info = "	 * @param ORequest $"."req Request object with method, headers, parameters and filters used\n";
+							}
+
+							$action_file = $actions_folder.'/'.$action_name.'/'.$action_name.'.action.php';
+
+							// Create blank action file
+							$action_content = "<"."?php declare(strict_types=1);\n\n";
+							$action_content .= "namespace OsumiFramework\App\Module\Action;\n\n";
+							$action_content .= "use OsumiFramework\OFW\Routing\OModuleAction;\n";
+							$action_content .= "use OsumiFramework\OFW\Routing\OAction;\n";
+							$action_content .= $data_namespace;
+							$action_content .= "#[OModuleAction(\n";
+							$action_content .= "	url: '/".$action_name."'";
+							if (count($service_list) > 0) {
+								$action_content .= ",\n	services: '".implode(', ', $service_list)."'";
+							}
+							$action_content .= "\n)]\n";
+							$action_content .= "class ".$action_name."Action extends OAction {\n";
+							$action_content .= "	/"."**\n";
+							$action_content .= "	 * Function description\n";
+							$action_content .= "	 *\n";
+							$action_content .= $data_info;
+							$action_content .= "	 * @return void\n";
+							$action_content .= "	 *"."/\n";
+							$action_content .= "	public function run(".$data_parameter."):void {\n";
+							$action_content .= "		\n";
+							$action_content .= "	}\n";
+							$action_content .= "}";
+
+							file_put_contents($action_file, $action_content);
+
+							$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_ACTION_CREATE_FILE'],
+								$this->colors->getColoredString($action_file, 'light_green')
+							);
+
+							// Get actions template files extension
+							$template_files = glob($module_template_folder.'/'.$action_name.'.*');
+
+							if (count($template_files) > 0) {
+								$template_data = explode('.', $template_files[0]);
+								$template_ext = array_pop($template_data);
+
+								// Move template file to actions folder with the new naming convention
+								$old_template_path = $module_template_folder.'/'.$action_name.'.'.$template_ext;
+								$action_template = $actions_folder.'/'.$action_name.'/'.$action_name.'.action.'.$template_ext;
+
+								rename($old_template_path, $action_template);
+
+								$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_ACTION_MOVE_TEMPLATE'],
+									$this->colors->getColoredString($old_template_path, 'light_green'),
+									$this->colors->getColoredString($action_template, 'light_green')
+								);
+							}
+						}
+
+						// After all templates have been moved template folder will be empty so delete it
+						if (file_exists($module_template_folder)) {
+							rmdir($module_template_folder);
+
+							$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_TEMPLATE_FOLDER_DELETED'],
+								$this->colors->getColoredString($module_template_folder, 'light_green')
+							);
+						}
+
+						$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_WARNING'],
+							$this->colors->getColoredString($file, 'light_green')
+						);
 					}
-
-					$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_SERVICES_FOUND'],
-						$this->colors->getColoredString(implode(', ', $service_list), 'light_green')
-					);
-
-					// Search all actions
-					preg_match('/function (.*?)\(/i', $module_content, $matches);
-
-					// For every action
-					for ($i=1; $i<count($matches); $i++) {
-						$action_name = trim($matches[$i]);
-
-						$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_ACTION_PROCESSING'],
-							$this->colors->getColoredString($action_name, 'light_green')
-						);
-
-						// Create actions folder
-						mkdir($actions_folder.'/'.$action_name);
-
-						$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_ACTION_CREATE_FOLDER'],
-							$this->colors->getColoredString($actions_folder.'/'.$action_name, 'light_green')
-						);
-
-						$action_file = $actions_folder.'/'.$action_name.'/'.$action_name.'.action.php';
-
-						// Create blank action file
-						$action_content = "<"."?php declare(strict_types=1);\n\n";
-						$action_content .= "namespace OsumiFramework\App\Module\Action;\n\n";
-						$action_content .= "use OsumiFramework\OFW\Routing\OModuleAction;\n";
-						$action_content .= "use OsumiFramework\OFW\Routing\OAction;\n";
-						$action_content .= "use OsumiFramework\OFW\Web\ORequest;\n\n";
-						$action_content .= "#[OModuleAction(\n";
-						$action_content .= "	url: '/".$action_name."',\n";
-						$action_content .= "	services: '".implode(', ', $service_list)."'\n";
-						$action_content .= ")]\n";
-						$action_content .= "class ".$action_name."Action extends OAction {\n";
-						$action_content .= "	/**\n";
-						$action_content .= "	 * Function description\n";
-						$action_content .= "	 *\n";
-						$action_content .= "	 * @param ORequest $"."req Request object with method, headers, parameters and filters used\n";
-						$action_content .= "	 * @return void\n";
-						$action_content .= "	 */\n";
-						$action_content .= "	public function run(ORequest $"."req):void {}\n";
-						$action_content .= "}";
-
-						file_put_contents($action_file, $action_content);
-
-						$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_ACTION_CREATE_FILE'],
-							$this->colors->getColoredString($action_file, 'light_green')
-						);
-
-						// Get actions template files extension
-						$template_files = glob($module_template_folder.'/'.$action_name.'.*');
-						$template_data = explode('.', $template_files[0]);
-						$template_ext = array_pop($template_data);
-
-						// Move template file to actions folder with the new naming convention
-						$old_template_path = $module_template_folder.'/'.$action_name.'.'.$template_ext;
-						$action_template = $actions_folder.'/'.$action_name.'/'.$action_name.'.action.'.$template_ext;
-						rename($old_template_path, $action_template);
-
-						$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_ACTION_MOVE_TEMPLATE'],
-							$this->colors->getColoredString($old_template_path, 'light_green'),
-							$this->colors->getColoredString($action_template, 'light_green')
-						);
-					}
-					// After all templates have been moved template folder will be empty so delete it
-					rmdir($module_template_folder);
-
-					$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_TEMPLATE_FOLDER_DELETED'],
-						$this->colors->getColoredString($module_template_folder, 'light_green')
-					);
-
-					$ret .= sprintf($this->messages[$this->config->getLang()]['MODULE_WARNING'],
-						$this->colors->getColoredString($file, 'light_green')
-					);
 				}
 			}
 		}
@@ -359,7 +433,7 @@ class OPostInstall {
 		if (file_exists($service_path)) {
 			if ($folder = opendir($service_path)) {
 				while (false !== ($file = readdir($folder))) {
-					if ($file != '.' && $file != '..') {
+					if ($file != '.' && $file != '..' && stripos($file, '.service.') === false) {
 						$name_data = explode('.', $file);
 						$ext = array_pop($name_data);
 						array_push($name_data, 'service');
