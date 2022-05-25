@@ -10,6 +10,7 @@
 				"ofw/vendor/core/ocomponent.class.php",
 				"ofw/vendor/core/ocore.class.php",
 				"ofw/vendor/core/otemplate.class.php",
+				"ofw/vendor/core/oupdate.class.php",
 				"ofw/vendor/db/omodel.class.php",
 				"ofw/vendor/routing/oaction.class.php",
 				"ofw/vendor/routing/omodule.class.php",
@@ -57,6 +58,22 @@
 				"ofw/task/version.php"
 			],
 			"postinstall": true
+		},
+		"7.9.5": {
+			"message": "7.9.5 - Corrección en OUpdate",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/vendor/version.json",
+				"ofw/vendor/core/oupdate.class.php"
+			]
+		},
+		"7.9.4": {
+			"message": "7.9.4 - Corrección en OUpdate",
+			"files": [
+				"CHANGELOG.md",
+				"ofw/vendor/version.json",
+				"ofw/vendor/core/oupdate.class.php"
+			]
 		},
 		"7.9.3": {
 			"message": "7.9.3 - Corrección en OUpdate",
