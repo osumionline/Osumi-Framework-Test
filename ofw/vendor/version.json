@@ -7,7 +7,8 @@
 				"CHANGELOG.md",
 				"ofw/vendor/version.json",
 				"ofw/vendor/core/ocomponent.class.php",
-				"ofw/vendor/tools/otools.class.php"
+				"ofw/vendor/tools/otools.class.php",
+				"ofw/template/updateCheck/updateCheck.php"
 			],
 			"postinstall": true
 		},
