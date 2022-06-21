@@ -1,6 +1,29 @@
 CHANGELOG
 =========
 
+## `8.0.2` (21/05/2022)
+
+Segunda ronda de correcciones, también con breaking changes. A partir de esta versión cambia la sintaxis usada para definir dependencias en componentes:
+
+```php
+Antes:
+
+class ChangelogListComponent extends OComponent {
+  private string $depends = 'model/changelog';
+}
+
+Ahora:
+
+class ChangelogListComponent extends OComponent {
+  public array $depends = ['model/changelog'];
+}
+
+```
+
+De este modo las clases componente sobrescriben la propiedad `$depends` que tiene por defecto la clase `OComponent`, una lista vacía. Antes se trataba de un string con los nombres de las dependencias separados por comas, de modo que había que parsear cada solicitud a un componente, las sub-dependencias... Ahora al tratarse directamente de una lista no hace falta ningún procesamiento.
+
+La actualización incluye una tarea `postinstall` que se encarga de actualizar los componentes a la nueva sintaxis automáticamente.
+
 ## `8.0.1` (14/05/2022)
 
 Primera ronda de correcciones y cambios tras usar la nueva versión 8.0 en producción.
