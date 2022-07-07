@@ -87,11 +87,11 @@ class OPostInstall {
 							$component_content
 						);
 						// Busco depends
-						$depends_pattern = "/\n\spublic array \$depends = \[(.*?)];\n/m";
+						$depends_pattern = '/\n\spublic array \\$depends = \[(.*?)];\n/m';
 						$result = preg_match($depends_pattern, $component_content, $depends_match);
 						if ($result === 1) {
-							$replace = "/\n\spublic array \$depends = \[".str_ireplace("/", "\/", $depends_match[1])."];\n/m";
-							$component_content = preg_replace($replace, "", $component_content);
+							$replace = '/\n\spublic array \\$depends = \['.str_ireplace('/', '\/', $depends_match[1]).'];\n/m';
+							$component_content = preg_replace($replace, '', $component_content);
 						}
 						file_put_contents($check_path, $component_content);
 						// Obtengo nombre de la clase
