@@ -4,6 +4,7 @@ namespace OsumiFramework\OFW\Migrations;
 
 use OsumiFramework\OFW\Core\OConfig;
 use OsumiFramework\OFW\Tools\OColors;
+use OsumiFramework\OFW\Tools\OTools;
 
 class OPostInstall {
 	private ?OColors $colors = null;
@@ -69,7 +70,7 @@ class OPostInstall {
 					// Si existe file/file.component.php es un componente
 					if (file_exists($check_path)) {
 						$partial_path = str_ireplace($this->config->getDir('app_component'), '', $check_path); // Quito el principio, ejemplo: home/photo_list/photo_list.php
-						$partial_path = str_ireplace($file.'/'.$file.'.component.php', '', $partial_path); // Quito el final, ejemplo: home
+						$partial_path = str_ireplace('/'.$file.'/'.$file.'.component.php', '', $partial_path); // Quito el final, ejemplo: home
 						// Exploto por / y a cada pieza underscoresToCamelCase, vuelvo a juntar piezas con \
 						$partial_path_parts = explode('/', $partial_path);
 						for ($i = 0; $i < count($partial_path_parts); $i++) {
@@ -90,7 +91,7 @@ class OPostInstall {
 						$this->replaces['use OsumiFramework\\App\\Component\\'.$name_match[1].';'] = 'use OsumiFramework\\App\\Component\\'.$partial_path.'\\'.$name_match[1].';';
 					}
 					else {
-						$this->updateComponents($path . '/' . $file . '/');
+						$this->updateComponents($path . $file . '/');
 					}
 				}
 			}
@@ -123,7 +124,8 @@ class OPostInstall {
 										$action_content = str_ireplace($old, $new, $action_content);
 									}
 									// Quito la línea de "components" en OModuleAction
-									$action_content = str_ireplace(",\n\scomponents: [".$component_match[1]."]", "", $action_content);
+									$replace = "/,\n\scomponents: \[".str_ireplace("/", "\/", $component_match[1])."]/m";
+									$action_content = preg_replace($replace, "", $action_content);
 									file_put_contents($action_path, $action_content);
 								}
 							}

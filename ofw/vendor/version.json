@@ -11,7 +11,8 @@
 				"ofw/vendor/routing/oaction.class.php",
 				"ofw/vendor/routing/omoduleaction.class.php",
 				"ofw/vendor/tools/otools.class.php"
-			]
+			],
+			"postinstall": true
 		},
 		"8.0.4": {
 			"message": "8.0.4 - Múltiples filtros",
