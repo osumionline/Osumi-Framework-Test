@@ -15,6 +15,8 @@ class OPostInstall {
 			'COMPONENTS_UPDATED'  => "  Componentes actualizados.\n",
 			'UPDATING_MODULES'    => "  Actualizando módulos...\n",
 			'MODULES_UPDATED'     => "  Módulos actualizados.\n",
+			'UPDATING_DTOS'       => "  Actualizando DTOs...\n",
+			'DTOS_UPDATED'        => "  DTOs actualizados.\n",
       'URL_CACHE_DELETE'    => "  Archivo cache de URLs borrado: \"%s\"\n",
 			'END_TITLE'           => "\nPOST INSTALL 8.1.0 finalizado.\n\n"
 		],
@@ -24,6 +26,8 @@ class OPostInstall {
 			'COMPONENTS_UPDATED'  => "  Components updated.\n",
 			'UPDATING_MODULES'    => "  Updating modules...\n",
 			'MODULES_UPDATED'     => "  Modules updated.\n",
+			'UPDATING_DTOS'       => "  Updating DTOs...\n",
+			'DTOS_UPDATED'        => "  DTOs updated.\n",
       'URL_CACHE_DELETE'    => "  URL cache file deleted: \"%s\"\n",
 			'END_TITLE'           => "\nPOST INSTALL 8.1.0 finished.\n\n"
 		],
@@ -33,6 +37,8 @@ class OPostInstall {
 			'COMPONENTS_UPDATED'  => "  Konponenteak eguneratu dira.\n",
 			'UPDATING_MODULES'    => "  Eguneratzen moduluak...\n",
 			'MODULES_UPDATED'     => "  Moduluak eguneratu dira.\n",
+			'UPDATING_DTOS'       => "  Eguneratzen DTOak...\n",
+			'DTOS_UPDATED'        => "  DTOak eguneratu dira.\n",
       'URL_CACHE_DELETE'    => "  URLen cache-fitxategia ezabatu da: \"%s\"\n",
 			'END_TITLE'           => "\nPOST INSTALL 8.1.0 bukatu du.\n\n"
 		]
@@ -110,10 +116,13 @@ class OPostInstall {
 								$action_content = file_get_contents($action_path);
 								$result = preg_match("/,\n\scomponents: \[(.*?)]/m", $action_content, $component_match);
 
+								// Si la acción usa componentes
 								if ($result === 1) {
+									// Renombro a la nueva estructura de carpetas/namespaces
 									foreach ($this->replaces as $old => $new) {
 										$action_content = str_ireplace($old, $new, $action_content);
 									}
+									// Quito la línea de "components" en OModuleAction
 									$action_content = str_ireplace(",\n\scomponents: [".$component_match[1]."]", "", $action_content);
 									file_put_contents($action_path, $action_content);
 								}
@@ -122,6 +131,28 @@ class OPostInstall {
 					}
 				}
 			}
+		}
+	}
+
+	/**
+	 * Function to update all DTO file names to the new convention: userDTO.php -> user.dto.php
+	 *
+	 * @return void
+	 */
+	private function updateDTOs(): void {
+		$list = [];
+		if ($folder = opendir($this->config->getDir('app_dto'))) {
+			// Recorrer DTOs
+			while (false !== ($dto = readdir($folder))) {
+				if ($dto != '.' && $dto != '..') {
+					array_push($list, $dto);
+				}
+			}
+		}
+
+		foreach ($list as $item) {
+			$new_name = str_ireplace("DTO.php", ".dto.php", $item);
+			rename($this->config->getDir('app_dto').$item, $this->config->getDir('app_dto').$new_name);
 		}
 	}
 
@@ -150,6 +181,14 @@ class OPostInstall {
 
 		$ret .= $this->messages[$this->config->getLang()]['MODULES_UPDATED'];
 
+		// Update DTOs
+
+		$ret .= $this->messages[$this->config->getLang()]['UPDATING_DTOS'];
+
+		$this->updateDTOs();
+
+		$ret .= $this->messages[$this->config->getLang()]['DTOS_UPDATED'];
+
     // Delete the URL cache file
 		$url_cache_file = $this->config->getDir('ofw_cache').'urls.cache.json';
 		if (file_exists($url_cache_file)) {
@@ -165,31 +204,3 @@ class OPostInstall {
 		return $ret;
 	}
 }
-/*
-1814.66   80.80
-x         100
-
-2245.86 x 12 = 26950.39
-
-1674
-
-16.1 € / hora
-
-30000 / 1800 = 16.66
-32000 / 1800 = 17.77
-
-16.1    100
-16.66   103.47
-
-16.1    100
-17.77   110.37
-
-
-
-35000 / 1800 = 19.44
-
-16.1    100
-19.44   120.74
-
-jon.m@educaedu.com
-*/
