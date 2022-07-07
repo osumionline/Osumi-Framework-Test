@@ -6,7 +6,6 @@ use OsumiFramework\OFW\Routing\OModuleAction;
 use OsumiFramework\OFW\Routing\OAction;
 use OsumiFramework\OFW\Web\ORequest;
 use OsumiFramework\App\Component\Home\UsersComponent;
-use OsumiFramework\App\Component\Home\PhotoListComponent;
 
 #[OModuleAction(
 	url: '/',
