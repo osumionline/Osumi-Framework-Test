@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+## `8.1.1` (17/07/2022)
+
+Correcciones a `eeagerLoader`. La primera versión de `eagerLoader` cargaba dinámicamente todos los servicios y componentes que hubiera en la acción a ejecutar. Pero si un servicio usaba en su interior otro servicio o componentes no se cargaban. Lo mismo ocurría en las tareas.
+
+Ahora `eagerLoader` carga todos los servicios y componentes de manera recursiva de modo que se asegura que todos los servicios y componentes, por muchos "subservicios" o "subcomponentes" tengan, serán cargados.
+
 ## `8.1.0` (07/07/2022)
 
 Termino ronda de refactorizaciones/correcciones en la nueva versión 8.0
