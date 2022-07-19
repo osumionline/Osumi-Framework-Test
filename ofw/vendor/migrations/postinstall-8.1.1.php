@@ -13,12 +13,13 @@ class OPostInstall {
 		'es' => [
 			'TITLE'            => "\nPOST INSTALL 8.1.1\n\n",
 			'UPDATING_MODELS'  => "  Actualizando modelos...\n",
-			'UPDATED_MODEL'    => "    Modelo \"%s\" actualizado.",
+			'UPDATED_MODEL'    => "    Modelo \"%s\" actualizado.\n",
 			'MODELS_UPDATED'   => "  Modelos actualizados.\n",
 			'UPDATING_SERVICES'=> "  Actualizando servicios...\n",
-			'UPDATED_SERVICE'  => "    Servicio \"%s\" actualizado.",
+			'UPDATED_SERVICE'  => "    Servicio \"%s\" actualizado.\n",
 			'SERVICES_UPDATED' => "  Servicios actualizados.\n",
 			'UPDATING_TASKS'   => "  Actualizando tareas...\n",
+			'UPDATED_TASK'     => "    Tarea \"%s\" actualizada.\n",
 			'TASKS_UPDATED'    => "  Tareas actualizados.\n",
 			'URL_CACHE_DELETE' => "  Archivo cache de URLs borrado: \"%s\"\n",
 			'END_TITLE'        => "\nPOST INSTALL 8.1.1 finalizado.\n\n"
@@ -32,6 +33,7 @@ class OPostInstall {
 			'UPDATED_SERVICE'   => "    Service \"%s\" updated.",
 			'SERVICES_UPDATED'  => "  Services updated.\n",
 			'UPDATING_TASKS'    => "  Updating tasks...\n",
+			'UPDATED_TASK'      => "    Task \"%s\" updated.",
 			'TASKS_UPDATED'     => "  Tasks updated.\n",
 			'URL_CACHE_DELETE'  => "  URL cache file deleted: \"%s\"\n",
 			'END_TITLE'         => "\nPOST INSTALL 8.1.1 finished.\n\n"
@@ -45,6 +47,7 @@ class OPostInstall {
 			'UPDATED_SERVICE'   => "    \"%s\" zerbitzua eguneratu da.",
 			'SERVICES_UPDATED'  => "  Zerbitzuak eguneratu dira.\n",
 			'UPDATING_TASKS'    => "  Eguneratzen atazak...\n",
+			'UPDATED_TASK'      => "    \"%s\" ataza eguneratu da.",
 			'TASKS_UPDATED'     => "  Atazak eguneratu dira.\n",
 			'URL_CACHE_DELETE'  => "  URLen cache-fitxategia ezabatu da: \"%s\"\n",
 			'END_TITLE'         => "\nPOST INSTALL 8.1.1 bukatu du.\n\n"
@@ -75,7 +78,7 @@ class OPostInstall {
 						$model_path = $this->config->getDir('app_model').$entry;
 						$model_content = file_get_contents($model_path);
 
-						$pattern = "/^\s+?OTools::loadService\((.*?)\);\nn/m";
+						$pattern = "/^\s+?OTools::loadService\((.*?)\);\n/m";
 						$replace = '';
 						$model_content = preg_replace($pattern, $replace, $model_content);
 
@@ -112,11 +115,11 @@ class OPostInstall {
 						$service_path = $this->config->getDir('app_service').$entry;
 						$service_content = file_get_contents($service_path);
 
-						$pattern = "/^\s+?OTools::loadService\((.*?)\);\nn/m";
+						$pattern = "/^\s+?OTools::loadService\((.*?)\);\n/m";
 						$replace = '';
 						$service_content = preg_replace($pattern, $replace, $service_content);
 
-						$pattern = "/^\s+?OTools::loadComponent\((.*?)\);\nn/m";
+						$pattern = "/^\s+?OTools::loadComponent\((.*?)\);\n/m";
 						$service_content = preg_replace($pattern, $replace, $service_content);
 
 						if (strpos($service_content, "OTools::") === false) {
@@ -130,7 +133,7 @@ class OPostInstall {
 						);
 					}
 				}
-				closedir($model);
+				closedir($service);
 			}
 		}
 
@@ -152,11 +155,11 @@ class OPostInstall {
 						$task_path = $this->config->getDir('app_task').$entry;
 						$task_content = file_get_contents($task_path);
 
-						$pattern = "/^\s+?OTools::loadService\((.*?)\);\nn/m";
+						$pattern = "/^\s+?OTools::loadService\((.*?)\);\n/m";
 						$replace = '';
 						$task_content = preg_replace($pattern, $replace, $task_content);
 
-						$pattern = "/^\s+?OTools::loadComponent\((.*?)\);\nn/m";
+						$pattern = "/^\s+?OTools::loadComponent\((.*?)\);\n/m";
 						$task_content = preg_replace($pattern, $replace, $task_content);
 
 						if (strpos($task_content, "OTools::") === false) {
@@ -170,7 +173,7 @@ class OPostInstall {
 						);
 					}
 				}
-				closedir($model);
+				closedir($task);
 			}
 		}
 
@@ -184,6 +187,7 @@ class OPostInstall {
 	 */
 	public function run(): string {
 		$ret = '';
+
 		// Start
 		$ret .= $this->messages[$this->config->getLang()]['TITLE'];
 
@@ -201,7 +205,7 @@ class OPostInstall {
 
 		$ret .= $this->updateServices();
 
-		$ret .= $this->messages[$this->config->getLang()]['MODELS_SERVICES'];
+		$ret .= $this->messages[$this->config->getLang()]['SERVICES_UPDATED'];
 		
 		// Update tasks
 
@@ -209,7 +213,7 @@ class OPostInstall {
 
 		$ret .= $this->updateTasks();
 
-		$ret .= $this->messages[$this->config->getLang()]['MODELS_TASKS'];
+		$ret .= $this->messages[$this->config->getLang()]['TASKS_UPDATED'];
 
 		// Delete the URL cache file
 		$url_cache_file = $this->config->getDir('ofw_cache').'urls.cache.json';
