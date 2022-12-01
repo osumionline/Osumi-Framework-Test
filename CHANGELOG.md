@@ -1,6 +1,26 @@
 CHANGELOG
 =========
 
+## `8.1.7` (22/11/2022)
+
+Correcciones en la tarea `add modelComponent`. Al crear un nuevo componente de una clase de modelo, el nombre del namespace no era correcto y provocaba fallos.
+
+## `8.1.6` (21/11/2022)
+
+Mejoras a la hora de buscar subcomponentes. La expresión regular usada para buscar subcomponentes en un componente era demasiado restrictiva y daba fallos con algún que otro salto de línea. Se ha simplificado de modo que sea menos restrictiva y no haga falta tal exactitud.
+
+## `8.1.5` (31/10/2022)
+
+Mejoras al añadir acciones. He acotado la busqueda de acciones existentes de modo que sea menos restrictiva y se evitan errores por caracteres extraños o que no se han contemplado.
+
+## `8.1.4` (31/10/2022)
+
+Corrección al añadir una nueva acción usando la tarea `add`. Si el módulo al que se quiere añadir una acción contiene algún valor después del valor "actions", este tiene una coma final que no se estaba teniendo en cuenta y fallaba.
+
+## `8.1.3` (04/10/2022)
+
+Corrección al generar el modelo usando la tarea `generateModel`. La tarea no tomaba bien los nombres de las clases de modelo y daba un error.
+
 ## `8.1.2` (22/07/2022)
 
 Pequeña corrección al obtener la lista de servicios de una acción. En el caso de que el array de servicios, además de estar separados por comas, estuviesen separados por espacios, se tomaba el espacio como parte del nombre del servicio y fallaba al incluirlos.
