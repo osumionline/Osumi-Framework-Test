@@ -3,20 +3,20 @@
 	"db": {
 		"host": "localhost",
 		"user": "dev",
-		"pass": "eIl!x767",
+		"pass": "K10%2axt4",
 		"name": "dev"
 	},
 	"cookies": {
 		"prefix": "ofw",
-		"url": ".osumi.es"
+		"url": ".osumi.dev"
 	},
 	"log_level": "ALL",
 	"log": {
 		"max_file_size": 50,
 		"max_num_files": 3
 	},
-	"base_url": "https://dev.osumi.es/",
-	"admin_email": "igorosabel@osumi.es",
+	"base_url": "https://test.osumi.dev/",
+	"admin_email": "igorosabel@osumi.dev",
 	"default_title": "Osumi Framework Dev",
 	"lang": "eu",
 	"css": ["common"],
