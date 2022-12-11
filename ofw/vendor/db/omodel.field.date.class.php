@@ -54,7 +54,7 @@ class OModelFieldDate extends OModelField {
    */
   public function get(string | null $extra = null): string | null {
     if (!is_null($this->current_value) && !is_null($extra)) {
-      return date($extra, str_to_time($this->current_value));
+      return date($extra, strtotime($this->current_value));
     }
     return $this->current_value;
   }
