@@ -128,10 +128,10 @@ class OModel {
 		$field = $this->getModel($key);
 		if (!is_null($field)) {
 			if ($field::GET_EXTRA) {
-				return $field->get($value, $extra);
+				return $field->get($extra);
 			}
 			else {
-				return $field->get($value);
+				return $field->get();
 			}
 		}
 		else {

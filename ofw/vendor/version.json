@@ -14,7 +14,7 @@
 				"ofw/vendor/db/omodel.field.float.class.php",
 				"ofw/vendor/db/omodel.field.num.class.php",
 				"ofw/vendor/db/omodel.field.text.class.php",
-				"ofw/vendor/db/omodel.group.class.php",
+				"ofw/vendor/db/omodel.group.class.php"
 			],
 			"postinstall": true
 		},
