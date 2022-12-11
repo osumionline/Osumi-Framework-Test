@@ -8,6 +8,9 @@ use OsumiFramework\OFW\DB\OModelFieldDate;
 use OsumiFramework\OFW\DB\OModelFieldBool;
 use OsumiFramework\OFW\DB\OModelFieldFloat;
 
+/**
+ * Class to make a table fields group. Given a list of OModelFields, it turns them into specific type class objects. Also performs some global validations.
+ */
 class OModelGroup {
 	private array   $model   = [];
 	private array   $pk      = [];
@@ -123,22 +126,49 @@ class OModelGroup {
 		}
 	}
 
+	/**
+	 * Get model field list
+	 *
+	 * @return array List of model fields
+	 */
 	public function getFields(): array {
 		return $this->model;
 	}
 
+	/**
+	 * Get list of fields that are PK
+	 *
+	 * @return array List of PK fields
+	 */
 	public function getPk(): array {
 		return $this->pk;
 	}
 
+	/**
+	 * Get created types field name
+	 *
+	 * @return ?string Name of the created type field
+	 */
 	public function getCreated(): ?string {
 		return $this->created;
 	}
 
+	/**
+	 * Get updated types field name
+	 *
+	 * @return ?string Name of the updated type field
+	 */
 	public function getUpdated(): ?string {
 		return $this->updated;
 	}
 
+	/**
+	 * Generate the SQL command to create a models table, with it's columns
+	 *
+	 * @param string $table_name Name of the table
+	 *
+	 * @return string SQL command to create the table
+	 */
 	public function generate(string $table_name): string {
 		global $core;
 
@@ -152,6 +182,13 @@ class OModelGroup {
 		return $sql;
 	}
 
+	/**
+	 * Generate the SQL commands needed to create the relations between a models table and its referenced tables
+	 *
+	 * @param string $table_name Name of the table
+	 *
+	 * @return string SQL commands to create the relations
+	 */
 	public function generateRefs(string $table_name): string {
 		$sql         = '';
 		$has_refs    = false;
