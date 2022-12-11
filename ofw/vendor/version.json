@@ -8,6 +8,7 @@
 				"ofw/vendor/version.json",
 				"ofw/vendor/core/ocore.class.php",
 				"ofw/vendor/db/odb.class.php",
+				"ofw/vendor/db/omodel.class.php",
 				"ofw/vendor/db/omodel.field.class.php",
 				"ofw/vendor/db/omodel.field.bool.class.php",
 				"ofw/vendor/db/omodel.field.date.class.php",
