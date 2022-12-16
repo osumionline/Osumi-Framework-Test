@@ -35,7 +35,7 @@ class OModelFieldNum extends OModelField {
       }
     }
     else {
-      throw new \Exception('Value "'.strval($value).'" must be an integer or null.');
+      throw new \Exception('Value "'.strval($value).'" must be an integer or null ('.gettype($value).' given).');
     }
   }
 
@@ -63,7 +63,7 @@ class OModelFieldNum extends OModelField {
    * @return void
    */
   public function reset(): void {
-  	$this->original_value = $this->current_value;
+    $this->original_value = $this->current_value;
   }
 
   /**
@@ -73,6 +73,15 @@ class OModelFieldNum extends OModelField {
    */
   public function getUpdateStr(): string {
     return "`".$this->getName()."` = ?";
+  }
+
+  /**
+   * Get the SQL string needed to insert the field.
+   *
+   * @return string SQL string.
+   */
+  public function getInsertStr(): string {
+    return "?";
   }
 
   /**
