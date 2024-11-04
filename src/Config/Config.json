@@ -10,7 +10,7 @@
 		"url": ""
 	},
 	"log_level": "ERROR",
-	"base_url": "https://composer.osumi.es/",
+	"base_url": "https://test.osumi.es/",
 	"admin_email": "",
 	"default_title": "Osumi Framework",
 	"lang": "es",
