@@ -1,0 +1,108 @@
+{
+  "model": [
+    {
+      "name": "product",
+      "fields": [
+        {
+          "name": "id",
+          "comment": "Id único para cada producto",
+          "decorator": "OPK"
+        },
+        {
+          "name": "name",
+          "comment": "Nombre del producto",
+          "decorator": "OField",
+          "nullable": false,
+          "max": 100,
+          "attribute_type": "string"
+        },
+        {
+          "name": "description",
+          "comment": "Descripción del producto",
+          "decorator": "OField",
+          "nullable": true,
+          "default": null,
+          "type": "OField::LONGTEXT",
+          "attribute_type": "string"
+        },
+        {
+          "name": "price",
+          "comment": "Precio del producto",
+          "decorator": "OField",
+          "nullable": false,
+          "attribute_type": "float"
+        },
+        {
+          "name": "is_new",
+          "comment": "Indica si el producto es nuevo",
+          "decorator": "OField",
+          "nullable": false,
+          "default": true,
+          "attribute_type": "bool"
+        },
+        {
+          "name": "expiration_date",
+          "comment": "Fecha de caducidad del producto",
+          "decorator": "OField",
+          "nullable": true,
+          "default": null,
+          "type": "OField::DATE",
+          "attribute_type": "string"
+        },
+        {
+          "name": "created_at",
+          "comment": "Fecha de creación del registro",
+          "decorator": "OCreatedAt"
+        },
+        {
+          "name": "updated_at",
+          "comment": "Fecha de última modificación del registro",
+          "decorator": "OUpdatedAt"
+        }
+      ],
+      "refs": [
+        {
+          "to": "product_photo",
+          "field_from": "id",
+          "field_to": "id_product"
+        }
+      ]
+    },
+    {
+      "name": "product_photo",
+      "fields": [
+        {
+          "name": "id",
+          "comment": "Id único para cada foto de un producto",
+          "decorator": "OPK"
+        },
+        {
+          "name": "id_product",
+          "comment": "Id del producto al que pertenece la foto",
+          "decorator": "OField",
+          "nullable": false,
+          "attribute_type": "int",
+          "ref": "product.id"
+        },
+        {
+          "name": "name",
+          "comment": "Nombre del archivo de la foto",
+          "decorator": "OField",
+          "nullable": false,
+          "max": 100,
+          "attribute_type": "string"
+        },
+        {
+          "name": "created_at",
+          "comment": "Fecha de creación del registro",
+          "decorator": "OCreatedAt"
+        },
+        {
+          "name": "updated_at",
+          "comment": "Fecha de última modificación del registro",
+          "decorator": "OUpdatedAt"
+        }
+      ]
+    }
+  ]
+}
