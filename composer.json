@@ -23,7 +23,7 @@
     "osumionline/plugin-ftp": "^3.0",
     "osumionline/plugin-image": "^3.0",
     "osumionline/plugin-token": "^3.0",
-    "osumionline/plugin-websocket": "^1.0.0"
+    "osumionline/plugin-websocket": "^1.0"
   },
   "autoload": {
     "psr-4": {

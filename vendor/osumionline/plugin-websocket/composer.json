@@ -1,7 +1,7 @@
 {
   "name": "osumionline/plugin-websocket",
-  "description": "Plugin para usar un servidor Websocket para Osumi Framework",
-  "version": "0.1.0",
+  "description": "Plugin to add WebSocket server support to Osumi Framework",
+  "version": "1.0.0",
   "type": "library",
   "license": "MIT",
   "autoload": {
@@ -11,14 +11,7 @@
   },
   "require": {
     "php": ">=8.2",
-    "cboden/ratchet": "^0.4.4"
-  },
-  "scripts": {
-    "post-install-cmd": [
-      "Osumi\\OsumiFramework\\Plugins\\WebsocketInstaller::runCheck"
-    ],
-    "install-plugin-websocket": [
-      "Osumi\\OsumiFramework\\Plugins\\WebsocketInstaller::run"
-    ]
+    "cboden/ratchet": "^0.4.4",
+    "osumionline/framework": "^9.0"
   }
 }

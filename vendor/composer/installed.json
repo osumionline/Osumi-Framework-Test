@@ -591,24 +591,25 @@
         },
         {
             "name": "osumionline/plugin-websocket",
-            "version": "0.1.0",
-            "version_normalized": "0.1.0.0",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/osumionline/plugin-websocket.git",
-                "reference": "a762a85c5c2fa62fef701158aef91bf950f4b5e5"
+                "reference": "54ee152f03cc40234b624334923397c0f0b921ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/osumionline/plugin-websocket/zipball/a762a85c5c2fa62fef701158aef91bf950f4b5e5",
-                "reference": "a762a85c5c2fa62fef701158aef91bf950f4b5e5",
+                "url": "https://api.github.com/repos/osumionline/plugin-websocket/zipball/54ee152f03cc40234b624334923397c0f0b921ab",
+                "reference": "54ee152f03cc40234b624334923397c0f0b921ab",
                 "shasum": ""
             },
             "require": {
                 "cboden/ratchet": "^0.4.4",
+                "osumionline/framework": "^9.0",
                 "php": ">=8.2"
             },
-            "time": "2025-01-22T08:06:16+00:00",
+            "time": "2026-04-05T16:02:10+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -620,10 +621,10 @@
             "license": [
                 "MIT"
             ],
-            "description": "Plugin para usar un servidor Websocket para Osumi Framework",
+            "description": "Plugin to add WebSocket server support to Osumi Framework",
             "support": {
                 "issues": "https://github.com/osumionline/plugin-websocket/issues",
-                "source": "https://github.com/osumionline/plugin-websocket/tree/v0.1.0"
+                "source": "https://github.com/osumionline/plugin-websocket/tree/v1.0.0"
             },
             "install-path": "../osumionline/plugin-websocket"
         },
