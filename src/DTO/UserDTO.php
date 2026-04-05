@@ -2,20 +2,16 @@
 
 namespace Osumi\OsumiFramework\App\DTO;
 
-use Osumi\OsumiFramework\Core\ODTO;
-use Osumi\OsumiFramework\Web\ORequest;
+use Osumi\OsumiFramework\DTO\ODTO;
+use Osumi\OsumiFramework\DTO\ODTOField;
 
-class UserDTO implements ODTO{
-	public int $id_user = -1;
+class UserDTO extends ODTO{
+	#[ODTOField(required: true)]
+	public ?int $id_user = null;
 
-	public function isValid(): bool {
-		return ($this->id_user !== -1);
-	}
+	#[ODTOField(required: true, middleware: 'User', middlewareProperty: 'name')]
+	public ?string $username = null;
 
-	public function load(ORequest $req): void {
-		$id_user = $req->getParamInt('id');
-		if (!is_null($id_user)) {
-			$this->id_user = $id_user;
-		}
-	}
+	#[ODTOField(required: true, header: 'Host')]
+	public ?string $host = null;
 }

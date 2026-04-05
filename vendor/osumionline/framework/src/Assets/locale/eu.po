@@ -1,0 +1,329 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 9.0\n"
+"POT-Creation-Date: 2021-04-06\n"
+"PO-Revision-Date: 2025-08-12\n"
+"Last-Translator: igorosabel\n"
+"Language-Team: Osumi\n"
+"Language: eu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "ERROR_TITLE"
+msgstr "Errorea"
+
+msgid "ERROR_403_LABEL"
+msgstr "403 Autentifikazio errorea"
+
+msgid "ERROR_404_LABEL"
+msgstr "404 Orria ez da aurkitu"
+
+msgid "ERROR_405_LABEL"
+msgstr "405 Metodoa ez da onartzen"
+
+msgid "ERROR_405_MESSAGE"
+msgstr ""%s" espero zen baina "%s" jaso zen."
+
+msgid "ERROR_500_LABEL"
+msgstr "500 Zerbitzariaren barneko errorea"
+
+msgid "ERROR_VIEW_LABEL"
+msgstr "Ikuspegi fitxategia ez da aurkitu"
+
+msgid "ERROR_VIEW_MESSAGE"
+msgstr "Ezin izan da ikuspegi "%s" fitxategia aurkitu."
+
+msgid "ERROR_SEE_MORE_LABEL"
+msgstr "Xehetasun gehiago ikusi"
+
+msgid "TASK_BACKUP_ALL"
+msgstr "Aplikazioaren (datu-base eta kodea) babeskopia-fitxategi (erauzgailu-fitxategia) bat sortu. Barneki "backupDB" eta "extractor" zereginei deitzen da."
+
+msgid "TASK_BACKUP_ALL_DONE"
+msgstr "Babeskopia egina"
+
+msgid "TASK_BACKUP_DB"
+msgstr "Datu-basearen babeskopia egiten du "mysqldump" CLI herraminta erabiliz. ofw/export karpetan, datu-basearen izena duelarik, fitxategi bat sortzen da."
+
+msgid "TASK_BACKUP_DB_NO_DB"
+msgstr "Ez dago konfiguratua dagoen datu-baserik."
+
+msgid "TASK_BACKUP_DB_EXPORTING"
+msgstr ""%s" datu-basea "%s" fitxategira esportatzen."
+
+msgid "TASK_BACKUP_DB_EXISTS"
+msgstr "Helburu-fitxategia jada bazegoen, ezabatua izan da."
+
+msgid "TASK_BACKUP_DB_SUCCESS"
+msgstr "Datu-basea arrakastaz esportatu da."
+
+msgid "TASK_EXTRACTOR"
+msgstr "Aplikazio bat bere fitxategi guztiekin automatikoki erauzten den PHP fitxategi bakar batera esportatzeko funtzioa"
+
+msgid "TASK_EXTRACTOR_EXPORTING"
+msgstr "Proiektua esportatzen"
+
+msgid "TASK_EXTRACTOR_EXISTS"
+msgstr "Helburu-fitxategia jada bazegoen, ezabatua izan da."
+
+msgid "TASK_EXTRACTOR_GETTING_FILES"
+msgstr "Karpetak eta fitxategiak lortzen esportatzeko..."
+
+msgid "TASK_EXTRACTOR_EXPORTING_FILES"
+msgstr "%s fitxategia esportatzen."
+
+msgid "TASK_EXTRACTOR_EXPORTING_FOLDERS"
+msgstr "%s karpeta esportatzen."
+
+msgid "TASK_EXTRACTOR_GETTING_READY"
+msgstr "Erauzgailua prestatzen..."
+
+msgid "TASK_EXTRACTOR_BASE_FOLDER"
+msgstr "OINARRIZKO HELBIDEA"
+
+msgid "TASK_EXTRACTOR_CREATE_FOLDERS"
+msgstr "KARPETAK SORTZEN"
+
+msgid "TASK_EXTRACTOR_CREATE_FILES"
+msgstr "FITXATEGIAK SORTZEN"
+
+msgid "TASK_EXTRACTOR_END"
+msgstr "Proiektua esportatua izan da."
+
+msgid "TASK_GENERATE_MODEL"
+msgstr "SQL fitxategi bat sortu erabiltzaileak definitutako modulutan oinarritutako datu-baseko taula guztiak sortzeko (fitxategia ofw/export-en sortua)."
+
+msgid "TASK_GENERATE_MODEL_MODEL"
+msgstr "Eredua"
+
+msgid "TASK_GENERATE_MODEL_EXISTS"
+msgstr "Helburu-fitxategia jada bazegoen, ezabatua izan da."
+
+msgid "TASK_GENERATE_MODEL_GENERATED"
+msgstr "Eredu-fitxategia sortua: %s"
+
+msgid "TASK_GENERATE_MODEL_NO_DATABASE"
+msgstr "Ez da definitu datu-baserik."
+
+msgid "TASK_GENERATE_MODEL_FROM"
+msgstr "JSON fitxategi batetik eredu-klaseak sortzeko funtzioa."
+
+msgid "TASK_GENERATE_MODEL_FROM_DB"
+msgstr "Datu-base bateko konexio batetik eredu-klaseak sortzeko funtzioa."
+
+msgid "TASK_GENERATE_MODEL_FROM_WARNING"
+msgstr "Kontuz!"
+
+msgid "TASK_GENERATE_MODEL_FROM_CONTINUE"
+msgstr "Igo beharreko fitxategiaren izena adierazi behar duzu."
+
+msgid "TASK_GENERATE_MODEL_FROM_DB_CONTINUE"
+msgstr "Datu-basearen konexioa konfiguratu behar duzu jarraitzeko."
+
+msgid "TASK_GENERATE_MODEL_FROM_FILE_NOT_FOUND"
+msgstr "Adierazitako fitxategia ez da existitzen."
+
+msgid "TASK_GENERATE_MODEL_FROM_OK"
+msgstr ""%s" eredu-klase berria sortu da "%s" fitxategian."
+
+msgid "TASK_GENERATE_MODEL_FROM_ERROR_EXISTS"
+msgstr ""%s" fitxategia dagoeneko existitzen da."
+
+msgid "TASK_GENERATE_MODEL_FROM_ERROR_PK"
+msgstr ""%s" taulak ez du OPK gisa definitutako eremurik."
+
+msgid "TASK_GENERATE_MODEL_FROM_ERROR_CREATED_AT"
+msgstr ""%s" taulak ez du OCreatedAt gisa definitutako eremurik."
+
+msgid "TASK_GENERATE_MODEL_FROM_ERROR_UPDATED_AT"
+msgstr ""%s" taulak ez du OUpdatedAt gisa definitutako eremurik."
+
+msgid "TASK_VERSION"
+msgstr "Frameworkaren oraingo bertsioaren informazioa jaso."
+
+msgid "TASK_ADD"
+msgstr "Ekintza, zerbitzu, zeregin, modulu osagai, osagai edo iragazki berriak gehitu."
+
+msgid "TASK_ADD_DEFAULT_NOT_VALID"
+msgstr "Adierazitako komandoa ez da onartutako aukera bat."
+
+msgid "TASK_ADD_DEFAULT_AVAILABLE_OPTIONS"
+msgstr "Eskuragarri dauden aukerak hauexek dira:"
+
+msgid "TASK_ADD_DEFAULT_ACTION"
+msgstr "Ekintza berri bat sortu"
+
+msgid "TASK_ADD_DEFAULT_SERVICE"
+msgstr "Zerbitzu berri bat sortu"
+
+msgid "TASK_ADD_DEFAULT_TASK"
+msgstr "Ataza berri bat sortu"
+
+msgid "TASK_ADD_DEFAULT_MODEL_COMPONENT"
+msgstr "Modulurako osagai berri bat sortu"
+
+msgid "TASK_ADD_DEFAULT_COMPONENT"
+msgstr "Osagai berri bat sortu"
+
+msgid "TASK_ADD_DEFAULT_FILTER"
+msgstr "Iragazki berri bat sortu"
+
+msgid "TASK_ADD_ACTION_MESSAGE"
+msgstr "%s ekintza berria"
+
+msgid "TASK_ADD_ACTION_TEMPLATE"
+msgstr "<strong>%s</strong> ekintza berria badabil!"
+
+msgid "TASK_ADD_ACTION_ERROR"
+msgstr "Sortu nahi duzun ekintzaren izena adierazi behar duzu, bere URLa eta zer nolako itzulera izango duen. Adibidez:"
+
+msgid "TASK_ADD_ACTION_EXISTS"
+msgstr ""%s" ekintza jada badago."
+
+msgid "TASK_ADD_ACTION_TEMPLATE_EXISTS"
+msgstr ""%s" txantiloi-fitxategia jada badago."
+
+msgid "TASK_ADD_ACTION_NEW_ACTION"
+msgstr ""%s" ekintza berria sortua."
+
+msgid "TASK_ADD_ACTION_NEW_FOLDER"
+msgstr ""%s" karpeta berria sortua."
+
+msgid "TASK_ADD_ACTION_NEW_FILE"
+msgstr ""%s" ekintza-fitxategi berria sortua."
+
+msgid "TASK_ADD_ACTION_NEW_TEMPLATE"
+msgstr ""%s" txantiloi-fitxategi berria sortua."
+
+msgid "TASK_ADD_ACTION_URLS_UPDATED"
+msgstr "URLen fitxategia eguneratu da ere."
+
+msgid "TASK_ADD_SERVICE_ERROR"
+msgstr "Sortu nahi duzun zerbitzuaren izena adierazi behar duzu, adibidez:"
+
+msgid "TASK_ADD_SERVICE_EXISTS"
+msgstr ""%s" zerbitzu-fitxategia jada badago."
+
+msgid "TASK_ADD_SERVICE_NEW_SERVICE"
+msgstr ""%s" zerbitzu berria sortua:"
+
+msgid "TASK_ADD_SERVICE_NEW_FILE"
+msgstr ""%s" fitxategi berria sortua."
+
+msgid "TASK_ADD_TASK_MESSAGE"
+msgstr ""%s" ataza berria"
+
+msgid "TASK_ADD_TASK_ERROR"
+msgstr "Sortu nahi duzun atazaren izena adierazi behar duzu, adibidez:"
+
+msgid "TASK_ADD_TASK_EXISTS"
+msgstr ""%s" ataza-fitxategia jada badago."
+
+msgid "TASK_ADD_TASK_NEW_TASK"
+msgstr ""%s" ataza berria sortua:"
+
+msgid "TASK_ADD_TASK_NEW_FILE"
+msgstr ""%s" fitxategi berria sortua."
+
+msgid "TASK_ADD_MODEL_COMPONENT_ERROR"
+msgstr "Sortu nahi duzun moduluaren osagaiaren izena adierazi behar duzu, adibidez:"
+
+msgid "TASK_ADD_MODEL_COMPONENT_NO_MODEL"
+msgstr ""%s" eskatutako modulua ezin izan da aurkitu."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FOLDER_EXISTS"
+msgstr ""%s" karpeta jada badago."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FILE_EXISTS"
+msgstr ""%s" fitxategia jada badago."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FOLDER_CANT_CREATE"
+msgstr "Can't create folder "%s"."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FILE_CANT_CREATE"
+msgstr ""%s" fitxategia ezin da sortu."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FOLDER_CREATED"
+msgstr ""%s" karpeta berria sortua."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FILE_CREATED"
+msgstr ""%s" fitxategi berria sortua."
+
+msgid "TASK_ADD_MODEL_COMPONENT_USE"
+msgstr ""%s" modulu-osagaia sortua. Honekin erabili:"
+
+msgid "TASK_ADD_COMPONENT_ERROR"
+msgstr "Sortu nahi duzun osagaiaren izena adierazi behar duzu, adibidez:"
+
+msgid "TASK_ADD_COMPONENT_EXISTS"
+msgstr ""%s" osagaia jada badago."
+
+msgid "TASK_ADD_COMPONENT_NEW_COMPONENT"
+msgstr ""%s" osagai berria sortua."
+
+msgid "TASK_ADD_COMPONENT_NEW_FILE"
+msgstr ""%s" fitxategi berria sortua."
+
+msgid "TASK_ADD_COMPONENT_TEMPLATE"
+msgstr ""%s" osagaia ondo dabil."
+
+msgid "TASK_ADD_FILTER_ERROR"
+msgstr "Sortu nahi duzun iragazkiaren izena adierazi behar duzu, adibidez:"
+
+msgid "TASK_ADD_FILTER_EXISTS"
+msgstr ""%s" iragazkia jada badago."
+
+msgid "TASK_ADD_FILTER_NEW_FILTER"
+msgstr ""%s" iragazki berria sortua."
+
+msgid "TASK_ADD_FILTER_NEW_FILE"
+msgstr ""%s" fitxategi berria sortua."
+
+msgid "TASK_ADD_FILTER_TEMPLATE"
+msgstr ""%s" iragazki berria."
+
+msgid "TASK_RESET"
+msgstr "Ezabatzen du framework-eko ez diren fitxategi guztiak, instalazio berrietan erabiltzeko."
+
+msgid "TASK_RESET_WARNING"
+msgstr "¡Kontuz!"
+
+msgid "TASK_RESET_CONTINUE"
+msgstr "Jarraian, framework-etik kanpoko eduki guztia ezabatzeari ekingo diogu, amaieran instalatu berri den aplikazio baten egoera izango du."
+
+msgid "TASK_RESET_TIME_TO_CANCEL"
+msgstr "Prozesu hau bertan behera uzteko 10 segundo dituzu Kontrol + C sakatuta."
+
+msgid "TASK_RESET_RESET_KEY_CREATED"
+msgstr "Berrezarri gakoa sortu da. Datu guztiak ezabatzea berresteko, exekutatu komando hau hurrengo 15 minutuetan:"
+
+msgid "TASK_RESET_DATA_ERASED"
+msgstr "Datuak ezabatu dira!"
+
+msgid "TASK_RESET_ERROR"
+msgstr "ERROREA!"
+
+msgid "TASK_RESET_GET_NEW_KEY"
+msgstr "Errore bat gertatu da berrezartzeko gakoa balioztatzean edo dagoeneko iraungi da. Sortu berriro gako berri bat komando hau exekutatuz:"
+
+msgid "OFW_INDICATE_OPTION"
+msgstr "  Aukera bat aukeratu behar duzu.\n"
+
+msgid "OFW_OPTIONS"
+msgstr "  Aukerak:\n\n"
+
+msgid "OFW_EXAMPLE"
+msgstr "Adibidez"
+
+msgid "OFW_WRONG_OPTION"
+msgstr ""%s" aukera oker dago."
+
+msgid "PLUGIN_IMAGE_FILE_NOT_FOUND"
+msgstr "ERROREA! Eskatutako irudia ezin izan da aurkitu."
+
+msgid "PLUGIN_IMAGE_LOAD_ERROR"
+msgstr "ERROREA! Errore bat gertatu da irudia kargatzean."
+
+msgid "PLUGIN_IMAGE_FILE_NOT_LOADED"
+msgstr "ERROREA! Momentu honetan ez dago irudirik kargatuta."

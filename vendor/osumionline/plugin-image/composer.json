@@ -1,0 +1,16 @@
+{
+  "name": "osumionline/plugin-image",
+  "description": "Plugin OImage para Osumi Framework",
+  "version": "3.4.0",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Osumi\\OsumiFramework\\Plugins\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=8.2",
+    "ext-gd": "*"
+  }
+}

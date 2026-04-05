@@ -1,0 +1,329 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 9.0\n"
+"POT-Creation-Date: 2021-04-06\n"
+"PO-Revision-Date: 2025-08-12\n"
+"Last-Translator: igorosabel\n"
+"Language-Team: Osumi\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "ERROR_TITLE"
+msgstr "Error"
+
+msgid "ERROR_403_LABEL"
+msgstr "403 Error de autenticación"
+
+msgid "ERROR_404_LABEL"
+msgstr "404 Página no encontrada"
+
+msgid "ERROR_405_LABEL"
+msgstr "405 Método no permitido"
+
+msgid "ERROR_405_MESSAGE"
+msgstr "Se esperaba "%s" pero se obtuvo "%s""
+
+msgid "ERROR_500_LABEL"
+msgstr "500 Error interno del servidor"
+
+msgid "ERROR_VIEW_LABEL"
+msgstr "Archivo de vista no encontrado"
+
+msgid "ERROR_VIEW_MESSAGE"
+msgstr "No se ha podido encontrar el archivo "%s"."
+
+msgid "ERROR_SEE_MORE_LABEL"
+msgstr "Ver más detalles"
+
+msgid "TASK_BACKUP_ALL"
+msgstr "Función para crear una copia de seguridad de TODA la aplicación (base de datos más archivos)."
+
+msgid "TASK_BACKUP_ALL_DONE"
+msgstr "Copia de seguridad completada."
+
+msgid "TASK_BACKUP_DB"
+msgstr "Función para crear una copia de seguridad de la base de datos."
+
+msgid "TASK_BACKUP_DB_NO_DB"
+msgstr "No hay ninguna base de datos configurada."
+
+msgid "TASK_BACKUP_DB_EXPORTING"
+msgstr "Exportando base de datos "%s" al archivo "%s""
+
+msgid "TASK_BACKUP_DB_EXISTS"
+msgstr "Archivo destino ya existía, se ha borrado."
+
+msgid "TASK_BACKUP_DB_SUCCESS"
+msgstr "Base de datos exportada con éxito."
+
+msgid "TASK_EXTRACTOR"
+msgstr "Función para exportar una aplicación con todos sus archivos a un solo archivo autoextraíble."
+
+msgid "TASK_EXTRACTOR_EXPORTING"
+msgstr "Exportando proyecto"
+
+msgid "TASK_EXTRACTOR_EXISTS"
+msgstr "Archivo destino ya existía, se ha borrado."
+
+msgid "TASK_EXTRACTOR_GETTING_FILES"
+msgstr "Obteniendo carpetas y archivos a exportar..."
+
+msgid "TASK_EXTRACTOR_EXPORTING_FILES"
+msgstr "Exportando %s archivos."
+
+msgid "TASK_EXTRACTOR_EXPORTING_FOLDERS"
+msgstr "Exportando %s carpetas."
+
+msgid "TASK_EXTRACTOR_GETTING_READY"
+msgstr "Preparando extractor..."
+
+msgid "TASK_EXTRACTOR_BASE_FOLDER"
+msgstr "RUTA BASE"
+
+msgid "TASK_EXTRACTOR_CREATE_FOLDERS"
+msgstr "CREANDO CARPETAS"
+
+msgid "TASK_EXTRACTOR_CREATE_FILES"
+msgstr "CREANDO ARCHIVOS"
+
+msgid "TASK_EXTRACTOR_END"
+msgstr "Proyecto exportado."
+
+msgid "TASK_GENERATE_MODEL"
+msgstr "Función para generar el script con el que crear la base de datos a partir del modelo."
+
+msgid "TASK_GENERATE_MODEL_MODEL"
+msgstr "Modelo"
+
+msgid "TASK_GENERATE_MODEL_EXISTS"
+msgstr "El archivo ya existía y ha sido borrado."
+
+msgid "TASK_GENERATE_MODEL_GENERATED"
+msgstr "Archivo de modelo generado: %s"
+
+msgid "TASK_GENERATE_MODEL_NO_DATABASE"
+msgstr "No se ha definido ninguna base de datos."
+
+msgid "TASK_GENERATE_MODEL_FROM"
+msgstr "Función para generar las clases de modelo a partir de un archivo JSON."
+
+msgid "TASK_GENERATE_MODEL_FROM_DB"
+msgstr "Función para generar las clases de modelo a partir de una conexión a la base de datos."
+
+msgid "TASK_GENERATE_MODEL_FROM_WARNING"
+msgstr "¡Atención!"
+
+msgid "TASK_GENERATE_MODEL_FROM_CONTINUE"
+msgstr "Debes indicar el nombre del archivo a cargar."
+
+msgid "TASK_GENERATE_MODEL_FROM_DB_CONTINUE"
+msgstr "Debes configurar la conexión de la base de datos para continuar."
+
+msgid "TASK_GENERATE_MODEL_FROM_FILE_NOT_FOUND"
+msgstr "El archivo indicado no existe."
+
+msgid "TASK_GENERATE_MODEL_FROM_OK"
+msgstr "Nueva clase de modelo "%s" creada en el archivo "%s"."
+
+msgid "TASK_GENERATE_MODEL_FROM_ERROR_EXISTS"
+msgstr "El archivo "%s" ya existe."
+
+msgid "TASK_GENERATE_MODEL_FROM_ERROR_PK"
+msgstr "La tabla "%s" no tiene definido ningún campo como OPK."
+
+msgid "TASK_GENERATE_MODEL_FROM_ERROR_CREATED_AT"
+msgstr "La tabla "%s" no tiene definido ningún campo como OCreatedAt."
+
+msgid "TASK_GENERATE_MODEL_FROM_ERROR_UPDATED_AT"
+msgstr "La tabla "%s" no tiene definido ningún campo como OUpdatedAt."
+
+msgid "TASK_VERSION"
+msgstr "Función para obtener el número de versión actual del Framework."
+
+msgid "TASK_ADD"
+msgstr "Añade nuevas acciones, servicios, tareas, componentes de modelo, componentes o filtros."
+
+msgid "TASK_ADD_DEFAULT_NOT_VALID"
+msgstr "El comando indicado no es una opción válida."
+
+msgid "TASK_ADD_DEFAULT_AVAILABLE_OPTIONS"
+msgstr "Las opciones disponibles son:"
+
+msgid "TASK_ADD_DEFAULT_ACTION"
+msgstr "Crea una nueva acción"
+
+msgid "TASK_ADD_DEFAULT_SERVICE"
+msgstr "Crea un nuevo servicio"
+
+msgid "TASK_ADD_DEFAULT_TASK"
+msgstr "Crea una nueva tarea"
+
+msgid "TASK_ADD_DEFAULT_MODEL_COMPONENT"
+msgstr "Crea un componente para un modelo"
+
+msgid "TASK_ADD_DEFAULT_COMPONENT"
+msgstr "Crea un nuevo componente"
+
+msgid "TASK_ADD_DEFAULT_FILTER"
+msgstr "Crea un nuevo filtro"
+
+msgid "TASK_ADD_ACTION_MESSAGE"
+msgstr "Nueva acción %s"
+
+msgid "TASK_ADD_ACTION_TEMPLATE"
+msgstr "¡La nueva acción <strong>%s</strong> funciona!"
+
+msgid "TASK_ADD_ACTION_ERROR"
+msgstr "Debes indicar el nombre de la acción que quieres crear, su URL y su tipo de retorno. Por ejemplo:"
+
+msgid "TASK_ADD_ACTION_EXISTS"
+msgstr "La acción "%s" ya existe."
+
+msgid "TASK_ADD_ACTION_TEMPLATE_EXISTS"
+msgstr "El archivo de plantilla "%s" ya existe."
+
+msgid "TASK_ADD_ACTION_NEW_ACTION"
+msgstr "Nueva acción "%s" creada."
+
+msgid "TASK_ADD_ACTION_NEW_FOLDER"
+msgstr "Nueva carpeta "%s" creada."
+
+msgid "TASK_ADD_ACTION_NEW_FILE"
+msgstr "Nuevo archivo de acción "%s" creado."
+
+msgid "TASK_ADD_ACTION_NEW_TEMPLATE"
+msgstr "Nuevo archivo de plantilla "%s" creado."
+
+msgid "TASK_ADD_ACTION_URLS_UPDATED"
+msgstr "El archivo de URLs ha sido actualizado."
+
+msgid "TASK_ADD_SERVICE_ERROR"
+msgstr "Debes indicar el nombre del servicio que quieres crear, por ejemplo:"
+
+msgid "TASK_ADD_SERVICE_EXISTS"
+msgstr "El archivo de servicio "%s" ya existe."
+
+msgid "TASK_ADD_SERVICE_NEW_SERVICE"
+msgstr "Nuevo servicio "%s" creado:"
+
+msgid "TASK_ADD_SERVICE_NEW_FILE"
+msgstr "Nuevo archivo "%s" creado."
+
+msgid "TASK_ADD_TASK_MESSAGE"
+msgstr "Nueva tarea %s"
+
+msgid "TASK_ADD_TASK_ERROR"
+msgstr "Debes indicar el nombre de la tarea que quieres crear, por ejemplo:"
+
+msgid "TASK_ADD_TASK_EXISTS"
+msgstr "El archivo de tarea "%s" ya existe."
+
+msgid "TASK_ADD_TASK_NEW_TASK"
+msgstr "Nueva tarea "%s" creada:"
+
+msgid "TASK_ADD_TASK_NEW_FILE"
+msgstr "Nuevo archivo "%s" creado."
+
+msgid "TASK_ADD_MODEL_COMPONENT_ERROR"
+msgstr "Debes indicar el nombre del modelo cuyo componente quieres crear, por ejemplo:"
+
+msgid "TASK_ADD_MODEL_COMPONENT_NO_MODEL"
+msgstr "El modelo indicado "%s" no se ha encontrado."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FOLDER_EXISTS"
+msgstr "La carpeta "%s" ya existe."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FILE_EXISTS"
+msgstr "El archivo "%s" ya existe."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FOLDER_CANT_CREATE"
+msgstr "No se pudo crear la carpeta "%s"."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FILE_CANT_CREATE"
+msgstr "No se pudo crear el archivo "%s"."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FOLDER_CREATED"
+msgstr "Nueva carpeta "%s" creada."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FILE_CREATED"
+msgstr "Nuevo archivo "%s" creado."
+
+msgid "TASK_ADD_MODEL_COMPONENT_USE"
+msgstr "Nuevo componente de modelo "%s" creado. Se puede usar de la siguiente manera:"
+
+msgid "TASK_ADD_COMPONENT_ERROR"
+msgstr "Debes indicar el nombre del componente que quieres crear, por ejemplo:"
+
+msgid "TASK_ADD_COMPONENT_EXISTS"
+msgstr "El componente "%s" ya existe."
+
+msgid "TASK_ADD_COMPONENT_NEW_COMPONENT"
+msgstr "Nuevo componente "%s" creado:"
+
+msgid "TASK_ADD_COMPONENT_NEW_FILE"
+msgstr "Nuevo archivo "%s" creado."
+
+msgid "TASK_ADD_COMPONENT_TEMPLATE"
+msgstr "El componente "%s" funciona."
+
+msgid "TASK_ADD_FILTER_ERROR"
+msgstr "Debes indicar el nombre del filtro que quieres crear, por ejemplo:"
+
+msgid "TASK_ADD_FILTER_EXISTS"
+msgstr "El filtro "%s" ya existe."
+
+msgid "TASK_ADD_FILTER_NEW_FILTER"
+msgstr "Nuevo filtro "%s" creado:"
+
+msgid "TASK_ADD_FILTER_NEW_FILE"
+msgstr "Nuevo archivo "%s" creado."
+
+msgid "TASK_ADD_FILTER_TEMPLATE"
+msgstr "Nuevo filtro "%s"."
+
+msgid "TASK_RESET"
+msgstr "Limpia todos los datos que no son propios del framework, para usar en instalaciones nuevas."
+
+msgid "TASK_RESET_WARNING"
+msgstr "¡Atención!"
+
+msgid "TASK_RESET_CONTINUE"
+msgstr "A continuación se va a proceder a borrar todo el contenido ajeno al framework, al acabar tendrá el estado de una aplicación recién instalada."
+
+msgid "TASK_RESET_TIME_TO_CANCEL"
+msgstr "Dispones de 10 segundos para cancelar este proceso presionando Control + C."
+
+msgid "TASK_RESET_RESET_KEY_CREATED"
+msgstr "Clave de reseteo creada. Para confirmar el borrado de todos los datos ejecuta el siguiente comando en los próximos 15 minutos:"
+
+msgid "TASK_RESET_DATA_ERASED"
+msgstr "¡Datos borrados!"
+
+msgid "TASK_RESET_ERROR"
+msgstr "¡ERROR!"
+
+msgid "TASK_RESET_GET_NEW_KEY"
+msgstr "Ocurrió un error al validar la clave de reseteo o ya ha expirado. Vuelve a crear una nueva clave ejecutando el siguiente comando:"
+
+msgid "OFW_INDICATE_OPTION"
+msgstr "  Tienes que indicar una opción.\n"
+
+msgid "OFW_OPTIONS"
+msgstr "  Opciones:\n\n"
+
+msgid "OFW_EXAMPLE"
+msgstr "Por ejemplo"
+
+msgid "OFW_WRONG_OPTION"
+msgstr "La opción "%s" no es correcta."
+
+msgid "PLUGIN_IMAGE_FILE_NOT_FOUND"
+msgstr "ERROR! La imagen solicitada no se ha podido encontrar."
+
+msgid "PLUGIN_IMAGE_LOAD_ERROR"
+msgstr "ERROR! Ha ocurrido un error al cargar el archivo."
+
+msgid "PLUGIN_IMAGE_FILE_NOT_LOADED"
+msgstr "ERROR! No hay ningún archivo cargado actualmente."

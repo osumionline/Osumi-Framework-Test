@@ -1,0 +1,329 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 9.0\n"
+"POT-Creation-Date: 2021-04-06\n"
+"PO-Revision-Date: 2025-08-12\n"
+"Last-Translator: igorosabel\n"
+"Language-Team: Osumi\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "ERROR_TITLE"
+msgstr "Error"
+
+msgid "ERROR_403_LABEL"
+msgstr "403 Authentication error"
+
+msgid "ERROR_404_LABEL"
+msgstr "404 Page not found"
+
+msgid "ERROR_405_LABEL"
+msgstr "405 Method not allowed"
+
+msgid "ERROR_405_MESSAGE"
+msgstr ""%s" was expected but "%s" was received."
+
+msgid "ERROR_500_LABEL"
+msgstr "500 Internal server error"
+
+msgid "ERROR_VIEW_LABEL"
+msgstr "View file not found"
+
+msgid "ERROR_VIEW_MESSAGE"
+msgstr "View file "%s" could not be found."
+
+msgid "ERROR_SEE_MORE_LABEL"
+msgstr "See more details"
+
+msgid "TASK_BACKUP_ALL"
+msgstr "Generate a backup file (extractor file) of the whole application (database and code). Calls internally to "backupDB" and "extractor" tasks."
+
+msgid "TASK_BACKUP_ALL_DONE"
+msgstr "Backup complete"
+
+msgid "TASK_BACKUP_DB"
+msgstr "Performs a database backup using "mysqldump" CLI tool. Generates a file on ofw/export folder with the name of the database."
+
+msgid "TASK_BACKUP_DB_NO_DB"
+msgstr "There is no database configured."
+
+msgid "TASK_BACKUP_DB_EXPORTING"
+msgstr "Exporting "%s" database to file "%s""
+
+msgid "TASK_BACKUP_DB_EXISTS"
+msgstr "Destiny file already existed, it has been deleted."
+
+msgid "TASK_BACKUP_DB_SUCCESS"
+msgstr "Database successfully exported."
+
+msgid "TASK_EXTRACTOR"
+msgstr "Function to export an application with all its files to a single self-extracting php file"
+
+msgid "TASK_EXTRACTOR_EXPORTING"
+msgstr "Exporting project"
+
+msgid "TASK_EXTRACTOR_EXISTS"
+msgstr "Destiny file already existed, it has been deleted."
+
+msgid "TASK_EXTRACTOR_GETTING_FILES"
+msgstr "Getting folders and files to export..."
+
+msgid "TASK_EXTRACTOR_EXPORTING_FILES"
+msgstr "Exporting %s files."
+
+msgid "TASK_EXTRACTOR_EXPORTING_FOLDERS"
+msgstr "Exporting %s folders."
+
+msgid "TASK_EXTRACTOR_GETTING_READY"
+msgstr "Preparing extractor..."
+
+msgid "TASK_EXTRACTOR_BASE_FOLDER"
+msgstr "BASE PATH"
+
+msgid "TASK_EXTRACTOR_CREATE_FOLDERS"
+msgstr "CREATING FOLDERS"
+
+msgid "TASK_EXTRACTOR_CREATE_FILES"
+msgstr "CREATING FILES"
+
+msgid "TASK_EXTRACTOR_END"
+msgstr "Project has been exported."
+
+msgid "TASK_GENERATE_MODEL"
+msgstr "Generate a SQL file to create all the tables in the database based on user defined models (file generated on ofw/export)."
+
+msgid "TASK_GENERATE_MODEL_MODEL"
+msgstr "Model"
+
+msgid "TASK_GENERATE_MODEL_EXISTS"
+msgstr "Destiny file already existed, it has been deleted."
+
+msgid "TASK_GENERATE_MODEL_GENERATED"
+msgstr "Model file generated: %s"
+
+msgid "TASK_GENERATE_MODEL_NO_DATABASE"
+msgstr "There are no databases configured."
+
+msgid "TASK_GENERATE_MODEL_FROM"
+msgstr "Function to generate model classes from a JSON file."
+
+msgid "TASK_GENERATE_MODEL_FROM_DB"
+msgstr "Function to generate model classes from a database connection."
+
+msgid "TASK_GENERATE_MODEL_FROM_WARNING"
+msgstr "Warning!"
+
+msgid "TASK_GENERATE_MODEL_FROM_CONTINUE"
+msgstr "You must indicate the name of the file to upload."
+
+msgid "TASK_GENERATE_MODEL_FROM_DB_CONTINUE"
+msgstr "You must configure the database connection to continue."
+
+msgid "TASK_GENERATE_MODEL_FROM_FILE_NOT_FOUND"
+msgstr "The specified file does not exist."
+
+msgid "TASK_GENERATE_MODEL_FROM_OK"
+msgstr "New model class "%s" created in file "%s"."
+
+msgid "TASK_GENERATE_MODEL_FROM_ERROR_EXISTS"
+msgstr "The file "%s" already exists."
+
+msgid "TASK_GENERATE_MODEL_FROM_ERROR_PK"
+msgstr "Table "%s" has no field defined as OPK."
+
+msgid "TASK_GENERATE_MODEL_FROM_ERROR_CREATED_AT"
+msgstr "Table "%s" has no field defined as OCreatedAt."
+
+msgid "TASK_GENERATE_MODEL_FROM_ERROR_UPDATED_AT"
+msgstr "Table "%s" has no field defined as OUpdatedAt."
+
+msgid "TASK_VERSION"
+msgstr "Get Frameworks current version information."
+
+msgid "TASK_ADD"
+msgstr "Add new actions, services, tasks, model components, components or filters."
+
+msgid "TASK_ADD_DEFAULT_NOT_VALID"
+msgstr "Indicated command is not a valid option."
+
+msgid "TASK_ADD_DEFAULT_AVAILABLE_OPTIONS"
+msgstr "Available options are:"
+
+msgid "TASK_ADD_DEFAULT_ACTION"
+msgstr "Create a new action"
+
+msgid "TASK_ADD_DEFAULT_SERVICE"
+msgstr "Create a new service"
+
+msgid "TASK_ADD_DEFAULT_TASK"
+msgstr "Create a new task"
+
+msgid "TASK_ADD_DEFAULT_MODEL_COMPONENT"
+msgstr "Create a component for a model"
+
+msgid "TASK_ADD_DEFAULT_COMPONENT"
+msgstr "Create a new component"
+
+msgid "TASK_ADD_DEFAULT_FILTER"
+msgstr "Create a new filter"
+
+msgid "TASK_ADD_ACTION_MESSAGE"
+msgstr "New action %s"
+
+msgid "TASK_ADD_ACTION_TEMPLATE"
+msgstr "New action <strong>%s</strong> works!"
+
+msgid "TASK_ADD_ACTION_ERROR"
+msgstr "You must indicate the name of the action you want to create, it's URL and the type of the return. For example:"
+
+msgid "TASK_ADD_ACTION_EXISTS"
+msgstr "Action "%s" already exists."
+
+msgid "TASK_ADD_ACTION_TEMPLATE_EXISTS"
+msgstr "Template file "%s" already exists."
+
+msgid "TASK_ADD_ACTION_NEW_ACTION"
+msgstr "New action "%s" created."
+
+msgid "TASK_ADD_ACTION_NEW_FOLDER"
+msgstr "New folder "%s" created."
+
+msgid "TASK_ADD_ACTION_NEW_FILE"
+msgstr "New action file "%s" created."
+
+msgid "TASK_ADD_ACTION_NEW_TEMPLATE"
+msgstr "New template file "%s" created."
+
+msgid "TASK_ADD_ACTION_URLS_UPDATED"
+msgstr "URLs file has been updated."
+
+msgid "TASK_ADD_SERVICE_ERROR"
+msgstr "You must indicate the name of the service you want to create, for example:"
+
+msgid "TASK_ADD_SERVICE_EXISTS"
+msgstr "Service file "%s" already exists."
+
+msgid "TASK_ADD_SERVICE_NEW_SERVICE"
+msgstr "New service "%s" created:"
+
+msgid "TASK_ADD_SERVICE_NEW_FILE"
+msgstr "New file "%s" created."
+
+msgid "TASK_ADD_TASK_MESSAGE"
+msgstr "New task %s"
+
+msgid "TASK_ADD_TASK_ERROR"
+msgstr "You must indicate the name of the task you want to create, for example:"
+
+msgid "TASK_ADD_TASK_EXISTS"
+msgstr "Task file "%s" already exists."
+
+msgid "TASK_ADD_TASK_NEW_TASK"
+msgstr "New task "%s" created:"
+
+msgid "TASK_ADD_TASK_NEW_FILE"
+msgstr "New file "%s" created."
+
+msgid "TASK_ADD_MODEL_COMPONENT_ERROR"
+msgstr "You must indicate the name of the model whose component you want to create, for example:"
+
+msgid "TASK_ADD_MODEL_COMPONENT_NO_MODEL"
+msgstr "Required model "%s" could not be found."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FOLDER_EXISTS"
+msgstr "Folder "%s" already exists."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FILE_EXISTS"
+msgstr "File "%s" already exists."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FOLDER_CANT_CREATE"
+msgstr "Can't create folder "%s"."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FILE_CANT_CREATE"
+msgstr "Can't create file "%s"."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FOLDER_CREATED"
+msgstr "New folder "%s" created."
+
+msgid "TASK_ADD_MODEL_COMPONENT_FILE_CREATED"
+msgstr "New file "%s" created."
+
+msgid "TASK_ADD_MODEL_COMPONENT_USE"
+msgstr "New model component "%s" created. Use it with:"
+
+msgid "TASK_ADD_COMPONENT_ERROR"
+msgstr "You must indicate the name of the component you want to create, for example:"
+
+msgid "TASK_ADD_COMPONENT_EXISTS"
+msgstr "Component "%s" already exists."
+
+msgid "TASK_ADD_COMPONENT_NEW_COMPONENT"
+msgstr "New component "%s" created:"
+
+msgid "TASK_ADD_COMPONENT_NEW_FILE"
+msgstr "New file "%s" created."
+
+msgid "TASK_ADD_COMPONENT_TEMPLATE"
+msgstr "Component "%s" works."
+
+msgid "TASK_ADD_FILTER_ERROR"
+msgstr "You must indicate the name of the filter you want to create, for example:"
+
+msgid "TASK_ADD_FILTER_EXISTS"
+msgstr "Filter "%s" already exists."
+
+msgid "TASK_ADD_FILTER_NEW_FILTER"
+msgstr "New filter "%s" created:"
+
+msgid "TASK_ADD_FILTER_NEW_FILE"
+msgstr "New file "%s" created."
+
+msgid "TASK_ADD_FILTER_TEMPLATE"
+msgstr "New "%s" filter."
+
+msgid "TASK_RESET"
+msgstr "Cleans all non framework data, to be used on new installations."
+
+msgid "TASK_RESET_WARNING"
+msgstr "¡Warning!"
+
+msgid "TASK_RESET_CONTINUE"
+msgstr "Next, we will proceed to delete all the content outside the framework, at the end it will have the status of a newly installed application."
+
+msgid "TASK_RESET_TIME_TO_CANCEL"
+msgstr "You have 10 seconds to cancel this process by pressing Control + C."
+
+msgid "TASK_RESET_RESET_KEY_CREATED"
+msgstr "Reset key created. To confirm the deletion of all data, execute the following command in the next 15 minutes:"
+
+msgid "TASK_RESET_DATA_ERASED"
+msgstr "Data erased!"
+
+msgid "TASK_RESET_ERROR"
+msgstr "ERROR!"
+
+msgid "TASK_RESET_GET_NEW_KEY"
+msgstr "An error occurred when validating the reset key or it has already expired. Re-create a new key by running the following command:"
+
+msgid "OFW_INDICATE_OPTION"
+msgstr "  You have to indicate an option.\n"
+
+msgid "OFW_OPTIONS"
+msgstr "  Options:\n\n"
+
+msgid "OFW_EXAMPLE"
+msgstr "For example"
+
+msgid "OFW_WRONG_OPTION"
+msgstr "Option "%s" is wrong."
+
+msgid "PLUGIN_IMAGE_FILE_NOT_FOUND"
+msgstr "ERROR! Required file was not found."
+
+msgid "PLUGIN_IMAGE_LOAD_ERROR"
+msgstr "ERROR! There was an error loading the file."
+
+msgid "PLUGIN_IMAGE_FILE_NOT_LOADED"
+msgstr "ERROR! There is not file already loaded."

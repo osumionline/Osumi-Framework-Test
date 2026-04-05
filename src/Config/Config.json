@@ -10,7 +10,7 @@
 		"url": ""
 	},
 	"log_level": "ERROR",
-	"base_url": "https://test.osumi.es/",
+	"base_url": "https://test.osumi.dev/",
 	"admin_email": "",
 	"default_title": "Osumi Framework",
 	"lang": "es",
@@ -22,9 +22,7 @@
 		"pass": "password"
 	},
 	"css": ["common"],
-	"ext_css": [],
 	"js": ["common"],
-	"ext_js": [],
 	"extra": {
 		"key": "value",
 		"foo": "bar"

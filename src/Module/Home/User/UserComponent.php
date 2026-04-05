@@ -31,6 +31,9 @@ class UserComponent extends OComponent {
 	 */
 	public function run(UserDTO $req): void {
 		if (!$req->isValid()) {
+			echo "<pre>";
+			var_dump($req);
+			echo "</pre>";
 			echo "ERROR!";
 			exit;
 		}
