@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
-
-namespace Osumi\OsumiFramework\Plugins\OWebsocket;
+namespace Osumi\OsumiFramework\Plugins;
 
 /**
  * OWebsocketError - List of standard websocket error codes

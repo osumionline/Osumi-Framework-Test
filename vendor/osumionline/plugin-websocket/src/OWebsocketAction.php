@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
-
-namespace Osumi\OsumiFramework\Plugins\Websocket;
+namespace Osumi\OsumiFramework\Plugins;
 
 use InvalidArgumentException;
 

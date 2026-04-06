@@ -31,5 +31,13 @@
 	"dir": {
 		"test": "{{web}}test/"
 	},
+	"plugins": {
+		"websocket": {
+			"host": "0.0.0.0",
+			"port": 8080,
+			"path": "/test-ws",
+			"debug": true
+		}
+	},
 	"environment": "dev"
 }

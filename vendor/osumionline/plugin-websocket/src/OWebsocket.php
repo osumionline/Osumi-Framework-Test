@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
-
-namespace Osumi\OsumiFramework\Plugins\OWebsocket;
+namespace Osumi\OsumiFramework\Plugins;
 
 use Closure;
 use Osumi\OsumiFramework\Web\ORequest;
@@ -30,6 +28,11 @@ final class OWebsocket {
 	 * @var string Default websocket path
 	 */
 	private const DEFAULT_PATH = '/';
+
+	/**
+	 * @var bool Default websocket debug mode
+	 */
+	private const DEFAULT_DEBUG = false;
 
 	/**
 	 * @var ?Closure Token validation method
@@ -65,6 +68,11 @@ final class OWebsocket {
 	private static int|string|null $current_connection_id = null;
 
 	/**
+	 * @var bool Debug mode enabled/disabled
+	 */
+	private static bool $debug = self::DEFAULT_DEBUG;
+
+	/**
 	 * Set token validation method
 	 *
 	 * Expected signature:
@@ -76,6 +84,7 @@ final class OWebsocket {
 	 */
 	public static function setValidateMethod(callable $validate_method): void {
 		self::$validate_method = Closure::fromCallable($validate_method);
+		self::debug('Token validation method configured.');
 	}
 
 	/**
@@ -93,6 +102,7 @@ final class OWebsocket {
 		}
 
 		require_once $actions_file;
+		self::debug(sprintf('Websocket actions loaded from "%s".', $actions_file));
 	}
 
 	/**
@@ -118,6 +128,17 @@ final class OWebsocket {
 			$path = self::normalizePath($config['path']);
 		}
 
+		self::$debug = self::DEFAULT_DEBUG;
+		if (array_key_exists('debug', $config)) {
+			self::$debug = filter_var($config['debug'], FILTER_VALIDATE_BOOLEAN);
+		}
+
+		self::debug('Starting WebSocket server...');
+		self::debug(sprintf('Host: %s', $host));
+		self::debug(sprintf('Port: %d', $port));
+		self::debug(sprintf('Path: %s', $path));
+		self::debug(sprintf('Debug mode: %s', self::$debug ? 'enabled' : 'disabled'));
+
 		$ws_handler = new class implements MessageComponentInterface {
 			/**
 			 * Handle a new opened connection
@@ -128,6 +149,7 @@ final class OWebsocket {
 			 */
 			public function onOpen(ConnectionInterface $conn): void {
 				OWebsocket::addConnection($conn);
+				OWebsocket::debug(sprintf('New connection opened: %s', strval($conn->resourceId)));
 			}
 
 			/**
@@ -141,6 +163,7 @@ final class OWebsocket {
 			 */
 			public function onMessage(ConnectionInterface $from, $msg): void {
 				OWebsocket::setCurrentConnectionId($from->resourceId);
+				OWebsocket::debug(sprintf('Message received from connection %s: %s', strval($from->resourceId), strval($msg)));
 				OWebsocket::handleMessage(strval($msg));
 			}
 
@@ -153,6 +176,7 @@ final class OWebsocket {
 			 */
 			public function onClose(ConnectionInterface $conn): void {
 				OWebsocket::setCurrentConnectionId($conn->resourceId);
+				OWebsocket::debug(sprintf('Connection closed: %s', strval($conn->resourceId)));
 				OWebsocket::removeConnection();
 			}
 
@@ -167,6 +191,7 @@ final class OWebsocket {
 			 */
 			public function onError(ConnectionInterface $conn, \Exception $e): void {
 				OWebsocket::setCurrentConnectionId($conn->resourceId);
+				OWebsocket::debug(sprintf('Connection error on %s: %s', strval($conn->resourceId), $e->getMessage()));
 				$conn->close();
 				OWebsocket::removeConnection();
 			}
@@ -174,6 +199,8 @@ final class OWebsocket {
 
 		$app = new App($host, $port);
 		$app->route($path, $ws_handler, ['*']);
+
+		self::debug('WebSocket server is running.');
 		$app->run();
 	}
 
@@ -193,6 +220,7 @@ final class OWebsocket {
 		];
 
 		self::$connection_objects[$connection_id] = $connection;
+		self::debug(sprintf('Connection registered in memory: %s', strval($connection_id)));
 	}
 
 	/**
@@ -246,9 +274,11 @@ final class OWebsocket {
 			);
 
 			self::$users[$user_id]['connections'] = $filtered_connections;
+			self::debug(sprintf('Connection %s removed from user %s.', strval($current_connection_id), strval($user_id)));
 
 			if (count(self::$users[$user_id]['connections']) === 0) {
 				unset(self::$users[$user_id]);
+				self::debug(sprintf('Last connection closed for user %s. User data removed from memory.', strval($user_id)));
 			}
 		}
 
@@ -258,6 +288,7 @@ final class OWebsocket {
 			unset(self::$connection_objects[$current_connection_id]);
 		}
 
+		self::debug(sprintf('Connection removed from memory: %s', strval($current_connection_id)));
 		self::$current_connection_id = null;
 	}
 
@@ -326,6 +357,7 @@ final class OWebsocket {
 		}
 
 		self::$connections[$current_connection_id]['user_id'] = $id;
+		self::debug(sprintf('Connection %s associated with user %s.', strval($current_connection_id), strval($id)));
 	}
 
 	/**
@@ -394,11 +426,13 @@ final class OWebsocket {
 		}
 
 		$user_connections = self::$users[$id]['connections'];
+		self::debug(sprintf('Clearing user data for user %s.', strval($id)));
 
 		foreach ($user_connections as $connection_id) {
 			if (array_key_exists($connection_id, self::$connection_objects)) {
 				self::$connection_objects[$connection_id]->close();
 				unset(self::$connection_objects[$connection_id]);
+				self::debug(sprintf('Connection closed: %s', strval($connection_id)));
 			}
 
 			if (array_key_exists($connection_id, self::$connections)) {
@@ -408,6 +442,7 @@ final class OWebsocket {
 		}
 
 		unset(self::$users[$id]);
+		self::debug(sprintf('User removed from memory: %s', strval($id)));
 
 		if (!is_null(self::$current_connection_id) && !array_key_exists(self::$current_connection_id, self::$connections)) {
 			self::$current_connection_id = null;
@@ -470,6 +505,7 @@ final class OWebsocket {
 		}
 
 		if (!self::isValidJson($json)) {
+			self::debug(sprintf('Invalid JSON response for connection %s.', strval($current_connection_id)));
 			return;
 		}
 
@@ -478,6 +514,7 @@ final class OWebsocket {
 		}
 
 		self::$connection_objects[$current_connection_id]->send($json);
+		self::debug(sprintf('Message sent to connection %s.', strval($current_connection_id)));
 	}
 
 	/**
@@ -491,6 +528,7 @@ final class OWebsocket {
 	 */
 	public static function sendToUser(int|string $id, string $json): void {
 		if (!self::isValidJson($json)) {
+			self::debug(sprintf('Invalid JSON response for user %s.', strval($id)));
 			return;
 		}
 
@@ -503,6 +541,8 @@ final class OWebsocket {
 				self::$connection_objects[$connection_id]->send($json);
 			}
 		}
+
+		self::debug(sprintf('Message sent to all connections of user %s.', strval($id)));
 	}
 
 	/**
@@ -514,12 +554,15 @@ final class OWebsocket {
 	 */
 	public static function broadcast(string $json): void {
 		if (!self::isValidJson($json)) {
+			self::debug('Invalid JSON broadcast message.');
 			return;
 		}
 
 		foreach (self::$connection_objects as $connection) {
 			$connection->send($json);
 		}
+
+		self::debug(sprintf('Broadcast sent to %d active connections.', count(self::$connection_objects)));
 	}
 
 	/**
@@ -531,8 +574,11 @@ final class OWebsocket {
 	 */
 	public static function broadcastAuthenticated(string $json): void {
 		if (!self::isValidJson($json)) {
+			self::debug('Invalid authenticated broadcast message.');
 			return;
 		}
+
+		$sent = 0;
 
 		foreach (self::$users as $user) {
 			if ($user['token'] === '') {
@@ -542,9 +588,12 @@ final class OWebsocket {
 			foreach ($user['connections'] as $connection_id) {
 				if (array_key_exists($connection_id, self::$connection_objects)) {
 					self::$connection_objects[$connection_id]->send($json);
+					$sent++;
 				}
 			}
 		}
+
+		self::debug(sprintf('Broadcast sent to %d authenticated connections.', $sent));
 	}
 
 	/**
@@ -574,17 +623,21 @@ final class OWebsocket {
 		$result = call_user_func(self::$validate_method, $token);
 
 		if (is_null($result)) {
+			self::debug('Token validation failed.');
 			return null;
 		}
 
 		if (!is_array($result)) {
+			self::debug('Token validation returned invalid data.');
 			return null;
 		}
 
 		if (!array_key_exists('id', $result)) {
+			self::debug('Token validation did not return a user id.');
 			return null;
 		}
 
+		self::debug(sprintf('Token validated for user %s.', strval($result['id'])));
 		return $result;
 	}
 
@@ -629,12 +682,16 @@ final class OWebsocket {
 		$action_definition = OWebsocketAction::get($action);
 
 		if (is_null($action_definition)) {
+			self::debug(sprintf('Unknown action received: %s', $action));
 			self::send(self::getErrorJson(OWebsocketError::UnknownAction));
 			return;
 		}
 
+		self::debug(sprintf('Executing action "%s".', $action));
+
 		if ($action_definition['protected']) {
 			if (!self::isAuthenticated()) {
+				self::debug(sprintf('Unauthorized access to protected action "%s".', $action));
 				self::send(self::getErrorJson(OWebsocketError::Unauthorized));
 				return;
 			}
@@ -646,6 +703,7 @@ final class OWebsocket {
 				!array_key_exists('token', $current_user_data) ||
 				!is_string($current_user_data['token'])
 			) {
+				self::debug(sprintf('Missing token for protected action "%s".', $action));
 				self::send(self::getErrorJson(OWebsocketError::Unauthorized));
 				return;
 			}
@@ -653,6 +711,7 @@ final class OWebsocket {
 			$validated_user_data = self::validateToken($current_user_data['token']);
 
 			if (is_null($validated_user_data)) {
+				self::debug(sprintf('Token revalidation failed for action "%s".', $action));
 				self::send(self::getErrorJson(OWebsocketError::Unauthorized));
 				return;
 			}
@@ -667,12 +726,14 @@ final class OWebsocket {
 			$request = self::createRequest($data);
 			$response = self::executeComponent($action_definition['component_class'], $request);
 		}
-		catch (Throwable) {
+		catch (Throwable $e) {
+			self::debug(sprintf('Server error while executing action "%s": %s', $action, $e->getMessage()));
 			self::send(self::getErrorJson(OWebsocketError::ServerError));
 			return;
 		}
 
 		if (!self::isValidJson($response)) {
+			self::debug(sprintf('Invalid JSON response returned by action "%s".', $action));
 			self::send(self::getErrorJson(OWebsocketError::InvalidResponse));
 			return;
 		}
@@ -823,5 +884,20 @@ final class OWebsocket {
 			],
 			JSON_UNESCAPED_UNICODE
 		) ?: '{"status":"error","error":"server_error"}';
+	}
+
+	/**
+	 * Print a debug message to console if debug mode is enabled
+	 *
+	 * @param string $message Debug message
+	 *
+	 * @return void
+	 */
+	private static function debug(string $message): void {
+		if (!self::$debug) {
+			return;
+		}
+
+		echo '[OWebsocket] ' . $message . PHP_EOL;
 	}
 }

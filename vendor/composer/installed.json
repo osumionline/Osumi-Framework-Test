@@ -591,17 +591,17 @@
         },
         {
             "name": "osumionline/plugin-websocket",
-            "version": "1.0.0",
-            "version_normalized": "1.0.0.0",
+            "version": "1.0.1",
+            "version_normalized": "1.0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/osumionline/plugin-websocket.git",
-                "reference": "54ee152f03cc40234b624334923397c0f0b921ab"
+                "reference": "48864613c0f3cd12f7a1da45e50f75825b199b1a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/osumionline/plugin-websocket/zipball/54ee152f03cc40234b624334923397c0f0b921ab",
-                "reference": "54ee152f03cc40234b624334923397c0f0b921ab",
+                "url": "https://api.github.com/repos/osumionline/plugin-websocket/zipball/48864613c0f3cd12f7a1da45e50f75825b199b1a",
+                "reference": "48864613c0f3cd12f7a1da45e50f75825b199b1a",
                 "shasum": ""
             },
             "require": {
@@ -609,7 +609,7 @@
                 "osumionline/framework": "^9.0",
                 "php": ">=8.2"
             },
-            "time": "2026-04-05T16:02:10+00:00",
+            "time": "2026-04-06T17:03:23+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -624,7 +624,7 @@
             "description": "Plugin to add WebSocket server support to Osumi Framework",
             "support": {
                 "issues": "https://github.com/osumionline/plugin-websocket/issues",
-                "source": "https://github.com/osumionline/plugin-websocket/tree/v1.0.0"
+                "source": "https://github.com/osumionline/plugin-websocket/tree/v1.0.1"
             },
             "install-path": "../osumionline/plugin-websocket"
         },
